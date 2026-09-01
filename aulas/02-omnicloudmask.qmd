@@ -1,0 +1,7 @@
+---
+title: "Aula 02 — Detecção de nuvens com OmniCloudMask"
+---
+
+::: {.callout-note}
+Página em construção. O vídeo desta aula ainda não foi publicado.
+:::

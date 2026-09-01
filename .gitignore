@@ -1,0 +1,36 @@
+# ---- Dados: nunca versionar imagem de satelite ----
+data/raw/*
+data/interim/*
+data/processed/*
+!data/**/.gitkeep
+*.tif
+*.tiff
+*.img
+*.jp2
+*.hdf
+*.nc
+*.aux.xml
+*.ovr
+
+# ---- Modelos baixados pelo mlstac ----
+model/
+
+# ---- Quarto ----
+# ATENCAO: a pasta docs/ NAO entra aqui. Ela e o site publicado
+# e precisa ser enviada ao GitHub.
+/.quarto/
+/_site/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+env_local/
+
+# ---- Sistema ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+**/*.quarto_ipynb

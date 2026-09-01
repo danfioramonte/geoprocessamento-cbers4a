@@ -1,0 +1,162 @@
+---
+title: "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+subtitle: "Super-resolução do Sentinel-2 para preencher lacunas do CBERS-4A"
+---
+
+<!-- Botão que abre o notebook desta aula direto no Colab -->
+[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SEU-USUARIO/SEU-REPO/blob/main/colab/03_sen2sr.ipynb)
+
+{{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}
+
+## O que vamos fazer
+
+Na aula anterior identificamos os pixels cobertos por nuvem na cena CBERS-4A.
+Agora precisamos preencher esses buracos. O problema é de escala: o CBERS-4A/WPM
+tem 2 m e o Sentinel-2 tem 10 m. Colar um pedaço de Sentinel-2 direto no CBERS
+produziria uma mancha visivelmente borrada.
+
+O SEN2SR resolve isso levando o Sentinel-2 de 10 m para 2,5 m antes da
+substituição. Não é mágica: o modelo não inventa informação que não existe, ele
+aprende como cenas de alta resolução costumam se parecer e usa isso para
+reconstruir os detalhes de forma plausível.
+
+::: {.callout-important}
+## 2,5 m não é 2 m
+
+A saída do SEN2SR é 2,5 m e a nossa grade CBERS é 2 m. Vamos precisar
+reamostrar. Isso introduz um erro pequeno, mas ele existe e precisa ser
+mencionado quando você for escrever sobre o método.
+:::
+
+::: {.callout-note}
+## Por que a versão Lite
+
+O SEN2SR tem duas versões. A completa usa arquitetura Mamba e depende do pacote
+`mamba-ssm`, que só instala em ambiente com GPU NVIDIA e CUDA acima da versão 12.
+A versão Lite roda em qualquer computador, inclusive sem placa de vídeo.
+
+Neste curso usamos a Lite. A diferença de qualidade existe, mas é pequena diante
+da diferença de acessibilidade.
+:::
+
+## Escolha a sua trilha
+
+::: {.panel-tabset}
+
+### Google Colab
+
+Se você não tem placa de vídeo NVIDIA, esta é a trilha mais confortável.
+Clique no botão do Colab no topo da página.
+
+Antes de rodar qualquer célula, ative a GPU gratuita:
+
+**Ambiente de execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU**
+
+```{python}
+#| eval: false
+# Instalação (só no Colab, leva cerca de 2 minutos)
+!pip install -q sen2sr mlstac
+!pip install -q git+https://github.com/ESDS-Leipzig/cubo.git
+```
+
+Para acessar a sua cena CBERS, monte o Google Drive:
+
+```{python}
+#| eval: false
+from google.colab import drive
+drive.mount('/content/drive')
+
+CAMINHO_CBERS = '/content/drive/MyDrive/geoproc/cbers_recorte.tif'
+```
+
+::: {.callout-warning}
+O Colab apaga tudo quando a sessão encerra. Salve os resultados no Drive antes
+de fechar, ou você vai precisar processar de novo.
+:::
+
+### Windows (miniconda)
+
+Abra o **Anaconda Prompt (miniconda3)**, vá até a pasta do projeto e ative o
+ambiente que você criou na Aula 00:
+
+```bash
+conda activate geoproc
+jupyter lab
+```
+
+Se a lista de bibliotecas der erro, rode `python verificar_ambiente.py` antes de
+seguir.
+
+```{python}
+#| eval: false
+CAMINHO_CBERS = r'C:\geo\dados\cbers_recorte.tif'
+```
+
+::: {.callout-warning}
+Use caminhos sem acentos e sem espaços. Uma pasta como
+`C:\Users\João Paulo\Área de Trabalho\` causa erros de leitura no GDAL que são
+difíceis de diagnosticar. Trabalhe em `C:\geo\`.
+
+Evite também colocar os dados dentro do OneDrive: ele tenta sincronizar cada
+GeoTIFF que você gera e trava o processamento.
+:::
+
+:::
+
+## Baixando o modelo
+
+O código abaixo é idêntico nas duas trilhas.
+
+```{python}
+#| eval: false
+import mlstac
+import torch
+
+# Baixa apenas o modelo Lite
+mlstac.download(
+    file="https://huggingface.co/tacofoundation/sen2sr/resolve/main/SEN2SRLite/main/mlm.json",
+    output_dir="model/SEN2SRLite",
+)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Rodando em: {device}")
+
+model = mlstac.load("model/SEN2SRLite").compiled_model(device=device)
+model = model.to(device)
+```
+
+## Montando o cubo Sentinel-2
+
+Aqui está a vantagem de usar o `cubo`: você não precisa ter nenhuma imagem
+Sentinel-2 no computador. A biblioteca busca a cena no catálogo e devolve só o
+recorte que você pediu.
+
+```{python}
+#| eval: false
+import cubo
+
+da = cubo.create(
+    lat=-19.3,           # ajuste para a sua área
+    lon=-43.6,
+    collection="sentinel-2-l2a",
+    bands=["B02", "B03", "B04", "B05", "B06", "B07", "B08", "B8A", "B11", "B12"],
+    start_date="2023-05-01",
+    end_date="2023-06-30",
+    edge_size=128,
+    resolution=10,
+)
+```
+
+<!--
+A PARTIR DAQUI: normalização, inferência, reamostragem 2,5 m → 2 m,
+histogram matching contra o CBERS e aplicação da máscara da Aula 02.
+-->
+
+## Erros comuns nesta aula
+
+| O que aparece na tela | O que fazer |
+|---|---|
+| `CUDA out of memory` | Reduza o `edge_size`. Processe em blocos menores. |
+| Download do modelo travado | Rode a célula de novo. O `mlstac` retoma de onde parou. |
+| `ModuleNotFoundError: cubo` | O `cubo` é instalado a partir do GitHub, não do PyPI. |
+| Resultado com faixas coloridas | A normalização de entrada está errada. Confira a escala de reflectância. |

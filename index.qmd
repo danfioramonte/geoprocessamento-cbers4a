@@ -1,0 +1,27 @@
+---
+title: "Geoprocessamento na prática"
+subtitle: "Do dado bruto CBERS-4A a uma imagem sem nuvens"
+---
+
+Material aberto do grupo de estudo em geoprocessamento. Cada aula tem vídeo,
+código comentado e duas trilhas de execução: Google Colab, para quem não tem
+placa de vídeo, e instalação local no Windows, para quem vai processar áreas
+maiores.
+
+Não é preciso ter experiência com Python, conda ou GitHub. A Aula 00 começa do
+zero absoluto.
+
+## As aulas
+
+| Aula | Assunto |
+|------|---------|
+| [00](aulas/00-ambiente.qmd) | Instalando o Miniconda e preparando o ambiente |
+| [01](aulas/01-toa-boa.qmd) | Convertendo DN para reflectância TOA e BOA no CBERS-4A |
+| [02](aulas/02-omnicloudmask.qmd) | Detectando nuvens com OmniCloudMask |
+| [03](aulas/03-sen2sr.qmd) | Substituindo pixels com nuvem usando SEN2SR e Sentinel-2 |
+
+Travou em algum ponto? Veja a página de [erros comuns](aulas/99-erros-comuns.qmd).
+
+## Como citar
+
+<!-- Preencher depois de gerar o DOI no Zenodo -->

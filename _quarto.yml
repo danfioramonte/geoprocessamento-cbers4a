@@ -1,0 +1,62 @@
+project:
+  type: website
+  output-dir: docs          # publica pelo GitHub Pages a partir da pasta docs/
+  render:
+    - "*.qmd"
+    - "aulas/*.qmd"
+
+# "auto" congela os resultados que voce executou na sua maquina.
+# Sem isso, o GitHub Actions tentaria rodar o SEN2SR sem GPU e sem
+# as imagens, e a publicacao do site falharia.
+execute:
+  freeze: auto
+  warning: false
+
+lang: pt
+
+website:
+  title: "Geoprocessamento com imagens CBERS-4A"
+  description: "CBERS-4A e Sentinel-2: do download da imagem à substituição de pixels"
+  site-url: "https://danfioramonte.github.io/geoprocessamento-cbers4a/"
+  repo-url: "https://github.com/danfioramonte/geoprocessamento-cbers4a"
+  repo-actions: [issue]
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Início
+      - href: aulas/00-ambiente.qmd
+        text: Comece aqui
+    right:
+      - icon: github
+        href: https://github.com/danfioramonte/geoprocessamento-cbers4a
+      - icon: youtube
+        href: https://www.youtube.com/@MapearUnesp
+
+  sidebar:
+    style: docked
+    contents:
+      - href: index.qmd
+        text: Visão geral
+      - section: "Aulas"
+        contents:
+          - aulas/00-ambiente.qmd
+          - aulas/01-toa-boa.qmd
+          - aulas/02-omnicloudmask.qmd
+          - aulas/03-sen2sr.qmd
+      - section: "Apoio"
+        contents:
+          - aulas/99-erros-comuns.qmd
+
+  page-footer:
+    center: "Material aberto sob licença MIT. Grupo de estudo MAPEAR."
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-title: "Nesta página"
+    code-copy: true
+    code-overflow: wrap
+    code-line-numbers: true
+    highlight-style: github

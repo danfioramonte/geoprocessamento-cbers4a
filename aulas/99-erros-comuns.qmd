@@ -1,0 +1,7 @@
+---
+title: "Erros comuns"
+---
+
+::: {.callout-note}
+Página em construção. O vídeo desta aula ainda não foi publicado.
+:::
