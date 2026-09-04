@@ -1,7 +1,650 @@
 ---
-title: "Aula 00 — Instalando o Miniconda"
+title: "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+subtitle: "Preparando o ambiente Python, conhecendo as bibliotecas e baixando a imagem por API"
+author: "Danilo Fioramonte"
+date: "2026-09-03"
 ---
 
+{{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}
+
+## O que vamos aprender
+
+Seja muito bem-vindo(a) à primeira aula dessa mini série!
+
+Nesta aula, você vai preparar o ambiente Python que roda **todas** as aulas do
+curso: a correção atmosférica do CBERS-4A (TOA e BOA), a remoção de nuvens com
+o OmniCloudMask e a super-resolução do Sentinel-2 com o SEN2SR. Um "ambiente" é
+uma caixa isolada com uma versão do Python e um conjunto de bibliotecas fixas —
+que permite você gerenciar tudo de forma organizada, sem conflitos e sem mexer
+alterar arquivos do seu sistema.
+
+Para montar esse ambiente vamos usar o gerenciador de ambientes **pixi**. Ele lê um arquivo chamado `pixi.toml` (que já vem no repositório do curso), baixa o próprio Python e todas as bibliotecas na versão certa, e registra tudo num arquivo `pixi.lock`. Esse `pixi.lock` é o que garante que o ambiente da sua máquina seja **idêntico** ao que utilizei no vídeo.
+
 ::: {.callout-note}
-Página em construção. O vídeo desta aula ainda não foi publicado.
+## Dúvida para nerds: Por que pixi? E não Miniforge/conda ou "pip" pelo terminal?
+
+Esta sequência de aulas tem uma combinação que nenhuma ferramenta sozinha resolve bem no
+Windows:
+
+- A correção atmosférica **BOA** depende do programa **Py6S**, e o **coregistro** depende do **GDAL**. Esses binários, no Windows, só funcionam corretamente com **conda-forge**.
+- Os modelos de aprendizado profundo (`omnicloudmask`, `sen2sr`, `mlstac`) só existem no **PyPI** (o repositório do `pip`).
+
+O **pixi** une os dois mundos — conda-forge e PyPI — num único arquivo e num único `pixi.lock`. Na prática, possibilita que você instale o seu ambiente de maneira correta e sem preocupações, já que esse ambiente foi testado previamente e está pronto para uso, evitando que você faça manualmente e te gere problemas.
 :::
+
+As principais bibliotecas do ambiente são: `numpy`, `pandas`, `geopandas`,
+`rasterio`, `matplotlib`, `py6s` (BOA), `arosics` (coregistro), `torch`,
+`omnicloudmask`, `sen2sr` e `cubo`. Você não precisa instalar nada disso à mão:
+o `pixi.toml` já lista tudo.
+
+
+## Passo 1 — Baixar o material do curso
+
+Você tem duas opções.
+
+**Com Git** (recomendado, facilita receber atualizações):
+
+```powershell
+cd C:\geo
+git clone https://github.com/danfioramonte/geoprocessamento-cbers4a.git
+cd geoprocessamento-cbers4a
+```
+
+**Sem Git:** na [página do repositório](https://github.com/danfioramonte/geoprocessamento-cbers4a),
+clique em **Code → Download ZIP**, extraia para `C:\geo\` e entre na pasta pelo
+terminal.
+
+::: {.callout-warning}
+Trabalhe em um caminho **sem acentos e sem espaços**, como `C:\geo\`. Pastas
+como `C:\Users\João Paulo\Área de Trabalho\` causam erros de leitura no GDAL que
+são difíceis de diagnosticar. Evite também o OneDrive: ele tenta sincronizar
+cada GeoTIFF gerado e trava o processamento.
+:::
+
+::: {.callout-note}
+Os passos 2 ao 5 são para quem vai processar na própria máquina. Se você pretende usar o **Google Colab**, não precisa instalar nada — pode pular direto para o  passo **VERIFICAR***. Mas lembre que o Colab apaga os arquivos ao encerrar a sessão e tem limites de tempo e disco; para áreas maiores, a instalação local compensa.
+:::
+
+## Passo 2 — Instalar o pixi
+
+O pixi é um único programa. Você o instala **uma vez** na sua máquina.
+
+Abra o **PowerShell** (menu Iniciar → digite "PowerShell") e cole:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
+```
+
+Depois **feche e reabra** o terminal, para o PATH ser atualizado. Para verificar se
+funcionou, no **PowerShell**:
+
+```powershell
+pixi --version
+```
+
+Se aparecer um número de versão, está pronto. Você **não** precisa instalar
+Python nem Miniforge — o pixi cuida do Python sozinho.
+
+## Passo 3 — Criar o ambiente
+Abra o **PowerShell** e entre na pasta do projeto:
+```powershell
+cd C:\geo\geoprocessamento-cbers4a
+```
+
+Dentro da pasta do projeto, rode:
+
+```powershell
+pixi install
+```
+
+O pixi vai ler o `pixi.toml`, baixar o Python, o GDAL, o PyTorch e todo o resto,
+e gerar o `pixi.lock`. **Na primeira vez leva alguns minutos** — é normal a barra
+parecer parada. Você só faz isso uma vez; depois o ambiente já está pronto.
+
+## Passo 4 — Conferir se deu certo
+
+```powershell
+pixi run check
+```
+
+Esse comando roda o `verificar_ambiente.py` dentro do ambiente e lista, uma por
+uma, cada biblioteca — inclusive o executável do **6S** (que o BOA usa). Se algo
+aparecer como `[FALHA]`, a própria saída diz o que fazer.
+
+## Passo 5 — Abrir o Jupyter Lab
+
+```powershell
+pixi run lab
+```
+
+Pronto: o Jupyter Lab abre **já dentro do ambiente correto**. Repare que não
+existe passo de "ativar ambiente" — o `pixi run` sempre usa o ambiente do
+projeto. Esse é o comando que você vai usar no início de cada aula.
+
+::: {.callout-tip}
+## Os comandos que você vai repetir
+
+Toda vez que for trabalhar, abra o terminal, entre na pasta do projeto e use:
+
+- `pixi run lab` — abre o Jupyter Lab
+- `pixi run check` — confere o ambiente quando algo der errado
+- `pixi run preview` — pré-visualiza o site do curso (se você for editá-lo)
+
+:::
+
+## Passo 6 - Baixando a imagem CBERS-4A via API STAC
+
+O STAC (*SpatioTemporal Asset Catalog*, ou Catálogo de Ativos Espaço-Temporais) é um site que organiza imagens de satélite de diversos provedores, incluindo o [Brazil Data Cube](https://data.inpe.br/bdc/explorer/explore) (BDC - do INPE) que fornece as imagens CBERS-4A. Graças ao STAC, você pode "pré-processar" a imagem antes de baixá-la, como iremos fazer nesse tutorial.
+
+::: {.callout-tip}
+## O que vamos fazer?
+
+Nós vamos baixar uma imagem CBERS-4a do sensor WPM, com uma área de interesse (AOI) definida para a área urbana e o horto florestal de Rio Claro/SP. Vamos identificar a cena de interesse, filtrar a data e baixar as bandas espectrais (Banda 0 (PAN), Banda 1 (BLUE), Banda 2 (GREEN), Banda 3 (RED), Banda 4 (NIR)) já recortadas para nossa área em formato GeoTIFF.
+
+Ao fazer isso, baixamos diversas bandas espectrais de uma só vez, já recortadas para a área de interesse, economizando tempo e espaço em disco.
+:::
+
+[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb)
+
+Todo o código abaixo está no notebook **`colab/00_aquisicao_cbers.ipynb`**. Você
+pode rodá-lo de duas formas:
+
+- **Local (recomendado):** com o ambiente já pronto, rode `pixi run lab`, abra o
+  notebook e execute célula a célula. Os arquivos caem direto em `data/raw`, que
+  é onde a Aula 01 vai procurar.
+- **Colab:** clique no botão acima. A primeira célula instala as bibliotecas na
+  sessão; no fim, baixe os GeoTIFFs (ou salve no seu Drive).
+
+### 6.1 A coleção e as bandas
+
+Vamos usar a coleção **`CB4A-WPM-L4-DN-1`** do BDC: imagens do sensor WPM,
+ortorretificadas, em **números digitais** (`int16`, `nodata = 0`), **sem**
+correção atmosférica — a correção é justamente o assunto da Aula 01.
+
+| asset | banda | faixa espectral | resolução |
+|---|---|---|---|
+| `BAND0` | PAN | 0,45–0,90 µm | 2 m |
+| `BAND1` | Blue | 0,45–0,52 µm | 8 m |
+| `BAND2` | Green | 0,52–0,59 µm | 8 m |
+| `BAND3` | Red | 0,63–0,69 µm | 8 m |
+| `BAND4` | NIR | 0,77–0,89 µm | 8 m |
+
+::: {.callout-important}
+## Duas particularidades desta coleção
+
+**1. Não há metadado de nuvem.** O campo `eo:cloud_cover` vem vazio em todas as
+cenas WPM L4-DN, e o servidor **ignora** o filtro de nuvem na busca. Por isso não
+confiamos na query: escolhemos a cena olhando a **miniatura** e uma **estimativa
+de nuvem calculada na própria AOI** (seção 6.5).
+
+**2. Os arquivos não são COG.** São TIFFs *striped* (bloco = 1 linha inteira),
+sem *overviews*. Na prática: ler um recorte exige baixar as **linhas inteiras**
+que o cruzam — a largura da AOI é quase de graça, mas a **altura custa caro**. A
+cena PAN tem ~56.000 × 57.700 px (3,2 gigapixels): **comece com uma AOI pequena**
+(5–10 km) e aumente depois.
+:::
+
+### 6.2 Preparando o ambiente da aquisição
+
+A primeira célula só faz diferença no Colab (instala as bibliotecas na sessão).
+Localmente, com o `pixi`, ela não faz nada — o ambiente já tem tudo.
+
+```{python}
+#| eval: false
+import sys
+
+NO_COLAB = "google.colab" in sys.modules
+if NO_COLAB:
+    # No Colab instalamos na sessao. Localmente, o pixi ja cuidou disso.
+    !pip install -q pystac-client rasterio pandas matplotlib shapely pyproj requests pillow folium
+```
+
+### 6.3 Configuração e imports
+
+O bloco define alguns ajustes do GDAL para leitura remota **antes** de importar o
+`rasterio`, aponta o endereço do STAC do INPE e o mapa de bandas, e cria a pasta
+de saída `data/raw`.
+
+```{python}
+#| eval: false
+import os
+
+# ajustes de GDAL para leitura remota (defina ANTES de importar o rasterio)
+os.environ.setdefault("GDAL_DISABLE_READDIR_ON_OPEN", "EMPTY_DIR")  # nao lista o diretorio remoto
+os.environ.setdefault("GDAL_HTTP_MAX_RETRY", "5")                   # a API do INPE as vezes cai
+os.environ.setdefault("GDAL_HTTP_RETRY_DELAY", "2")
+os.environ.setdefault("GDAL_CACHEMAX", "512")                       # MB de cache de blocos
+
+from io import BytesIO
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import rasterio
+import requests
+from pystac_client import Client
+from pyproj import Transformer
+from rasterio.windows import Window, from_bounds
+from rasterio.windows import transform as window_transform
+
+STAC_URL = "https://data.inpe.br/bdc/stac/v1/"
+COLLECTION = "CB4A-WPM-L4-DN-1"
+
+# asset do STAC -> apelido usado nos arquivos de saida
+BANDAS = {
+    "BAND1": "blue",
+    "BAND2": "green",
+    "BAND3": "red",
+    "BAND4": "nir",
+    "BAND0": "pan",
+}
+
+# saida direto na pasta que a Aula 01 le. No Colab, troque por um caminho no Drive.
+OUTPUT_DIR = "data/raw"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+client = Client.open(STAC_URL)
+client
+```
+
+### 6.4 Definindo a área de interesse (AOI)
+
+A AOI é um retângulo `[oeste, sul, leste, norte]` em graus (**EPSG:4326**). O
+exemplo cobre a área urbana e o horto florestal de **Rio Claro/SP**. Para a sua
+região, pegue as coordenadas no [bbox finder](https://bboxfinder.com/) e troque
+os valores. **Comece pequeno** (~4 km) para experimentar.
+
+```{python}
+#| eval: false
+AOI_BBOX = [-47.596712, -22.467523, -47.495068, -22.374216]
+AOI_NOME = "rio_claro"
+
+largura_km = (AOI_BBOX[2] - AOI_BBOX[0]) * 111 * np.cos(np.radians(AOI_BBOX[1]))
+altura_km = (AOI_BBOX[3] - AOI_BBOX[1]) * 111
+print(f"AOI: {AOI_BBOX}")
+print(f"tamanho aproximado: {largura_km:.1f} x {altura_km:.1f} km")
+```
+
+::: {.callout-tip collapse="true"}
+## Opcional: usar o polígono de um município inteiro
+
+Se preferir a geometria de um município ao retângulo, instale o `geobr`
+(`pixi add geobr`) e troque a célula acima por:
+
+```python
+import geobr
+muni = geobr.read_municipality(year=2020)
+alvo = muni.loc[(muni["abbrev_state"] == "SP") & (muni["name_muni"] == "Rio Claro")].iloc[0]
+AOI_BBOX = list(alvo.geometry.bounds)
+AOI_NOME = "rio_claro"
+```
+
+Cuidado: um município inteiro deixa o download **bem** mais lento por causa da
+altura da AOI.
+:::
+
+Um mapinha rápido ajuda a conferir se o retângulo caiu no lugar certo:
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mapa da AOI (opcional)"
+import folium
+from shapely.geometry import box
+
+m = folium.Map()
+folium.GeoJson(
+    box(*AOI_BBOX).__geo_interface__,
+    style_function=lambda x: {"fillColor": "none", "color": "red", "weight": 3},
+).add_to(m)
+m.fit_bounds([[AOI_BBOX[1], AOI_BBOX[0]], [AOI_BBOX[3], AOI_BBOX[2]]])
+m
+```
+
+### 6.5 Buscando e escolhendo a cena
+
+A busca por `bbox` retorna toda cena cujo contorno cruza a AOI — inclusive as que
+só encostam numa quina e cobrem a sua área apenas com `nodata`. Por isso, depois
+de buscar, a gente **filtra no olho** (miniaturas) e por um **diagnóstico na
+AOI**.
+
+```{python}
+#| eval: false
+def buscar_cenas(bbox, datetime_range, collection=COLLECTION, limite=None):
+    """Busca cenas no STAC e devolve (lista_de_items, DataFrame com o resumo)."""
+    busca = client.search(collections=[collection], bbox=bbox,
+                          datetime=datetime_range, max_items=limite)
+    items = list(busca.items())
+    linhas = []
+    for i, item in enumerate(items):
+        props = item.properties
+        linhas.append({
+            "idx": i,
+            "id": item.id,
+            "data": str(props.get("datetime", ""))[:10],
+            "orbita_ponto": f"{props.get('path', '?')}_{props.get('row', '?')}",
+            "bandas": sum(1 for k in BANDAS if k in item.assets),
+        })
+    return items, pd.DataFrame(linhas)
+
+
+items, df = buscar_cenas(AOI_BBOX, "2025-01-01/2026-09-03")
+print(f"{len(items)} cenas encontradas\n")
+df
+```
+
+Cada cena traz uma **miniatura** (PNG leve da cena inteira) — a forma mais rápida
+de ver se ela está limpa e se cobre a sua região:
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Função mostrar_thumbnails()"
+def mostrar_thumbnails(items, df, n=8, colunas=4):
+    from PIL import Image
+    subset = df.head(n)
+    linhas = int(np.ceil(len(subset) / colunas))
+    fig, axes = plt.subplots(linhas, colunas, figsize=(4 * colunas, 4.4 * linhas))
+    axes = np.atleast_1d(axes).ravel()
+    for ax, (_, row) in zip(axes, subset.iterrows()):
+        item = items[int(row["idx"])]
+        ax.axis("off")
+        ax.set_title(f"[{row['idx']}] {row['data']} — {row['orbita_ponto']}", fontsize=10)
+        thumb = item.assets.get("thumbnail")
+        if thumb is None:
+            ax.text(0.5, 0.5, "sem thumbnail", ha="center", va="center"); continue
+        try:
+            resp = requests.get(thumb.href, timeout=60); resp.raise_for_status()
+            ax.imshow(Image.open(BytesIO(resp.content)))
+        except Exception as erro:
+            ax.text(0.5, 0.5, f"erro: {erro}", ha="center", va="center", fontsize=8, wrap=True)
+    for ax in axes[len(subset):]:
+        ax.axis("off")
+    plt.tight_layout(); plt.show()
+
+
+mostrar_thumbnails(items, df, n=8)
+```
+
+A miniatura mostra a cena **inteira** (~110 km de lado); a nuvem pode estar longe
+da AOI ou bem em cima dela. As funções abaixo leem uma versão reduzida **só da
+AOI** e calculam, para cada cena candidata: a **cobertura** (% de pixels válidos)
+e uma **estimativa de nuvem** sobre a AOI. É uma heurística para *ranquear*
+cenas, não uma máscara oficial — a remoção de nuvem de verdade é a Aula 02.
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Funções de leitura da AOI (reprojetar_bounds, janela_da_aoi, ler_aoi)"
+def reprojetar_bounds(bounds, de="EPSG:4326", para=None):
+    t = Transformer.from_crs(de, para, always_xy=True)
+    minx, miny = t.transform(bounds[0], bounds[1])
+    maxx, maxy = t.transform(bounds[2], bounds[3])
+    return (minx, miny, maxx, maxy)
+
+
+def janela_da_aoi(src, bbox):
+    """Janela (em pixels) do dataset para o bbox em EPSG:4326, limitada a cena.
+
+    Cada asset e aberto separadamente: a PAN tem grade de 2 m e as MS de 8 m, e
+    cenas de orbitas diferentes podem estar ate em zonas UTM diferentes.
+    """
+    bounds = reprojetar_bounds(bbox, "EPSG:4326", src.crs)
+    janela = from_bounds(*bounds, src.transform).round_offsets().round_lengths()
+    col_off = max(0, int(janela.col_off)); row_off = max(0, int(janela.row_off))
+    col_fim = min(src.width, int(janela.col_off + janela.width))
+    row_fim = min(src.height, int(janela.row_off + janela.height))
+    if col_fim <= col_off or row_fim <= row_off:
+        raise ValueError("A AOI nao intersecta o retangulo desta cena.")
+    return Window(col_off, row_off, col_fim - col_off, row_fim - row_off)
+
+
+def ler_aoi(href, bbox, max_dim=None, masked=True):
+    """Le a AOI de um asset. Com max_dim, faz leitura decimada (economiza RAM)."""
+    with rasterio.open(href) as src:
+        janela = janela_da_aoi(src, bbox)
+        altura, largura = int(janela.height), int(janela.width)
+        if max_dim and max(altura, largura) > max_dim:
+            fator = max(altura, largura) / max_dim
+            out_shape = (max(1, int(altura / fator)), max(1, int(largura / fator)))
+        else:
+            out_shape = (altura, largura)
+        dados = src.read(1, window=janela, out_shape=out_shape, masked=masked)
+        transform = window_transform(janela, src.transform) * rasterio.Affine.scale(
+            largura / out_shape[1], altura / out_shape[0])
+        return dados, transform, src.crs
+```
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Diagnóstico de nuvem/cobertura na AOI (diagnosticar_aoi, diagnosticar_lista)"
+SATURACAO = 1023  # o WPM e de 10 bits, guardado em int16
+
+
+def diagnosticar_aoi(item, bbox, max_dim=150, limiar_brilho=0.7 * SATURACAO):
+    azul, *_ = ler_aoi(item.assets["BAND1"].href, bbox, max_dim=max_dim)
+    nir, *_ = ler_aoi(item.assets["BAND4"].href, bbox, max_dim=max_dim)
+    azul = np.ma.filled(azul.astype("float32"), 0)
+    nir = np.ma.filled(nir.astype("float32"), 0)
+    validos = (azul > 0) & (nir > 0)
+    if not validos.any():
+        return {"cobertura_aoi_%": 0.0, "nuvens_est_%": np.nan, "brilho_p98": np.nan}
+    # nuvem: perto da saturacao no azul E espectralmente chapada (NIR nao dispara)
+    nuvem = validos & (azul > limiar_brilho) & (nir < 1.6 * azul)
+    return {
+        "cobertura_aoi_%": round(100 * validos.sum() / validos.size, 1),
+        "nuvens_est_%": round(100 * nuvem.sum() / validos.sum(), 1),
+        "brilho_p98": int(np.percentile(azul[validos], 98)),
+    }
+
+
+def diagnosticar_lista(items, df, n=6, **kwargs):
+    resultados = []
+    for _, row in df.head(n).iterrows():
+        idx = int(row["idx"])
+        try:
+            diag = diagnosticar_aoi(items[idx], AOI_BBOX, **kwargs)
+        except Exception as erro:
+            diag = {"cobertura_aoi_%": np.nan, "nuvens_est_%": np.nan,
+                    "brilho_p98": np.nan, "erro": f"{type(erro).__name__}: {erro}"}
+        print(f"[{idx}] {row['data']} {row['orbita_ponto']} -> {diag}")
+        resultados.append({"idx": idx, **diag})
+    return df.merge(pd.DataFrame(resultados), on="idx", how="left")
+
+
+df_diag = diagnosticar_lista(items, df, n=6)
+# candidatas: cobrem a AOI de verdade e tem pouca nuvem
+(df_diag[df_diag["cobertura_aoi_%"] > 95]
+ .sort_values(["nuvens_est_%", "brilho_p98"])
+ [["idx", "id", "data", "orbita_ponto", "cobertura_aoi_%", "nuvens_est_%", "brilho_p98"]])
+```
+
+Escolha o número da coluna `idx` da melhor cena e coloque em `ESCOLHA`:
+
+```{python}
+#| eval: false
+ESCOLHA = 1  # <-- troque pelo "idx" da cena desejada
+
+item = items[ESCOLHA]
+print("id:     ", item.id)
+print("data:   ", item.properties.get("datetime"))
+print("orbita: ", item.properties.get("path"), "/", item.properties.get("row"))
+```
+
+### 6.6 Pré-visualização em RGB
+
+Antes de baixar tudo em resolução total, vale conferir a cena com uma composição
+colorida da AOI. O contraste é por **percentil** (2%–98%), ignorando o `nodata`.
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Funções de visualização (stretch, preview_rgb)"
+def stretch(array, low_pct=2, high_pct=98):
+    dados = np.ma.filled(array.astype("float64"), np.nan)
+    validos = dados[np.isfinite(dados) & (dados > 0)]
+    if validos.size == 0:
+        return np.zeros_like(dados)
+    p_lo, p_hi = np.percentile(validos, [low_pct, high_pct])
+    if p_hi <= p_lo:
+        p_hi = p_lo + 1
+    return np.clip((dados - p_lo) / (p_hi - p_lo), 0, 1)
+
+
+def preview_rgb(item, bbox, max_dim=800, bandas=("BAND3", "BAND2", "BAND1"), titulo=None):
+    canais = [ler_aoi(item.assets[b].href, bbox, max_dim=max_dim)[0] for b in bandas]
+    rgb = np.dstack([stretch(c) for c in canais])
+    plt.figure(figsize=(9, 9)); plt.imshow(rgb); plt.axis("off")
+    plt.title(titulo or f"{item.id}\n{str(item.properties.get('datetime'))[:10]}")
+    plt.tight_layout(); plt.show()
+    return rgb
+
+
+rgb = preview_rgb(item, AOI_BBOX)
+```
+
+Se não gostou da cena, volte na célula do `ESCOLHA`, troque o `idx` e rode de
+novo. Satisfeito? Siga para a exportação.
+
+### 6.7 Exportando as bandas para `data/raw`
+
+Agora lemos em **resolução total** e gravamos GeoTIFF preservando o `dtype`
+original (`int16`, DN), o `nodata = 0`, o CRS e o `transform` do recorte —
+com compressão `deflate` e *tiling*. Saem 5 GeoTIFFs (um por banda) + os XML de
+metadados de cada banda, todos em `data/raw`.
+
+::: {.callout-warning}
+A **PAN** é de longe a mais demorada (4× mais linhas e colunas que as MS). Numa
+AOI de 4 × 4 km: cada banda MS leva alguns segundos e a PAN pode levar ~45 s. Se
+a conexão com o INPE cair no meio, **rode a célula de novo** — o que já baixou é
+reaproveitado.
+:::
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Funções de exportação (exportar_banda, exportar_xml, exportar_cena, empilhar)"
+def exportar_banda(href, bbox, caminho_saida):
+    with rasterio.open(href) as src:
+        janela = janela_da_aoi(src, bbox)
+        dados = src.read(1, window=janela)
+        altura, largura = int(janela.height), int(janela.width)
+        perfil = src.profile.copy()
+        perfil.update(driver="GTiff", height=altura, width=largura, count=1,
+                      transform=window_transform(janela, src.transform),
+                      compress="deflate", predictor=2)
+        if altura >= 512 and largura >= 512:
+            perfil.update(tiled=True, blockxsize=512, blockysize=512)
+        else:
+            perfil.update(tiled=False); perfil.pop("blockxsize", None); perfil.pop("blockysize", None)
+    with rasterio.open(caminho_saida, "w", **perfil) as dst:
+        dst.write(dados, 1)
+    validos = 100 * np.count_nonzero(dados) / dados.size
+    mb = os.path.getsize(caminho_saida) / 1024**2
+    print(f"  {os.path.basename(caminho_saida):55s} {dados.shape} {dados.dtype} | {validos:5.1f}% validos | {mb:6.1f} MB")
+    return caminho_saida
+
+
+def exportar_xml(item, asset, caminho_saida):
+    chave = f"{asset}_xml"
+    if chave not in item.assets:
+        print(f"  ! asset {chave} nao existe nesta cena — pulando"); return None
+    resposta = requests.get(item.assets[chave].href, timeout=120); resposta.raise_for_status()
+    with open(caminho_saida, "wb") as f:
+        f.write(resposta.content)
+    print(f"  {os.path.basename(caminho_saida):55s} {len(resposta.content)/1024:21.1f} KB de metadados")
+    return caminho_saida
+
+
+def exportar_cena(item, bbox, prefixo, output_dir=OUTPUT_DIR, bandas=BANDAS, com_xml=True):
+    saidas = {}
+    print(f"Exportando {item.id}:")
+    for asset, apelido in bandas.items():
+        if asset not in item.assets:
+            print(f"  ! asset {asset} nao existe nesta cena — pulando"); continue
+        base = os.path.join(output_dir, f"{prefixo}_{item.id}_{asset}")
+        try:
+            saidas[asset] = exportar_banda(item.assets[asset].href, bbox, base + ".tif")
+        except Exception as erro:
+            print(f"  ! falhou em {asset} ({apelido}): {type(erro).__name__}: {erro}")
+        if com_xml:
+            try:
+                cx = exportar_xml(item, asset, base + ".xml")
+                if cx:
+                    saidas[f"{asset}_xml"] = cx
+            except Exception as erro:
+                print(f"  ! falhou no XML de {asset}: {type(erro).__name__}: {erro}")
+    return saidas
+
+
+def empilhar(caminhos, caminho_saida, descricoes=None):
+    with rasterio.open(caminhos[0]) as ref:
+        perfil = ref.profile.copy()
+    perfil.update(count=len(caminhos))
+    with rasterio.open(caminho_saida, "w", **perfil) as dst:
+        for i, caminho in enumerate(caminhos, start=1):
+            with rasterio.open(caminho) as src:
+                dst.write(src.read(1), i)
+            if descricoes:
+                dst.set_band_description(i, descricoes[i - 1])
+    print(f"{caminho_saida}  ({len(caminhos)} bandas, {os.path.getsize(caminho_saida)/1024**2:.1f} MB)")
+    return caminho_saida
+```
+
+```{python}
+#| eval: false
+# baixa as 5 bandas + XML para data/raw
+arquivos = exportar_cena(item, AOI_BBOX, AOI_NOME)
+
+# empilha as multiespectrais (8 m) num unico arquivo RGBN; a PAN (2 m) fica separada
+ordem = [a for a in ["BAND3", "BAND2", "BAND1", "BAND4"] if a in arquivos]  # R, G, B, NIR
+stack_rgbn = empilhar(
+    [arquivos[a] for a in ordem],
+    os.path.join(OUTPUT_DIR, f"{AOI_NOME}_{item.id}_RGBN.tif"),
+    descricoes=[BANDAS[a] for a in ordem],
+)
+```
+
+### 6.8 Conferindo o resultado
+
+Abrindo os arquivos locais para garantir que o recorte, a georreferência e os
+valores estão certos:
+
+```{python}
+#| eval: false
+with rasterio.open(stack_rgbn) as src:
+    print("CRS:      ", src.crs)
+    print("shape:    ", src.height, "x", src.width, f"({src.count} bandas, {src.dtypes[0]})")
+    print("resolucao:", src.res, "m")
+    print("descricoes:", src.descriptions)
+    r, g, b, nir = [src.read(i) for i in range(1, src.count + 1)]
+
+with rasterio.open(arquivos["BAND0"]) as src:
+    print("PAN ->", src.height, "x", src.width, "| resolucao:", src.res, "m")
+    pan = src.read(1)
+
+fig, axes = plt.subplots(1, 3, figsize=(16, 6))
+axes[0].imshow(np.dstack([stretch(r), stretch(g), stretch(b)])); axes[0].set_title("RGB (8 m)")
+axes[1].imshow(np.dstack([stretch(nir), stretch(r), stretch(g)])); axes[1].set_title("Falsa cor NIR/R/G (8 m)")
+axes[2].imshow(stretch(pan), cmap="gray"); axes[2].set_title("PAN (2 m)")
+for ax in axes:
+    ax.axis("off")
+plt.tight_layout(); plt.show()
+```
+
+::: {.callout-note}
+## Pronto para a Aula 01
+
+Se os arquivos apareceram em `data/raw` e a pré-visualização está correta, você
+tem tudo o que a próxima aula precisa: as bandas **RGBN (8 m)** e a **PAN (2 m)**
+em número digital. Na [Aula 01](01-toa-boa.qmd) vamos converter esses DN para
+reflectância **TOA** e **BOA**.
+
+Um lembrete de vocabulário para a próxima aula: o CRS de saída herda a zona UTM
+da cena. Se você baixar cenas de **órbitas diferentes** para a mesma AOI, elas
+podem cair em zonas UTM distintas — nesse caso, reprojete antes de comparar.
+:::
+
+Travou em algum ponto? A página de [erros comuns](99-erros-comuns.qmd) tem as
+mensagens mais frequentes e o que fazer com cada uma.

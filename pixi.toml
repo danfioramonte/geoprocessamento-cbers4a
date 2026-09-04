@@ -1,0 +1,118 @@
+# ============================================================================
+# pixi.toml — ambiente do grupo de estudo MAPEAR (geoprocessamento CBERS-4A)
+# ----------------------------------------------------------------------------
+# Um ambiente unico e reproduzivel para TODAS as aulas, no Windows, incluindo a
+# correcao BOA (via 6S) e o coregistro (AROSICS) — que no Windows so saem pelo
+# conda-forge — junto com os pacotes de deep learning, que so existem no PyPI.
+#
+# COMO USAR
+#   1. Instale o pixi uma vez (ver Aula 00).
+#   2. Nesta pasta, rode:
+#        pixi install        # cria o ambiente e gera o pixi.lock
+#        pixi run lab        # abre o Jupyter Lab dentro do ambiente
+#        pixi run check      # confere se tudo foi instalado
+#        pixi run preview    # pre-visualiza o site Quarto
+#
+# LOGICA DA DIVISAO DE CANAIS
+#   [dependencies]      -> conda-forge. Traz os BINARIOS que o pip nao entrega no
+#                          Windows: o GDAL (base do rasterio/geopandas/AROSICS) e
+#                          o executavel 6S (que o Py6S chama para o BOA).
+#   [pypi-dependencies] -> PyPI, resolvido pelo uv por dentro do pixi. Os pacotes
+#                          de deep learning que so existem la.
+#
+# NUNCA misture "pip install rasterio/gdal" aqui: o conda-forge ja cuida disso, e
+# instalar por cima quebra a ligacao com a libgdal. Para adicionar um pacote,
+# use  pixi add <nome>  (conda-forge)  ou  pixi add --pypi <nome>  (PyPI).
+#
+# VERSOES: antes de gravar cada video, rode  pixi list  e considere fixar as
+# versoes no pixi.lock (que deve ser versionado no Git). Um video e permanente e
+# o sen2sr ainda esta na serie 0.x, onde mudancas quebram codigo com facilidade.
+# ============================================================================
+
+[workspace]
+name = "geoprocessamento-cbers4a"
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+# ----------------------------------------------------------------------------
+# conda-forge — base, stack geoespacial, cientifico, atmosferico e coregistro
+# ----------------------------------------------------------------------------
+[dependencies]
+python = "3.11.*"
+
+# stack geoespacial (o conda-forge traz GDAL/GEOS/PROJ como binarios)
+gdal = "*"
+rasterio = "*"
+geopandas = "*"
+rioxarray = "*"
+xarray = "*"
+shapely = "*"
+pyproj = "*"
+fiona = "*"
+
+# cientifico
+numpy = "*"
+scipy = "*"
+pandas = "*"
+scikit-image = "*"
+scikit-learn = "*"
+matplotlib-base = "*"       # notebooks usam backend inline; -base evita puxar Qt
+
+# correcao atmosferica — BOA  (Aula 01, exp01 --nivel boa)
+py6s = "*"
+sixs = "*"                  # o EXECUTAVEL 6S; build win-64 disponivel no conda-forge
+
+# coregistro do S2-SR com o CBERS  (AROSICS; puxa o gdal do conda-forge)
+arosics = "*"
+
+# acesso a catalogos de imagem via STAC (Aula 00: aquisicao; Aula 03: cubo)
+pystac-client = "*"
+planetary-computer = "*"
+requests = "*"             # download dos assets/thumbnails/XML do STAC do INPE
+folium = "*"               # mapinha opcional da AOI (Aula 00)
+pillow = "*"               # abre as miniaturas (thumbnails) das cenas (Aula 00)
+# geobr = "*"              # opcional: AOI a partir do poligono de um municipio
+#                           (descomente e rode "pixi install", ou use "pixi add geobr")
+
+# ambiente de trabalho + toolchain do site
+jupyterlab = "*"
+ipykernel = "*"
+tqdm = "*"
+quarto = "*"                # permite  pixi run preview / render  sem Quarto do sistema
+
+# ----------------------------------------------------------------------------
+# PyPI (via uv, por cima do conda) — deep learning e pacotes so-PyPI.
+# torch/torchvision fixados no indice de CPU: SEN2SR Lite e OmniCloudMask rodam
+# em CPU. Se voce tem placa NVIDIA, veja a nota no fim deste arquivo.
+# ----------------------------------------------------------------------------
+[pypi-dependencies]
+torch = { version = "*", index = "https://download.pytorch.org/whl/cpu" }
+torchvision = { version = "*", index = "https://download.pytorch.org/whl/cpu" }
+omnicloudmask = "*"
+sen2sr = "*"
+mlstac = "*"
+cubo = "*"
+
+# ----------------------------------------------------------------------------
+# atalhos:  pixi run <tarefa>
+# ----------------------------------------------------------------------------
+[tasks]
+lab = "jupyter lab"
+check = "python verificar_ambiente.py"
+preview = "quarto preview"
+render = "quarto render"
+
+# ============================================================================
+# GPU (opcional). O ambiente acima e de CPU, que roda em qualquer maquina. Se
+# voce tem placa NVIDIA e quer acelerar, NAO edite o bloco de CPU acima; crie um
+# ambiente extra com um "feature" de CUDA. Esboco (descomente e ajuste a versao):
+#
+# [feature.gpu.pypi-dependencies]
+# torch = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
+# torchvision = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
+#
+# [environments]
+# gpu = ["gpu"]
+#
+# Uso:  pixi run -e gpu lab
+# ============================================================================

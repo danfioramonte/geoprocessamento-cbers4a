@@ -15,11 +15,10 @@ execute:
 lang: pt
 
 website:
-  title: "Geoprocessamento com imagens CBERS-4A"
+  title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2"
   description: "CBERS-4A e Sentinel-2: do download da imagem à substituição de pixels"
   site-url: "https://danfioramonte.github.io/geoprocessamento-cbers4a/"
   repo-url: "https://github.com/danfioramonte/geoprocessamento-cbers4a"
-  repo-actions: [issue]
 
   navbar:
     left:
@@ -30,8 +29,10 @@ website:
     right:
       - icon: github
         href: https://github.com/danfioramonte/geoprocessamento-cbers4a
+        target: _blank
       - icon: youtube
         href: https://www.youtube.com/@MapearUnesp
+        target: _blank
 
   sidebar:
     style: docked

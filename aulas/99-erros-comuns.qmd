@@ -1,7 +1,154 @@
 ---
 title: "Erros comuns"
+subtitle: "Antes de abrir uma issue, procure o seu erro aqui"
+engine: markdown
 ---
 
-::: {.callout-note}
-Página em construção. O vídeo desta aula ainda não foi publicado.
+Esta página cresce conforme os problemas aparecem. Se o seu não estiver aqui,
+[abra uma issue](https://github.com/danfioramonte/geoprocessamento-cbers4a/issues)
+informando o sistema operacional, a saída completa de `pixi run check` e a
+mensagem de erro inteira.
+
+Não use os comentários do YouTube para pedir ajuda: não há como formatar código
+lá, e a resposta se perde para quem vier depois.
+
+## Instalação
+
+### "pixi não é reconhecido como um comando"
+
+Duas causas possíveis:
+
+1. **Você não reabriu o terminal.** O instalador do pixi adiciona o programa ao
+   PATH, mas isso só vale em terminais abertos **depois** da instalação. Feche
+   todas as janelas de terminal, abra de novo e teste com `pixi --version`.
+2. **A instalação não terminou.** Rode de novo, em um PowerShell:
+
+   ```powershell
+   powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
+   ```
+
+### "Python não foi encontrado; executar sem argumentos para instalar do Microsoft Store"
+
+Esse aviso vem de um atalho falso que o Windows instala por padrão: ele finge
+ser o Python e responde isso quando nada real está no PATH. Com o pixi você
+**não** chama `python` diretamente — use `pixi run python ...` ou `pixi run lab`,
+que usam o Python do ambiente do projeto.
+
+Se quiser desativar o atalho falso de vez: Configurações → Aplicativos →
+Configurações avançadas do aplicativo → **Aliases de execução de aplicativo** →
+desligue `python.exe` e `python3.exe`.
+
+::: {.callout-warning}
+Não instale o Python do python.org para "resolver" isso. O pixi já traz o seu
+próprio Python, e ter dois instalados é a causa mais comum de erros confusos
+mais adiante.
 :::
+
+### O Windows bloqueou o `instalar_ambiente.bat`
+
+O SmartScreen desconfia de arquivos `.bat` baixados da internet. É esperado.
+Você pode clicar em "Mais informações" → "Executar assim mesmo", ou simplesmente
+rodar os comandos manualmente, na pasta do projeto:
+
+```bash
+pixi install
+pixi run check
+```
+
+### `pixi install` fica parado por muito tempo
+
+Na primeira vez o pixi baixa o Python, o GDAL, o PyTorch e o restante — pode
+levar alguns minutos, e a barra às vezes parece parada sem estar. Espere. Se
+travar de verdade (rede caindo, por exemplo), interrompa com `Ctrl+C` e rode
+`pixi install` de novo: ele aproveita o que já baixou.
+
+### Quero começar o ambiente do zero
+
+Apague a pasta oculta `.pixi` e recrie. **Não** apague o `pixi.lock` — é ele que
+garante a reprodução.
+
+```bash
+rmdir /s /q .pixi
+pixi install
+```
+
+### Erros estranhos de leitura de arquivo, sem padrão claro
+
+Quase sempre é o caminho. Duas causas no Windows:
+
+**Acentos e espaços.** Uma pasta como `C:\Users\João Paulo\Área de Trabalho\`
+quebra a leitura no GDAL de formas difíceis de diagnosticar. Trabalhe em
+`C:\geo\`.
+
+**OneDrive.** A Área de Trabalho e a pasta Documentos costumam estar
+sincronizadas com o OneDrive, que tenta enviar cada GeoTIFF gerado para a
+nuvem e trava o processamento. Mantenha os dados fora dele.
+
+## Execução
+
+### `ModuleNotFoundError`, mesmo tendo instalado tudo
+
+Você provavelmente rodou o `python` do sistema, e não o do ambiente. Sempre
+execute através do pixi, na pasta do projeto:
+
+```bash
+pixi run lab
+pixi run python meu_script.py
+```
+
+Se o pacote realmente não estiver lá, confirme que ele está no `pixi.toml` e
+rode `pixi install`.
+
+### O BOA falha com "cannot find the sixs executable"
+
+O BOA depende do programa **6S**, que não é uma biblioteca Python e sim um
+executável. No pixi ele vem do pacote conda `sixs`, já listado no `pixi.toml`.
+Confirme com:
+
+```bash
+pixi run check
+```
+
+A linha "6S (binario)" deve aparecer como `[ OK ]`. Se estiver ausente, cheque
+se `sixs` continua no `pixi.toml` e rode `pixi install` de novo.
+
+### `CUDA out of memory`
+
+O recorte é grande demais para a memória da placa. Reduza o `edge_size` ou
+processe em blocos menores. Sem placa NVIDIA isso não acontece: roda em CPU,
+só mais devagar.
+
+### `ModuleNotFoundError: No module named 'cubo'` (no Colab)
+
+No ambiente local o `cubo` já vem instalado pelo pixi. Esse erro costuma
+aparecer **no Colab**, onde ele é instalado à parte:
+
+```bash
+pip install cubo
+```
+
+### O download do modelo do SEN2SR trava no meio
+
+Rode a célula de novo. O `mlstac` retoma de onde parou.
+
+## Quarto
+
+### `Unable to locate an installed version of Python 3`
+
+O Quarto foi chamado fora do ambiente do projeto. Chame-o **através do pixi**,
+que coloca o Python certo no caminho:
+
+```bash
+pixi run preview      # ou:  pixi run render
+```
+
+Se quiser conferir manualmente qual Python o Quarto enxerga:
+
+```bash
+pixi run python -c "import sys; print(sys.executable)"
+pixi run quarto check jupyter
+```
+
+O caminho impresso deve apontar para dentro da pasta `.pixi` do projeto. Se
+aparecer `WindowsApps` no meio, é o atalho falso do Windows — veja o item
+"Python não foi encontrado" acima.

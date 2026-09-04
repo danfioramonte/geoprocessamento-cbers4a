@@ -5,26 +5,34 @@ Rode este arquivo sempre que algo parar de funcionar. Ele diz exatamente
 qual biblioteca esta faltando, em vez de deixar voce interpretar um
 traceback de trinta linhas.
 
-    conda activate geoproc
-    python verificar_ambiente.py
+    pixi run check
+
+(equivalente a:  pixi run python verificar_ambiente.py)
 """
 
 import importlib
 import platform
+import shutil
 import sys
 
 OK = "[ OK ]"
 FALHOU = "[FALHA]"
 
-# (modulo para importar, nome no pip/conda, em qual aula e usado)
+# (modulo para importar, nome amigavel, em qual aula e usado)
 PACOTES = [
     ("numpy", "numpy", "todas"),
     ("rasterio", "rasterio", "todas"),
+    ("pystac_client", "pystac-client", "00 (aquisicao)"),
+    ("requests", "requests", "00 (aquisicao)"),
+    ("PIL", "pillow", "00 (aquisicao)"),
+    ("folium", "folium", "00 (aquisicao)"),
     ("geopandas", "geopandas", "todas"),
     ("rioxarray", "rioxarray", "todas"),
     ("xarray", "xarray", "todas"),
     ("matplotlib", "matplotlib", "todas"),
     ("skimage", "scikit-image", "01 e 02"),
+    ("Py6S", "py6s", "01 (BOA)"),
+    ("arosics", "arosics", "coregistro"),
     ("torch", "torch", "02 e 03"),
     ("torchvision", "torchvision", "02"),
     ("omnicloudmask", "omnicloudmask", "02"),
@@ -59,6 +67,19 @@ def main():
             print(f"{FALHOU} {nome_pacote:<18} {'ausente':<12} (aula {aula})")
             faltando.append(nome_pacote)
 
+    # O 6S nao e um pacote Python: e um EXECUTAVEL que o Py6S chama. Precisa
+    # estar no PATH do ambiente. No conda-forge quem instala isso e o pacote
+    # "sixs". Sem ele, a Aula 01 roda o TOA mas falha no BOA.
+    print()
+    sixs_bin = shutil.which("sixs") or shutil.which("sixsV1.1")
+    if sixs_bin:
+        print(f"{OK}   6S (binario)       encontrado   ({sixs_bin})")
+    else:
+        print(f"{FALHOU} 6S (binario)       ausente      (aula 01 BOA)")
+        print("        O BOA depende do executavel 6S. No pixi ele vem do")
+        print("        pacote conda 'sixs'. Confirme que 'sixs' esta no pixi.toml.")
+        faltando.append("sixs")
+
     # Situacao da GPU: nao e obrigatorio, mas muda o tempo de execucao
     print()
     try:
@@ -77,13 +98,13 @@ def main():
     print()
     print("=" * 62)
     if faltando:
-        print("  Faltam pacotes. Com o ambiente geoproc ativado, rode:")
+        print("  Faltam pacotes. Confira se eles estao no pixi.toml e rode:")
         print()
-        print(f"      pip install {' '.join(faltando)}")
+        print("      pixi install")
         print()
-        print("  Se o problema persistir, apague e recrie o ambiente:")
-        print("      conda env remove -n geoproc")
-        print("      conda env create -f env\\environment.yml")
+        print("  Se o problema persistir, apague o ambiente e recrie:")
+        print("      (Windows)  rmdir /s /q .pixi   &&  pixi install")
+        print("      (Linux/Mac) rm -rf .pixi       &&  pixi install")
     else:
         print("  Tudo certo. Voce pode comecar pela Aula 01.")
     print("=" * 62)

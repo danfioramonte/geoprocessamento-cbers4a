@@ -2,23 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Aula 03 — Substituindo pixels com nuvem usando SEN2SR – Geoprocessamento com imagens CBERS-4A</title>
+<title>Aula 03 — Substituindo pixels com nuvem usando SEN2SR – Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -77,10 +74,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2bff8de579bfbea2a895c50d60f87590.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fb5670f5af5b608e6ffea10bfbc97ea6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -120,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Geoprocessamento com imagens CBERS-4A</span>
+    <span class="navbar-title">Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Procurar"></div>
@@ -140,12 +137,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/danfioramonte/geoprocessamento-cbers4a"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/danfioramonte/geoprocessamento-cbers4a" target="_blank"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.youtube.com/@MapearUnesp"> <i class="bi bi-youtube" role="img">
+    <a class="nav-link" href="https://www.youtube.com/@MapearUnesp" target="_blank"> <i class="bi bi-youtube" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -190,7 +187,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../aulas/00-ambiente.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aula 00 — Instalando o Miniconda</span></a>
+ <span class="menu-text">Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -246,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#montando-o-cubo-sentinel-2" id="toc-montando-o-cubo-sentinel-2" class="nav-link" data-scroll-target="#montando-o-cubo-sentinel-2">Montando o cubo Sentinel-2</a></li>
   <li><a href="#erros-comuns-nesta-aula" id="toc-erros-comuns-nesta-aula" class="nav-link" data-scroll-target="#erros-comuns-nesta-aula">Erros comuns nesta aula</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/danfioramonte/geoprocessamento-cbers4a/issues/new" class="toc-action"><i class="bi bi-github"></i>Criar uma issue</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -314,23 +311,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="escolha-a-sua-trilha" class="level2">
 <h2 class="anchored" data-anchor-id="escolha-a-sua-trilha">Escolha a sua trilha</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Google Colab</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Windows (miniconda)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Google Colab</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Windows (pixi)</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>Se você não tem placa de vídeo NVIDIA, esta é a trilha mais confortável. Clique no botão do Colab no topo da página.</p>
 <p>Antes de rodar qualquer célula, ative a GPU gratuita:</p>
 <p><strong>Ambiente de execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU</strong></p>
-<div id="3b03c3da" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="co"># Instalação (só no Colab, leva cerca de 2 minutos)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="op">!</span>pip install <span class="op">-</span>q sen2sr mlstac</span>
-<span id="cb1-3"><a href="#cb1-3" aria-label="3"></a><span class="op">!</span>pip install <span class="op">-</span>q git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>ESDS<span class="op">-</span>Leipzig<span class="op">/</span>cubo.git</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="0e66344c" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Instalação (só no Colab, leva cerca de 2 minutos)</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="op">!</span>pip install <span class="op">-</span>q sen2sr mlstac</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="op">!</span>pip install <span class="op">-</span>q git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>ESDS<span class="op">-</span>Leipzig<span class="op">/</span>cubo.git</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Para acessar a sua cena CBERS, monte o Google Drive:</p>
-<div id="dca14594" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
-<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a>drive.mount(<span class="st">'/content/drive'</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a>CAMINHO_CBERS <span class="op">=</span> <span class="st">'/content/drive/MyDrive/geoproc/cbers_recorte.tif'</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="809a6c87" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
+<span id="cb2-2"><a href="#cb2-2"></a>drive.mount(<span class="st">'/content/drive'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a>CAMINHO_CBERS <span class="op">=</span> <span class="st">'/content/drive/MyDrive/geoproc/cbers_recorte.tif'</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -347,12 +344,25 @@ Aviso
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>Abra o <strong>Anaconda Prompt (miniconda3)</strong>, vá até a pasta do projeto e ative o ambiente que você criou na Aula 00:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a><span class="ex">conda</span> activate geoproc</span>
-<span id="cb3-2"><a href="#cb3-2" aria-label="2"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se a lista de bibliotecas der erro, rode <code>python verificar_ambiente.py</code> antes de seguir.</p>
-<div id="e9d25f1e" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a>CAMINHO_CBERS <span class="op">=</span> <span class="vs">r'C:</span><span class="er">\</span><span class="vs">geo</span><span class="dv">\d</span><span class="vs">ados</span><span class="er">\</span><span class="vs">cbers_recorte</span><span class="dv">.</span><span class="vs">tif'</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Abra o terminal (PowerShell), vá até a pasta do projeto e abra o Jupyter Lab pelo pixi:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">cd</span> C:<span class="dt">\g</span>eo<span class="dt">\g</span>eoprocessamento-cbers4a</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">pixi</span> run lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>O <code>pixi run</code> já usa o ambiente do projeto — não existe “ativar ambiente”. Se algo der erro, rode <code>pixi run check</code> antes de seguir. Ele diz exatamente qual biblioteca está faltando.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Dica</span>“pixi não é reconhecido” ou “Python não foi encontrado”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Se o terminal reclamar do <code>pixi</code>, feche e reabra o terminal (o PATH só atualiza depois de reabrir) e confirme com <code>pixi --version</code>. Não instale o Python do python.org nem da Microsoft Store: o pixi já traz o seu próprio, e ter outro Python instalado é a causa mais comum de erros confusos.</p>
+</div>
+</div>
+<div id="22acf0bb" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>CAMINHO_CBERS <span class="op">=</span> <span class="vs">r'C:</span><span class="er">\</span><span class="vs">geo</span><span class="dv">\d</span><span class="vs">ados</span><span class="er">\</span><span class="vs">cbers_recorte</span><span class="dv">.</span><span class="vs">tif'</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -375,39 +385,39 @@ Aviso
 <section id="baixando-o-modelo" class="level2">
 <h2 class="anchored" data-anchor-id="baixando-o-modelo">Baixando o modelo</h2>
 <p>O código abaixo é idêntico nas duas trilhas.</p>
-<div id="e5e992cb" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-label="1"></a><span class="im">import</span> mlstac</span>
-<span id="cb5-2"><a href="#cb5-2" aria-label="2"></a><span class="im">import</span> torch</span>
-<span id="cb5-3"><a href="#cb5-3" aria-label="3"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a><span class="co"># Baixa apenas o modelo Lite</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a>mlstac.download(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>    <span class="bu">file</span><span class="op">=</span><span class="st">"https://huggingface.co/tacofoundation/sen2sr/resolve/main/SEN2SRLite/main/mlm.json"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>    output_dir<span class="op">=</span><span class="st">"model/SEN2SRLite"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a><span class="bu">print</span>(<span class="ss">f"Rodando em: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>model <span class="op">=</span> mlstac.load(<span class="st">"model/SEN2SRLite"</span>).compiled_model(device<span class="op">=</span>device)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>model <span class="op">=</span> model.to(device)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2f431458" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> mlstac</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="im">import</span> torch</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># Baixa apenas o modelo Lite</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>mlstac.download(</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="bu">file</span><span class="op">=</span><span class="st">"https://huggingface.co/tacofoundation/sen2sr/resolve/main/SEN2SRLite/main/mlm.json"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    output_dir<span class="op">=</span><span class="st">"model/SEN2SRLite"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="bu">print</span>(<span class="ss">f"Rodando em: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a>model <span class="op">=</span> mlstac.load(<span class="st">"model/SEN2SRLite"</span>).compiled_model(device<span class="op">=</span>device)</span>
+<span id="cb5-14"><a href="#cb5-14"></a>model <span class="op">=</span> model.to(device)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="montando-o-cubo-sentinel-2" class="level2">
 <h2 class="anchored" data-anchor-id="montando-o-cubo-sentinel-2">Montando o cubo Sentinel-2</h2>
 <p>Aqui está a vantagem de usar o <code>cubo</code>: você não precisa ter nenhuma imagem Sentinel-2 no computador. A biblioteca busca a cena no catálogo e devolve só o recorte que você pediu.</p>
-<div id="a983204e" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-label="1"></a><span class="im">import</span> cubo</span>
-<span id="cb6-2"><a href="#cb6-2" aria-label="2"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-label="3"></a>da <span class="op">=</span> cubo.create(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-label="4"></a>    lat<span class="op">=-</span><span class="fl">19.3</span>,           <span class="co"># ajuste para a sua área</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-label="5"></a>    lon<span class="op">=-</span><span class="fl">43.6</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-label="6"></a>    collection<span class="op">=</span><span class="st">"sentinel-2-l2a"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-label="7"></a>    bands<span class="op">=</span>[<span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span>, <span class="st">"B05"</span>, <span class="st">"B06"</span>, <span class="st">"B07"</span>, <span class="st">"B08"</span>, <span class="st">"B8A"</span>, <span class="st">"B11"</span>, <span class="st">"B12"</span>],</span>
-<span id="cb6-8"><a href="#cb6-8" aria-label="8"></a>    start_date<span class="op">=</span><span class="st">"2023-05-01"</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-label="9"></a>    end_date<span class="op">=</span><span class="st">"2023-06-30"</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-label="10"></a>    edge_size<span class="op">=</span><span class="dv">128</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-label="11"></a>    resolution<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-label="12"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="f9d252bd" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> cubo</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>da <span class="op">=</span> cubo.create(</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    lat<span class="op">=-</span><span class="fl">19.3</span>,           <span class="co"># ajuste para a sua área</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>    lon<span class="op">=-</span><span class="fl">43.6</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    collection<span class="op">=</span><span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    bands<span class="op">=</span>[<span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span>, <span class="st">"B05"</span>, <span class="st">"B06"</span>, <span class="st">"B07"</span>, <span class="st">"B08"</span>, <span class="st">"B8A"</span>, <span class="st">"B11"</span>, <span class="st">"B12"</span>],</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    start_date<span class="op">=</span><span class="st">"2023-05-01"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>    end_date<span class="op">=</span><span class="st">"2023-06-30"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    edge_size<span class="op">=</span><span class="dv">128</span>,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>    resolution<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb6-12"><a href="#cb6-12"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <!--
 A PARTIR DAQUI: normalização, inferência, reamostragem 2,5 m → 2 m,
@@ -859,7 +869,7 @@ histogram matching contra o CBERS e aplicação da máscara da Aula 02.
     </div>   
     <div class="nav-footer-center">
 <p>Material aberto sob licença MIT. Grupo de estudo MAPEAR.</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/danfioramonte/geoprocessamento-cbers4a/issues/new" class="toc-action"><i class="bi bi-github"></i>Criar uma issue</a></li></ul></div></div>
+</div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

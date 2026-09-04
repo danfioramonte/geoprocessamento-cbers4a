@@ -7,67 +7,70 @@ echo ==========================================================
 echo   Instalacao do ambiente - Grupo de Estudo Geoprocessamento
 echo ==========================================================
 echo.
-echo IMPORTANTE: este arquivo precisa ser executado pelo
-echo "Anaconda Prompt (miniconda3)", e nao pelo duplo clique.
+echo Este projeto usa o pixi para montar o ambiente Python.
+echo O pixi le o arquivo pixi.toml, baixa o proprio Python e
+echo todas as bibliotecas, e grava tudo num pixi.lock. Voce nao
+echo precisa instalar Python, Miniforge nem Anaconda a parte.
 echo.
-echo Se voce chegou aqui por duplo clique e viu um erro dizendo
-echo que "conda nao e reconhecido", feche esta janela, abra o
-echo menu Iniciar, digite "Anaconda Prompt", e a partir dele
-echo navegue ate esta pasta e rode:  instalar_ambiente.bat
+echo IMPORTANTE: rode este arquivo a partir de um terminal, de
+echo dentro da pasta do projeto. Se preferir, siga a Aula 00 e
+echo rode os comandos manualmente - sao poucos.
 echo.
 pause
 
-REM ---------- 1. Verifica se o conda existe ----------
-where conda >nul 2>nul
+REM ---------- 1. Verifica se o pixi existe ----------
+where pixi >nul 2>nul
 if errorlevel 1 (
     echo.
-    echo [ERRO] O conda nao foi encontrado.
-    echo Instale o Miniconda antes de continuar. Veja a Aula 00.
+    echo [ERRO] O pixi nao foi encontrado no PATH.
+    echo.
+    echo Instale o pixi antes de continuar. Em um PowerShell, rode:
+    echo.
+    echo     powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 ^| iex"
+    echo.
+    echo Depois FECHE e reabra o terminal (para o PATH atualizar) e
+    echo rode este arquivo de novo. Veja a Aula 00 para os detalhes.
     echo.
     pause
     exit /b 1
 )
 
-REM ---------- 2. Configura o solver rapido ----------
+REM ---------- 2. Cria o ambiente a partir do pixi.toml ----------
 echo.
-echo [1/4] Configurando o solver libmamba (deixa a instalacao muito mais rapida)...
-call conda config --set solver libmamba
-call conda config --set channel_priority strict
-
-REM ---------- 3. Cria o ambiente ----------
+echo [1/2] Criando o ambiente com "pixi install".
+echo       Na primeira vez leva alguns minutos (baixa Python, GDAL,
+echo       PyTorch etc.). NAO feche a janela.
 echo.
-echo [2/4] Criando o ambiente "geoproc".
-echo       Isso pode levar de 10 a 25 minutos. NAO feche a janela.
-echo.
-call conda env create -f env\environment.yml
+call pixi install
 if errorlevel 1 (
     echo.
-    echo [AVISO] A criacao falhou. Se a mensagem diz que o ambiente
-    echo         ja existe, rode o comando abaixo para recriar:
+    echo [AVISO] A instalacao falhou. Se a mensagem citar rede ou
+    echo canal, tente de novo com a internet estavel. Para comecar
+    echo do zero, apague a pasta oculta .pixi e rode de novo:
     echo.
-    echo         conda env remove -n geoproc
+    echo     rmdir /s /q .pixi
+    echo     pixi install
     echo.
     pause
     exit /b 1
 )
 
-REM ---------- 4. Registra o kernel no Jupyter ----------
+REM ---------- 3. Testa ----------
 echo.
-echo [3/4] Registrando o ambiente no Jupyter...
-call conda run -n geoproc python -m ipykernel install --user --name geoproc --display-name "Python (geoproc)"
-
-REM ---------- 5. Testa ----------
+echo [2/2] Verificando se tudo foi instalado corretamente...
 echo.
-echo [4/4] Verificando se tudo foi instalado corretamente...
-echo.
-call conda run -n geoproc python verificar_ambiente.py
+call pixi run check
 
 echo.
 echo ==========================================================
-echo   Pronto. Para usar o ambiente, sempre digite antes:
+echo   Pronto.
 echo.
-echo       conda activate geoproc
+echo   Para trabalhar, nesta pasta rode:
 echo.
+echo       pixi run lab        (abre o Jupyter Lab)
+echo       pixi run preview    (pre-visualiza o site Quarto)
+echo.
+echo   Nao existe "activate": o "pixi run" ja usa o ambiente certo.
 echo ==========================================================
 echo.
 pause

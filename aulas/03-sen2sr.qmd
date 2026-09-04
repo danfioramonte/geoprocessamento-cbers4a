@@ -74,18 +74,28 @@ O Colab apaga tudo quando a sessão encerra. Salve os resultados no Drive antes
 de fechar, ou você vai precisar processar de novo.
 :::
 
-### Windows (miniconda)
+### Windows (pixi)
 
-Abra o **Anaconda Prompt (miniconda3)**, vá até a pasta do projeto e ative o
-ambiente que você criou na Aula 00:
+Abra o terminal (PowerShell), vá até a pasta do projeto e abra o Jupyter Lab
+pelo pixi:
 
 ```bash
-conda activate geoproc
-jupyter lab
+cd C:\geo\geoprocessamento-cbers4a
+pixi run lab
 ```
 
-Se a lista de bibliotecas der erro, rode `python verificar_ambiente.py` antes de
-seguir.
+O `pixi run` já usa o ambiente do projeto — não existe "ativar ambiente". Se
+algo der erro, rode `pixi run check` antes de seguir. Ele diz exatamente qual
+biblioteca está faltando.
+
+::: {.callout-tip}
+## "pixi não é reconhecido" ou "Python não foi encontrado"
+
+Se o terminal reclamar do `pixi`, feche e reabra o terminal (o PATH só atualiza
+depois de reabrir) e confirme com `pixi --version`. Não instale o Python do
+python.org nem da Microsoft Store: o pixi já traz o seu próprio, e ter outro
+Python instalado é a causa mais comum de erros confusos.
+:::
 
 ```{python}
 #| eval: false

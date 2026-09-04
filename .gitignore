@@ -28,6 +28,12 @@ __pycache__/
 .venv/
 env_local/
 
+# ---- pixi ----
+# A pasta do ambiente e local e nao vai pro Git.
+# ATENCAO: o pixi.lock NAO entra aqui - ele garante a reproducao e
+# precisa ser versionado.
+.pixi/
+
 # ---- Sistema ----
 .DS_Store
 Thumbs.db

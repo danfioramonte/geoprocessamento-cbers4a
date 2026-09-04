@@ -2,29 +2,61 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Erros comuns – Geoprocessamento com imagens CBERS-4A</title>
+<title>Erros comuns – Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -42,10 +74,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2bff8de579bfbea2a895c50d60f87590.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fb5670f5af5b608e6ffea10bfbc97ea6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -85,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Geoprocessamento com imagens CBERS-4A</span>
+    <span class="navbar-title">Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Procurar"></div>
@@ -105,12 +137,12 @@ ul.task-list li input[type="checkbox"] {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/danfioramonte/geoprocessamento-cbers4a"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/danfioramonte/geoprocessamento-cbers4a" target="_blank"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.youtube.com/@MapearUnesp"> <i class="bi bi-youtube" role="img">
+    <a class="nav-link" href="https://www.youtube.com/@MapearUnesp" target="_blank"> <i class="bi bi-youtube" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -155,7 +187,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../aulas/00-ambiente.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aula 00 — Instalando o Miniconda</span></a>
+ <span class="menu-text">Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -200,8 +232,34 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#instalação" id="toc-instalação" class="nav-link active" data-scroll-target="#instalação">Instalação</a>
+  <ul class="collapse">
+  <li><a href="#pixi-não-é-reconhecido-como-um-comando" id="toc-pixi-não-é-reconhecido-como-um-comando" class="nav-link" data-scroll-target="#pixi-não-é-reconhecido-como-um-comando">“pixi não é reconhecido como um comando”</a></li>
+  <li><a href="#python-não-foi-encontrado-executar-sem-argumentos-para-instalar-do-microsoft-store" id="toc-python-não-foi-encontrado-executar-sem-argumentos-para-instalar-do-microsoft-store" class="nav-link" data-scroll-target="#python-não-foi-encontrado-executar-sem-argumentos-para-instalar-do-microsoft-store">“Python não foi encontrado; executar sem argumentos para instalar do Microsoft Store”</a></li>
+  <li><a href="#o-windows-bloqueou-o-instalar_ambiente.bat" id="toc-o-windows-bloqueou-o-instalar_ambiente.bat" class="nav-link" data-scroll-target="#o-windows-bloqueou-o-instalar_ambiente.bat">O Windows bloqueou o <code>instalar_ambiente.bat</code></a></li>
+  <li><a href="#pixi-install-fica-parado-por-muito-tempo" id="toc-pixi-install-fica-parado-por-muito-tempo" class="nav-link" data-scroll-target="#pixi-install-fica-parado-por-muito-tempo"><code>pixi install</code> fica parado por muito tempo</a></li>
+  <li><a href="#quero-começar-o-ambiente-do-zero" id="toc-quero-começar-o-ambiente-do-zero" class="nav-link" data-scroll-target="#quero-começar-o-ambiente-do-zero">Quero começar o ambiente do zero</a></li>
+  <li><a href="#erros-estranhos-de-leitura-de-arquivo-sem-padrão-claro" id="toc-erros-estranhos-de-leitura-de-arquivo-sem-padrão-claro" class="nav-link" data-scroll-target="#erros-estranhos-de-leitura-de-arquivo-sem-padrão-claro">Erros estranhos de leitura de arquivo, sem padrão claro</a></li>
+  </ul></li>
+  <li><a href="#execução" id="toc-execução" class="nav-link" data-scroll-target="#execução">Execução</a>
+  <ul class="collapse">
+  <li><a href="#modulenotfounderror-mesmo-tendo-instalado-tudo" id="toc-modulenotfounderror-mesmo-tendo-instalado-tudo" class="nav-link" data-scroll-target="#modulenotfounderror-mesmo-tendo-instalado-tudo"><code>ModuleNotFoundError</code>, mesmo tendo instalado tudo</a></li>
+  <li><a href="#o-boa-falha-com-cannot-find-the-sixs-executable" id="toc-o-boa-falha-com-cannot-find-the-sixs-executable" class="nav-link" data-scroll-target="#o-boa-falha-com-cannot-find-the-sixs-executable">O BOA falha com “cannot find the sixs executable”</a></li>
+  <li><a href="#cuda-out-of-memory" id="toc-cuda-out-of-memory" class="nav-link" data-scroll-target="#cuda-out-of-memory"><code>CUDA out of memory</code></a></li>
+  <li><a href="#modulenotfounderror-no-module-named-cubo-no-colab" id="toc-modulenotfounderror-no-module-named-cubo-no-colab" class="nav-link" data-scroll-target="#modulenotfounderror-no-module-named-cubo-no-colab"><code>ModuleNotFoundError: No module named 'cubo'</code> (no Colab)</a></li>
+  <li><a href="#o-download-do-modelo-do-sen2sr-trava-no-meio" id="toc-o-download-do-modelo-do-sen2sr-trava-no-meio" class="nav-link" data-scroll-target="#o-download-do-modelo-do-sen2sr-trava-no-meio">O download do modelo do SEN2SR trava no meio</a></li>
+  </ul></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a>
+  <ul class="collapse">
+  <li><a href="#unable-to-locate-an-installed-version-of-python-3" id="toc-unable-to-locate-an-installed-version-of-python-3" class="nav-link" data-scroll-target="#unable-to-locate-an-installed-version-of-python-3"><code>Unable to locate an installed version of Python 3</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -209,6 +267,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../aulas/99-erros-comuns.html">Apoio</a></li><li class="breadcrumb-item"><a href="../aulas/99-erros-comuns.html">Erros comuns</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Erros comuns</h1>
+<p class="subtitle lead">Antes de abrir uma issue, procure o seu erro aqui</p>
 </div>
 
 
@@ -225,21 +284,103 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-note callout-titled">
+<p>Esta página cresce conforme os problemas aparecem. Se o seu não estiver aqui, <a href="https://github.com/danfioramonte/geoprocessamento-cbers4a/issues">abra uma issue</a> informando o sistema operacional, a saída completa de <code>pixi run check</code> e a mensagem de erro inteira.</p>
+<p>Não use os comentários do YouTube para pedir ajuda: não há como formatar código lá, e a resposta se perde para quem vier depois.</p>
+<section id="instalação" class="level2">
+<h2 class="anchored" data-anchor-id="instalação">Instalação</h2>
+<section id="pixi-não-é-reconhecido-como-um-comando" class="level3">
+<h3 class="anchored" data-anchor-id="pixi-não-é-reconhecido-como-um-comando">“pixi não é reconhecido como um comando”</h3>
+<p>Duas causas possíveis:</p>
+<ol type="1">
+<li><p><strong>Você não reabriu o terminal.</strong> O instalador do pixi adiciona o programa ao PATH, mas isso só vale em terminais abertos <strong>depois</strong> da instalação. Feche todas as janelas de terminal, abra de novo e teste com <code>pixi --version</code>.</p></li>
+<li><p><strong>A instalação não terminou.</strong> Rode de novo, em um PowerShell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm -useb https://pixi.sh/install.ps1 | iex"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+</section>
+<section id="python-não-foi-encontrado-executar-sem-argumentos-para-instalar-do-microsoft-store" class="level3">
+<h3 class="anchored" data-anchor-id="python-não-foi-encontrado-executar-sem-argumentos-para-instalar-do-microsoft-store">“Python não foi encontrado; executar sem argumentos para instalar do Microsoft Store”</h3>
+<p>Esse aviso vem de um atalho falso que o Windows instala por padrão: ele finge ser o Python e responde isso quando nada real está no PATH. Com o pixi você <strong>não</strong> chama <code>python</code> diretamente — use <code>pixi run python ...</code> ou <code>pixi run lab</code>, que usam o Python do ambiente do projeto.</p>
+<p>Se quiser desativar o atalho falso de vez: Configurações → Aplicativos → Configurações avançadas do aplicativo → <strong>Aliases de execução de aplicativo</strong> → desligue <code>python.exe</code> e <code>python3.exe</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Página em construção. O vídeo desta aula ainda não foi publicado.</p>
+<p>Não instale o Python do python.org para “resolver” isso. O pixi já traz o seu próprio Python, e ter dois instalados é a causa mais comum de erros confusos mais adiante.</p>
 </div>
 </div>
+</section>
+<section id="o-windows-bloqueou-o-instalar_ambiente.bat" class="level3">
+<h3 class="anchored" data-anchor-id="o-windows-bloqueou-o-instalar_ambiente.bat">O Windows bloqueou o <code>instalar_ambiente.bat</code></h3>
+<p>O SmartScreen desconfia de arquivos <code>.bat</code> baixados da internet. É esperado. Você pode clicar em “Mais informações” → “Executar assim mesmo”, ou simplesmente rodar os comandos manualmente, na pasta do projeto:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">pixi</span> install</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="ex">pixi</span> run check</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="pixi-install-fica-parado-por-muito-tempo" class="level3">
+<h3 class="anchored" data-anchor-id="pixi-install-fica-parado-por-muito-tempo"><code>pixi install</code> fica parado por muito tempo</h3>
+<p>Na primeira vez o pixi baixa o Python, o GDAL, o PyTorch e o restante — pode levar alguns minutos, e a barra às vezes parece parada sem estar. Espere. Se travar de verdade (rede caindo, por exemplo), interrompa com <code>Ctrl+C</code> e rode <code>pixi install</code> de novo: ele aproveita o que já baixou.</p>
+</section>
+<section id="quero-começar-o-ambiente-do-zero" class="level3">
+<h3 class="anchored" data-anchor-id="quero-começar-o-ambiente-do-zero">Quero começar o ambiente do zero</h3>
+<p>Apague a pasta oculta <code>.pixi</code> e recrie. <strong>Não</strong> apague o <code>pixi.lock</code> — é ele que garante a reprodução.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">rmdir</span> /s /q .pixi</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">pixi</span> install</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="erros-estranhos-de-leitura-de-arquivo-sem-padrão-claro" class="level3">
+<h3 class="anchored" data-anchor-id="erros-estranhos-de-leitura-de-arquivo-sem-padrão-claro">Erros estranhos de leitura de arquivo, sem padrão claro</h3>
+<p>Quase sempre é o caminho. Duas causas no Windows:</p>
+<p><strong>Acentos e espaços.</strong> Uma pasta como <code>C:\Users\João Paulo\Área de Trabalho\</code> quebra a leitura no GDAL de formas difíceis de diagnosticar. Trabalhe em <code>C:\geo\</code>.</p>
+<p><strong>OneDrive.</strong> A Área de Trabalho e a pasta Documentos costumam estar sincronizadas com o OneDrive, que tenta enviar cada GeoTIFF gerado para a nuvem e trava o processamento. Mantenha os dados fora dele.</p>
+</section>
+</section>
+<section id="execução" class="level2">
+<h2 class="anchored" data-anchor-id="execução">Execução</h2>
+<section id="modulenotfounderror-mesmo-tendo-instalado-tudo" class="level3">
+<h3 class="anchored" data-anchor-id="modulenotfounderror-mesmo-tendo-instalado-tudo"><code>ModuleNotFoundError</code>, mesmo tendo instalado tudo</h3>
+<p>Você provavelmente rodou o <code>python</code> do sistema, e não o do ambiente. Sempre execute através do pixi, na pasta do projeto:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">pixi</span> run lab</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="ex">pixi</span> run python meu_script.py</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se o pacote realmente não estiver lá, confirme que ele está no <code>pixi.toml</code> e rode <code>pixi install</code>.</p>
+</section>
+<section id="o-boa-falha-com-cannot-find-the-sixs-executable" class="level3">
+<h3 class="anchored" data-anchor-id="o-boa-falha-com-cannot-find-the-sixs-executable">O BOA falha com “cannot find the sixs executable”</h3>
+<p>O BOA depende do programa <strong>6S</strong>, que não é uma biblioteca Python e sim um executável. No pixi ele vem do pacote conda <code>sixs</code>, já listado no <code>pixi.toml</code>. Confirme com:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="ex">pixi</span> run check</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A linha “6S (binario)” deve aparecer como <code>[ OK ]</code>. Se estiver ausente, cheque se <code>sixs</code> continua no <code>pixi.toml</code> e rode <code>pixi install</code> de novo.</p>
+</section>
+<section id="cuda-out-of-memory" class="level3">
+<h3 class="anchored" data-anchor-id="cuda-out-of-memory"><code>CUDA out of memory</code></h3>
+<p>O recorte é grande demais para a memória da placa. Reduza o <code>edge_size</code> ou processe em blocos menores. Sem placa NVIDIA isso não acontece: roda em CPU, só mais devagar.</p>
+</section>
+<section id="modulenotfounderror-no-module-named-cubo-no-colab" class="level3">
+<h3 class="anchored" data-anchor-id="modulenotfounderror-no-module-named-cubo-no-colab"><code>ModuleNotFoundError: No module named 'cubo'</code> (no Colab)</h3>
+<p>No ambiente local o <code>cubo</code> já vem instalado pelo pixi. Esse erro costuma aparecer <strong>no Colab</strong>, onde ele é instalado à parte:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">pip</span> install cubo</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="o-download-do-modelo-do-sen2sr-trava-no-meio" class="level3">
+<h3 class="anchored" data-anchor-id="o-download-do-modelo-do-sen2sr-trava-no-meio">O download do modelo do SEN2SR trava no meio</h3>
+<p>Rode a célula de novo. O <code>mlstac</code> retoma de onde parou.</p>
+</section>
+</section>
+<section id="quarto" class="level2">
+<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
+<section id="unable-to-locate-an-installed-version-of-python-3" class="level3">
+<h3 class="anchored" data-anchor-id="unable-to-locate-an-installed-version-of-python-3"><code>Unable to locate an installed version of Python 3</code></h3>
+<p>O Quarto foi chamado fora do ambiente do projeto. Chame-o <strong>através do pixi</strong>, que coloca o Python certo no caminho:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">pixi</span> run preview      <span class="co"># ou:  pixi run render</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se quiser conferir manualmente qual Python o Quarto enxerga:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">pixi</span> run python <span class="at">-c</span> <span class="st">"import sys; print(sys.executable)"</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="ex">pixi</span> run quarto check jupyter</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>O caminho impresso deve apontar para dentro da pasta <code>.pixi</code> do projeto. Se aparecer <code>WindowsApps</code> no meio, é o atalho falso do Windows — veja o item “Python não foi encontrado” acima.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -650,7 +791,7 @@ Nota
     </div>   
     <div class="nav-footer-center">
 <p>Material aberto sob licença MIT. Grupo de estudo MAPEAR.</p>
-<div class="toc-actions"><ul><li><a href="https://github.com/danfioramonte/geoprocessamento-cbers4a/issues/new" class="toc-action"><i class="bi bi-github"></i>Criar uma issue</a></li></ul></div></div>
+</div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
