@@ -1,7 +1,547 @@
 ---
-title: "Aula 01 — De DN para TOA e BOA"
+title: "Aula 01 — De DN para reflectância (TOA e BOA)"
+subtitle: "Calibração radiométrica, correção atmosférica com o 6S e fusão com a pancromática"
+author: "Danilo Fioramonte"
+date: "2026-09-08"
 ---
 
-::: {.callout-note}
-Página em construção. O vídeo desta aula ainda não foi publicado.
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/01_toa_boa.ipynb){target="_blank"}
+
+{{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}
+
+## O que vamos aprender
+
+A Aula 00 deixou em `data/raw` cinco GeoTIFFs em **números digitais** — quatro bandas
+multiespectrais de 8 m e uma pancromática de 2 m. Número digital não é uma grandeza física:
+é o valor que o conversor analógico-digital do sensor gravou. Ele depende do ganho da câmera,
+da posição do Sol no dia da passagem e do que a atmosfera fez com a luz no caminho. Duas cenas
+da mesma área em datas diferentes não são comparáveis em DN.
+
+Nesta aula transformamos esse número numa grandeza física e comparável, em quatro trechos:
+
+| etapa | de | para | onde acontece |
+|---|---|---|---|
+| calibração radiométrica | DN | radiância (W m⁻² sr⁻¹ µm⁻¹) | bandas MS de 8 m |
+| reflectância TOA | radiância | ρ no topo da atmosfera | bandas MS de 8 m |
+| correção atmosférica (6S) | ρ TOA | ρ de superfície (BOA) | bandas MS de 8 m |
+| fusão Gram-Schmidt | MS 8 m + PAN 2 m | RGBN de 2 m | grade da pancromática |
+
+Ao final você tem `data/interim/pansharpening_<DATA>_boa.tif`: quatro bandas em reflectância de
+superfície, 2 m, prontas para a detecção de nuvem da Aula 02.
+
+::: {.callout-important}
+## A ordem importa: converter ANTES de fundir
+
+A conversão é feita nas bandas multiespectrais **nativas de 8 m, antes da fusão**. A fusão
+redistribui valores entre as bandas e não preserva a linearidade radiométrica banda a banda —
+aplicar coeficientes de calibração sobre um produto já fusionado seria uma aproximação.
+Convertendo antes, a fusão passa a operar em espaço de reflectância.
+
+Isso **não** torna a fusão radiometricamente rigorosa: o Gram-Schmidt continua sem preservar
+exatamente a resposta espectral. O que muda é que as entradas passam a ser fisicamente válidas.
 :::
+
+::: {.callout-note}
+## Por que ir até BOA e não parar no TOA
+
+Porque na Aula 03 vamos colar pedaços de **Sentinel-2 L2A** dentro desta imagem, e o L2A é
+reflectância **de superfície**. Comparar e harmonizar duas imagens no mesmo nível radiométrico
+é muito mais defensável do que corrigir a diferença depois, no ajuste empírico da emenda.
+
+Fora do curso, o TOA continua sendo suficiente para muita coisa: índices dentro de uma mesma
+cena, inspeção visual, classificação de uma data só. O BOA é o que permite **comparar datas e
+sensores**.
+:::
+
+## Antes de começar
+
+::: {.panel-tabset}
+
+### Windows (pixi)
+
+Abra o PowerShell na pasta do projeto e suba o Jupyter Lab:
+
+```powershell
+cd C:\geo\geoprocessamento-cbers4a
+pixi run lab
+```
+
+Abra `colab/01_toa_boa.ipynb`. O ambiente já tem o Py6S **e** o executável do 6S — as duas
+células de instalação do topo do notebook não fazem nada aqui.
+
+### Google Colab
+
+Clique no botão do Colab no topo da página. Diferente das outras aulas, aqui a instalação tem
+**duas células e um reinício da sessão** no meio: o 6S não é uma biblioteca Python, é um
+programa em Fortran, e no Colab ele só chega pelo conda.
+
+```{python}
+#| eval: false
+# célula 1 — instala o conda na sessão; o ambiente REINICIA aqui
+!pip install -q condacolab
+import condacolab
+condacolab.install()
+```
+
+```{python}
+#| eval: false
+# célula 2 — rode DEPOIS do reinício
+!mamba install -q -y -c conda-forge rasterio pyproj py6s sixs pystac-client requests
+```
+
+::: {.callout-warning}
+Espere a mensagem de reinício antes de rodar a segunda célula. Se você rodar as duas juntas, a
+segunda executa no ambiente antigo e não instala nada.
+:::
+
+:::
+
+O notebook também traz uma célula que baixa `aulas_cbers.py` e a pasta `config/` do repositório.
+`aulas_cbers.py` guarda, de forma condensada, as etapas das aulas anteriores — é o que permite
+começar o curso por qualquer aula. Se você não fez a Aula 00, ele baixa a cena para você.
+
+```{python}
+#| eval: false
+import aulas_cbers as ac
+ac.configurar_gdal()
+
+CENA_ID = ac.CENA_PADRAO      # CBERS_4A_WPM_20260301_203_141_L4
+NIVEL = "boa"                 # "boa" (recomendado) ou "toa"
+ESCALA = ac.ESCALA            # 10000: reflectância 0-1 gravada como int16
+NODATA = ac.NODATA            # -9999
+
+arquivos = ac.arquivos_da_cena(CENA_ID)
+if len(arquivos) < 5:
+    arquivos = ac.preparar_aula_01(CENA_ID)   # baixa do STAC, mesmo bbox da Aula 00
+```
+
+::: {.callout-warning}
+`CENA_ID` precisa ser o `id` da cena que **você** escolheu na Aula 00, e o bbox precisa ser o
+mesmo em todas as aulas. É essa disciplina que faz o coregistro do AROSICS fechar na Aula 03.
+:::
+
+## 1. Calibração: de DN para radiância
+
+Ao lado de cada banda, a Aula 00 baixou o **XML de metadados** do produto. É de lá que vem tudo
+o que a física da conversão precisa:
+
+- `absoluteCalibrationCoefficient` — um ganho por banda, que transforma DN em radiância;
+- `sunPosition/elevation` — a elevação do Sol no momento da passagem;
+- a data da passagem, que dá a distância Terra-Sol.
+
+A convenção é **multiplicativa e sem offset**:
+
+$$L_\lambda = DN \times G_\lambda$$
+
+::: {.callout-note collapse="true"}
+## Por que o offset é zero
+
+@pinto_first_2016 confirmam a forma $L = G \cdot DN + b$ para os sensores CBERS. Eles
+ajustaram ganho e intercepto por regressão sobre dois alvos de calibração (Dunas de Algodones e
+Libya-4) e **todos os interceptos saíram estatisticamente consistentes com zero** — as
+incertezas do intercepto variaram de 95% a 850%. Os ganhos publicados são os de intercepto
+forçado em zero, com R² entre 0,98 e 1,00.
+
+Fisicamente é o que se espera: sem energia incidente na abertura, a resposta é zero. E o XML do
+WPM, coerentemente, traz só o ganho — não existe campo de offset.
+:::
+
+```{python}
+#| eval: false
+meta = ac.ler_xml(CENA_ID)      # coeficientes + geometria solar, do XML
+esun = ac.ler_esun()            # config/esun_wpm.json
+
+quando = date.fromisoformat(meta["data"])
+d = ac.distancia_terra_sol(quando)
+cos_z = math.cos(math.radians(meta["zenite_solar"]))
+
+print(f"elevação solar : {meta['elevacao_solar']:.4f}°")
+print(f"zênite solar   : {meta['zenite_solar']:.4f}°  (cos = {cos_z:.5f})")
+print(f"distância T-S  : {d:.5f} UA")
+```
+
+## 2. De radiância para reflectância TOA
+
+$$\rho_{TOA} = \frac{\pi \, d^2 \, L_\lambda}{ESUN_\lambda \, \cos\theta_z}$$
+
+onde $d$ é a distância Terra-Sol em unidades astronômicas (função do dia do ano), $\theta_z$ é o
+ângulo zenital solar (90° menos a elevação) e $ESUN_\lambda$ é a irradiância solar
+exoatmosférica da banda.
+
+O $ESUN$ do WPM vem de `config/esun_wpm.json`, com valores publicados pela **CRESDA** (a
+operadora chinesa do satélite) e derivados da resposta espectral real do sensor. Não é
+aproximação por adoção de outro sensor — o arquivo documenta a fonte e a incerteza.
+
+::: {.callout-important}
+## Nodata: zero em QUALQUER banda, não em todas
+
+O produto usa `0` para "sem dado". Marcamos como nodata o pixel que vale zero em **qualquer**
+banda, e não só o que vale zero em todas as quatro.
+
+A razão é física: em reflectância TOA o azul **nunca** é zero sobre a terra, porque a radiância
+de trajetória do espalhamento Rayleigh garante sinal até dentro de sombra profunda. Um zero
+isolado, portanto, não é alvo escuro — é artefato da borda da faixa imageada. Se ficar como
+válido, entra na fusão deformando a estatística por banda e depois contamina a harmonização da
+Aula 03.
+:::
+
+```{python}
+#| eval: false
+zeros = np.zeros(forma, dtype=bool)
+for n in dn:
+    zeros |= (dn[n] == 0)
+valido = ~zeros
+
+radiancia, toa = {}, {}
+for n, nome in ac.BANDAS_NATIVAS.items():
+    radiancia[n] = ac.dn_para_radiancia(dn[n], meta["coeficientes"][n])
+    toa[n] = ac.radiancia_para_toa(radiancia[n], esun[n], d, cos_z)
+```
+
+### 2.1 Conferindo antes de seguir
+
+Trinta segundos aqui evitam refazer tudo depois. Se a convenção do coeficiente estivesse
+invertida (divisiva em vez de multiplicativa), a reflectância passaria de 1,0 na maioria dos
+pixels — fisicamente impossível. Se o vermelho e o NIR estivessem trocados, o NDVI ficaria
+negativo sobre vegetação.
+
+Faixas esperadas em TOA:
+
+| alvo | vermelho | NIR | NDVI |
+|---|---|---|---|
+| vegetação densa | 0,03–0,10 | 0,20–0,45 | 0,45–0,80 |
+| solo exposto | próximos entre si | próximos entre si | 0,05–0,25 |
+| água | — | < 0,06 | negativo |
+
+O notebook traz uma função `sanidade()` que amostra 200 mil pixels válidos, imprime os
+percentis por banda e o NDVI, e avisa quando algo sai da faixa.
+
+## 3. De TOA para BOA: a correção atmosférica com o 6S
+
+A reflectância TOA ainda inclui o que a atmosfera fez com a luz: **espalhamento** (que
+acrescenta brilho, sobretudo no azul), **absorção** por vapor d'água e ozônio (que tira sinal) e
+o efeito de vizinhança. O **6S** [@vermote_second_1997] modela isso e devolve três coeficientes
+por banda, que invertem a relação:
+
+$$y = x_a L - x_b \qquad\qquad \rho_{BOA} = \frac{y}{1 + x_c \, y}$$
+
+O $x_b$ é o termo que a atmosfera **acrescenta** — a radiância de trajetória. Ele é maior no
+azul, que é onde o espalhamento Rayleigh domina. Se você rodar a correção e o azul não cair,
+o 6S provavelmente não rodou.
+
+### 3.1 Os três parâmetros atmosféricos
+
+Os coeficientes dependem da geometria (Sol e sensor), da altitude do alvo e do estado da
+atmosfera no dia — três números que ficam em `config/atmosfera_rio_claro.json`:
+
+| parâmetro | o que é | onde obter |
+|---|---|---|
+| `aot550` | profundidade óptica de aerossol em 550 nm | MCD19A2 (MAIAC) ou AERONET |
+| `vapor_agua_gcm2` | coluna de vapor d'água (g/cm²) | MERRA-2 (`TQV`) ou ERA5 |
+| `ozonio_cmatm` | coluna de ozônio (cm-atm) | MERRA-2 (`TO3`) ou OMI/TROPOMI |
+| `altitude_alvo_km` | altitude média do terreno | qualquer MDE; Rio Claro ≈ 0,62 km |
+
+::: {.callout-warning}
+Os valores que vêm no arquivo são **padrões plausíveis para o verão do interior paulista, não
+medidas do dia da cena**. Servem para a aula rodar de ponta a ponta. Para um trabalho
+publicável, substitua pelos valores reais — o próprio JSON explica de onde tirar cada um.
+:::
+
+::: {.callout-note collapse="true"}
+## Altitude única ou estratificada por MDE?
+
+Com AOD baixo, o termo dominante da correção é o espalhamento **Rayleigh**, que depende da
+pressão e portanto da **altitude**. Em Rio Claro o relevo é suave e uma altitude única resolve.
+
+Numa área de grande amplitude — a Serra do Cipó, por exemplo, com 600 a 1.685 m — uma altitude
+só erraria esse termo **mais do que a contribuição inteira dos aerossóis**. Ali o caminho é
+estratificar: dividir a cena em faixas de altitude por quantis com um modelo digital de
+elevação e rodar o 6S uma vez por faixa.
+:::
+
+### 3.2 Escolhendo o AOD quando você não tem a medida do dia
+
+Dos três, o **AOD** é o que mais mexe no resultado e o mais difícil de obter. Dá para estimá-lo
+a partir da própria imagem, com um método antigo e conhecido: o **critério do alvo escuro**.
+
+Numa cena com água ou sombra densa, o pixel mais escuro tem reflectância de superfície no azul
+perto de **zero, mas não negativa** — em torno de 0,005. Se o AOD informado for alto demais, o
+6S subtrai mais radiância de trajetória do que existe e o percentil 1 do azul **afunda abaixo de
+zero**. Se for baixo demais, sobra brilho atmosférico e o percentil 1 fica alto.
+
+Então: roda-se o 6S só na banda azul, com vários AOD, e escolhe-se o que deixa o alvo escuro no
+lugar certo. O notebook faz isso automaticamente com `AJUSTAR_AOD = True` (custa uns 30 s):
+
+```{python}
+#| eval: false
+for aod in [0.03, 0.05, 0.08, 0.12, 0.16, 0.22]:
+    xa, xb, xc = ac.coeficientes_6s(meta, dict(atm, aot550=aod), 1)   # 1 = azul
+    y = xa * L_azul - xb
+    r = y / (1.0 + xc * y)
+    print(f"{aod:>6.2f}  p1={np.percentile(r, 1):+.4f}  negativos={100*(r<0).mean():.1f}%")
+
+aod_sugerido = min(testes, key=lambda a: abs(testes[a][0] - 0.005))
+```
+
+Na cena do curso, a busca sai assim:
+
+{{< embed ../colab/01_toa_boa.ipynb#tbl-aod >}}
+
+É uma **estimativa, não uma medida** — mas é muito melhor que um chute, e pode ser declarada no
+método. Depois de rodar, traga o valor sugerido para dentro do JSON, para congelar a escolha.
+
+O efeito da correção aparece direto no histograma: o **azul cai** — era o mais contaminado pelo
+espalhamento — e o **NDVI sobe**, porque o vermelho cai proporcionalmente mais que o NIR.
+
+{{< embed ../colab/01_toa_boa.ipynb#fig-toa-boa >}}
+
+### 3.3 Reflectância negativa: o que é normal e o que é sintoma
+
+Olhando os valores em ponto flutuante, antes de gravar, você vai encontrar **valores
+negativos**. Isso assusta na primeira vez, então vale separar três coisas.
+
+::: {.callout-important}
+## Um pouco de negativo é esperado — no cálculo, não no arquivo
+
+Reflectância de superfície levemente negativa é resultado normal de qualquer correção
+atmosférica, e os produtos operacionais convivem com ela: a faixa **válida** do produto de
+reflectância de superfície do **Landsat Collection 2 (USGS) vai de −0,2 a 1,6**. Sobre água,
+sombra profunda e asfalto molhado o sinal real é tão baixo que o erro do modelo — alguns
+milésimos — atravessa o zero.
+
+Só que reflectância negativa **não existe fisicamente**: é ruído em torno de zero, não medida.
+Por isso o arquivo sai com **piso em 0**, e o diagnóstico roda **antes** do piso. Ou seja: o
+sintoma continua visível na tabela, e o `.tif` não carrega um número impossível.
+:::
+
+O que **é** sintoma:
+
+- a **mediana** de alguma banda negativa;
+- **mais de uns 5%** dos pixels de uma banda abaixo de zero.
+
+Nos dois casos não é ruído, é correção demais — quase sempre **AOD alto demais**. Volte para a
+seção 3.2. O notebook imprime essa tabela automaticamente e diz qual dos dois casos é o seu:
+
+```{python}
+#| eval: false
+neg = diagnostico_negativos(refl, valido)
+```
+
+{{< embed ../colab/01_toa_boa.ipynb#tbl-negativos >}}
+
+A gravação recorta na faixa `[PISO_REFLECTANCIA, TETO_REFLECTANCIA]`, que por padrão é
+`[0.0, 1.6]`. O piso introduz um viés positivo nos alvos escuros, mas medido nesta cena ele dá
+**+1 na escala de 10.000** — 0,0001 de reflectância —, e só nos pixels ceifados. Se o seu
+trabalho precisa da cauda negativa preservada (comparação direta com produtos Landsat C2, por
+exemplo), ponha `PISO_REFLECTANCIA = -0.2` e declare isso no método.
+
+Repare que o nodata é `-9999`, não `0`: o pixel ceifado vale 0 e **continua sendo dado
+válido**. Isso é diferente do que faz a ferramenta do ArcGIS, que grava em `uint16` com
+`NoData = 0` — lá o negativo é ceifado em zero *e desaparece*, virando buraco na imagem.
+
+## 4. Gravando o composto RGBN de 8 m
+
+Saída em `int16` com a reflectância multiplicada por **10.000** — a mesma escala do produto
+Sentinel-2 L2A, o que evita conversão na Aula 03. O nodata vai como `-9999`, e não como 0,
+porque agora zero é um valor de reflectância legítimo.
+
+A ordem física passa a ser **RGBN** (vermelho, verde, azul, NIR), diferente da ordem nativa do
+CBERS (azul, verde, vermelho, NIR). E os nomes das bandas são **gravados dentro do arquivo**.
+
+::: {.callout-important}
+## Por que carimbar o nome das bandas
+
+A ordem das bandas costuma ser a única informação do pipeline que vive apenas na cabeça de quem
+roda os scripts. Uma troca silenciosa de R por B não quebra nada: as métricas continuam saindo,
+só que erradas. Com os nomes gravados no GeoTIFF, as aulas seguintes **leem** a ordem do
+metadado em vez de assumir — e avisam quando não conseguem.
+:::
+
+```{python}
+#| eval: false
+with rasterio.open(rgbcomp, "w", **perfil) as dst:
+    for i, n in enumerate(ac.ORDEM_SAIDA, start=1):        # [3, 2, 1, 4] = R, G, B, NIR
+        arr = refl[ac.BANDAS_NATIVAS[n]]
+        esc = np.clip(np.rint(arr * ESCALA), PISO_ESC, TETO_ESC)
+        dst.write(np.where(valido, esc, NODATA).astype("int16"), i)
+        dst.set_band_description(i, ac.NOMES_SAIDA[i - 1])  # o carimbo
+```
+
+Ao lado do GeoTIFF sai um `.params.json` com tudo o que foi usado: coeficientes de calibração,
+ESUN, geometria solar, parâmetros atmosféricos, coeficientes do 6S e o diagnóstico de negativos.
+É o que permite, meses depois, responder como aquele arquivo foi gerado.
+
+## 5. Alinhando a multiespectral com a pancromática
+
+A Aula 00 recortou cada banda calculando a janela **na grade dela**: a MS arredonda em passos de
+8 m, a PAN em passos de 2 m. As duas cobrem a mesma AOI, mas podem terminar deslocadas em alguns
+metros e com uma razão que não é exatamente 4:1.
+
+O Gram-Schmidt precisa de razão inteira e origens coincidentes. Sem isso a fusão introduz um
+deslocamento subpixel que se propaga por tudo — inclusive pelo coregistro da Aula 03, onde ele
+apareceria como um erro sem origem aparente.
+
+```{python}
+#| eval: false
+ms, pan, t_ms, t_pan, crs, nod_ms, FATOR = ac.alinhar_ms_pan(rgbcomp, arquivos["BAND0"])
+# recorta as duas à extensão comum encaixada na grade de 8 m e reamostra a PAN
+# para a grade derivada dessa, com fator exato de 4
+```
+
+## 6. A fusão Gram-Schmidt
+
+O Gram-Schmidt é um método de **substituição de componente** [@laben_process_2000]. Em quatro
+passos:
+
+1. simula uma pancromática a partir das bandas multiespectrais — uma soma ponderada,
+   $I = \sum_i w_i \, MS_i$;
+2. casa **média e desvio** da pancromática real com os dessa simulada, produzindo $PAN'$;
+3. calcula $\Delta = PAN' - I$, que é o **detalhe espacial** que só a pancromática tem;
+4. devolve esse detalhe a cada banda com um ganho próprio,
+   $MS_i^{fus} = MS_i + g_i \Delta$, com $g_i = \mathrm{cov}(MS_i, I) / \mathrm{var}(I)$
+   [@aiazzi_improving_2007].
+
+::: {.callout-note}
+## Por que tanto faz a PAN estar em DN ou em reflectância
+
+O passo 2. O casamento de média e desvio absorve qualquer fator multiplicativo da pancromática,
+então a escala dela não chega na saída. Isso **não** valeria para Brovey ou IHS, onde a escala
+da PAN propaga direto para o resultado — se um dia você trocar de método, converta a
+pancromática também.
+:::
+
+### Como simular a pancromática — e por que isso decide tudo
+
+A forma clássica do passo 1 usa **pesos fixos**: R 0,166 | G 0,167 | B 0,167 | NIR 0,5, os
+padrões genéricos do ArcGIS Pro, já que o CBERS-4A não consta na lista de sensores da
+ferramenta. O peso alto no NIR é coerente com a pancromática do WPM, que cobre 0,45–0,90 µm e
+portanto **inclui o infravermelho próximo**.
+
+O problema é que esses pesos são um chute sobre a resposta espectral do sensor. Com 0,5 no NIR,
+$I$ fica dominado pelo infravermelho e **não se parece com a pancromática de verdade**. Aí o
+passo 3 degringola: $\Delta$ deixa de ser só detalhe de alta frequência e passa a carregar o
+descasamento espectral inteiro, que é injetado nas bandas e empurra os alvos escuros para baixo
+de zero.
+
+A correção é a de @aiazzi_improving_2007: degradar a pancromática para a grade de 8 m e achar
+**por mínimos quadrados** os coeficientes que melhor a reproduzem a partir das próprias bandas
+multiespectrais,
+
+$$I = a_0 + \sum_i a_i \, MS_i .$$
+
+É o método conhecido como **GSA** (*Gram-Schmidt Adaptive*), e é o que o notebook usa. Medido na
+cena do curso:
+
+| | pesos fixos | regressão (GSA) |
+|---|---:|---:|
+| desvio de $\Delta$ (escala 10.000) | 233 | **29** |
+| pixels negativos, banda azul | 4,0 % | **1,9 %** |
+| RMSE espectral, azul¹ | 123 | **102** |
+| RMSE espectral, NIR¹ | 244 | **140** |
+
+: Pesos fixos contra intensidade por regressão {.striped}
+
+¹ diferença entre a média 4×4 da fusão e a banda original de 8 m — quanto menor, menos a fusão
+distorceu a cor.
+
+::: {.callout-tip}
+## Sem ArcGIS
+
+A implementação do notebook é em NumPy e substitui o `CreatePansharpenedRasterDataset` do ArcGIS
+Pro, que exige licença e só roda no interpretador do próprio ArcGIS. Duas diferenças que valem
+declarar no método: a intensidade aqui é estimada por regressão, não pelos pesos fixos; e a
+saída é `int16` com `NoData = -9999`, enquanto a ferramenta da ESRI grava `uint16` com
+`NoData = 0` — lá o pixel que a fusão empurrou para baixo de zero é ceifado **e vira buraco**.
+:::
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Função gram_schmidt()"
+def gram_schmidt(ms_up, pan, pesos, valido):
+    """ms_up: (4, h, w) já na grade da PAN, ordem RGBN. pan: (h, w)."""
+    w = np.array([pesos[n] for n in NOMES], dtype="float32")
+    w = w / w.sum()
+
+    I = np.tensordot(w, ms_up, axes=(0, 0))          # pancromática simulada
+
+    # estatísticas numa amostra: com dezenas de milhões de pixels, média,
+    # desvio e covariância convergem muito antes de usar todos eles
+    idx = np.flatnonzero(valido.ravel())
+    if idx.size > 2_000_000:
+        idx = np.random.default_rng(42).choice(idx, 2_000_000, replace=False)
+    pa = pan.ravel()[idx].astype("float64")
+    ia = I.ravel()[idx].astype("float64")
+
+    pan_ajustada = (pan - pa.mean()) * (ia.std() / max(pa.std(), 1e-9)) + ia.mean()
+    delta = pan_ajustada - I
+
+    ia_c = ia - ia.mean()
+    var_I = max(float(ia.var()), 1e-9)
+    saida, ganhos = np.empty_like(ms_up), {}
+    for i, nome in enumerate(NOMES):
+        bi = ms_up[i].ravel()[idx].astype("float64")
+        g = float(np.dot(bi - bi.mean(), ia_c) / ia_c.size) / var_I
+        ganhos[nome] = g
+        saida[i] = ms_up[i] + g * delta
+    return saida, ganhos
+```
+
+::: {.callout-warning}
+## A fusão também produz negativos
+
+Mesmo com a intensidade por regressão sobra uma cauda abaixo de zero: o termo $g_i \Delta$ é
+aditivo e negativo onde a pancromática é escura, e a reamostragem cúbica da multiespectral
+produz *undershoot* nas bordas de contraste alto. Sobre alvos que já estavam perto de zero — o
+azul sobre água e sombra —, o resultado atravessa.
+
+Na cena do curso isso dá 1,9 % da banda azul e 1,1 % da vermelha, com **mediana dos negativos em
+torno de −0,005**: ruído em volta do zero, não medida. O notebook imprime a tabela e grava com o
+piso de `PISO_REFLECTANCIA`, registrando no `.params.json` quantos pixels foram ceifados.
+:::
+
+E o resultado, na área do curso:
+
+{{< embed ../colab/01_toa_boa.ipynb#fig-fusao >}}
+
+<!-- Rode também a última célula do notebook (o zoom 8 m x 2 m) e salve; depois
+     acrescente aqui:  {{< embed ../colab/01_toa_boa.ipynb#fig-fusao-zoom >}}  -->
+
+## O que ficou pronto
+
+```
+data/interim/rgbcomp_<DATA>_boa.tif          8 m, RGBN, reflectância x10000
+data/interim/pansharpening_<DATA>_boa.tif    2 m, RGBN, reflectância x10000   <- produto da aula
+data/interim/*.params.json                   o que foi usado para gerar cada um
+```
+
+Na [Aula 02](02-omnicloudmask.qmd) esse arquivo de 2 m entra no OmniCloudMask, que separa nuvem
+densa, nuvem fina e sombra de nuvem.
+
+## Erros comuns nesta aula
+
+| O que aparece na tela | O que fazer |
+|---|---|
+| `cannot find the sixs executable` | O Py6S está instalado, o 6S não. No pixi: `pixi run check`, a linha "6S (binario)" tem que estar `[ OK ]`. No Colab: rode as duas células de instalação, com o reinício entre elas. |
+| O notebook avisa "Py6S/6S indisponível — seguindo em TOA" | Mesma causa acima. A aula continua rodando, mas o produto sai em TOA e a Aula 03 vai harmonizar níveis diferentes. |
+| `nenhum XML utilizável encontrado` | Os XML não foram baixados na Aula 00 (`com_xml=True`) ou estão em outra pasta. Sem eles não há coeficiente de calibração. |
+| Mediana de alguma banda negativa | AOD alto demais. Rode a busca da seção 3.2. |
+| NDVI p95 abaixo de 0,35 | Vermelho e NIR provavelmente trocados. Confira a ordem das bandas do arquivo de entrada. |
+| Reflectância acima de 1,0 na maioria dos pixels | Convenção do coeficiente invertida: a relação é `L = DN × G`, multiplicativa. |
+| `as bandas MS não estão na mesma grade` | Uma das bandas foi baixada com bbox diferente. Refaça a Aula 00 com o mesmo `AOI_BBOX`. |
+| `razão MS/PAN não inteira` | A pancromática não é de 2 m, ou não é da mesma cena que as multiespectrais. |
+
+## Referências
+
+::: {#refs}
+:::
+
+### Documentação e software
+
+- CRESDA. *Irradiância solar equivalente no topo da atmosfera dos sensores civis de observação
+  terrestre* (Anexo 4), rev. 2024-12-22.
+  [página da CRESDA](https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html)
+- USGS. *Landsat 8-9 Collection 2 Level 2 Science Product Guide* (LSDS-1619) — é ali que está a
+  faixa válida de reflectância de superfície, de −0,2 a 1,6.
+  [documento no USGS](https://www.usgs.gov/media/files/landsat-8-9-collection-2-level-2-science-product-guide)
+- [Py6S](https://py6s.readthedocs.io) · [rasterio](https://rasterio.readthedocs.io)

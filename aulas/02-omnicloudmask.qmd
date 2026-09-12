@@ -1,7 +1,326 @@
 ---
-title: "Aula 02 — Detecção de nuvens com OmniCloudMask"
+title: "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+subtitle: "Uma rede treinada para achar nuvem, aplicada a um sensor que ela nunca viu"
+author: "Danilo Fioramonte"
+date: "2026-09-08"
 ---
 
-::: {.callout-note}
-Página em construção. O vídeo desta aula ainda não foi publicado.
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/02_nuvens_omnicloudmask.ipynb){target="_blank"}
+
+{{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}
+
+## O que vamos aprender
+
+A cena de 2 m que saiu da Aula 01 tem nuvem em parte da área. Aqui a gente descobre **exatamente
+onde**, e grava isso como uma máscara georreferenciada — que é o que a Aula 03 vai usar para
+saber quais pixels precisam ser substituídos.
+
+O **OmniCloudMask** (OCM) [@wright_training_2025] é uma rede convolucional treinada em cenas de
+vários sensores para separar quatro classes:
+
+| valor | classe | o que é |
+|---|---|---|
+| 0 | `clear` | céu limpo — pixel utilizável |
+| 1 | `thick_cloud` | nuvem espessa, opaca |
+| 2 | `thin_cloud` | nuvem fina, cirros — deixa passar parte do sinal do solo |
+| 3 | `cloud_shadow` | sombra projetada pela nuvem |
+
+Ele usa só três bandas — **vermelho, verde e infravermelho próximo** — e é **agnóstico ao
+sensor**: não foi treinado com CBERS-4A e mesmo assim funciona, porque aprendeu a assinatura
+espectral e a textura da nuvem, não as particularidades de um satélite.
+
+::: {.callout-important}
+## A sombra conta tanto quanto a nuvem
+
+Um pixel sombreado não está coberto — a superfície aparece na imagem. Mas está com a radiância
+errada: recebeu só a luz difusa do céu, sem a componente direta do Sol. Se ele entrar numa
+classificação de uso e cobertura, vira erro silencioso, do tipo que não aparece na inspeção
+visual e aparece na matriz de confusão.
+
+Por isso a classe 3 sai junto, e por isso ela é tratada como lacuna na Aula 03.
 :::
+
+::: {.callout-note}
+## O que esta aula não é
+
+O OCM não é um detector de **haze** nem de fumaça. Uma cena com neblina generalizada, ou com
+pluma de queimada, pode sair quase toda como `clear` — porque não existe borda de nuvem, existe
+uma degradação suave do contraste. Confira a olho na pré-visualização antes de confiar.
+:::
+
+## Antes de começar
+
+Esta aula consome `data/interim/pansharpening_<DATA>_boa.tif`, o produto da
+[Aula 01](01-toa-boa.qmd). Se você está começando o curso por aqui, o notebook refaz sozinho as
+etapas anteriores com `ac.preparar_aula_02()` — baixando a cena e convertendo para reflectância.
+
+::: {.panel-tabset}
+
+### Windows (pixi)
+
+```powershell
+cd C:\geo\geoprocessamento-cbers4a
+pixi run lab
+```
+
+Abra `colab/02_nuvens_omnicloudmask.ipynb`. Nada a instalar: o `omnicloudmask` e o PyTorch já
+vêm no ambiente.
+
+### Google Colab
+
+Clique no botão do Colab no topo. Se você **já** tem o `pansharpening_*.tif` na sessão, basta:
+
+```{python}
+#| eval: false
+!pip install -q omnicloudmask
+```
+
+Se você está começando por esta aula, o atalho que refaz a Aula 01 precisa do 6S, e aí valem as
+duas células com reinício de sessão descritas na [Aula 01](01-toa-boa.qmd).
+
+:::
+
+```{python}
+#| eval: false
+CENA_ID = ac.CENA_PADRAO
+NIVEL = "boa"                 # tem que casar com o que você gerou na Aula 01
+DETECT_RES = 10.0             # resolução (m) em que a detecção acontece
+BANDA_RED, BANDA_GREEN, BANDA_NIR = 1, 2, 4     # ordem RGBN do produto da Aula 01
+PATCH, OVERLAP = 1000, 300    # janelamento interno do OCM
+```
+
+## 1. Por que detectar em 10 m, e não nos 2 m nativos
+
+Parece contraintuitivo jogar fora resolução. Três motivos:
+
+1. **O OCM foi validado na faixa de 10 a 50 m.** Fora dela o desempenho cai — a rede aprendeu a
+   nuvem numa determinada escala de textura, e em 2 m ela vê estrutura demais;
+2. **Nuvem é um objeto grande.** A borda de uma nuvem não é nítida em escala nenhuma: existe uma
+   faixa de transição de dezenas de metros. Detectar em 2 m não dá uma borda mais correta, dá
+   uma borda mais ruidosa;
+3. **Custo.** São 16 vezes menos pixels para a rede processar.
+
+A máscara sai em 10 m e depois volta para a grade nativa de 2 m por **vizinho mais próximo** — o
+único reamostrador aceitável para dado categórico. Interpolação bilinear numa máscara de classes
+produziria "nuvem 1,4", que não quer dizer nada.
+
+::: {.callout-note collapse="true"}
+## Como saber quais pixels da grade reduzida são válidos
+
+Detalhe pequeno com consequência real. A redução para 10 m é feita por **média** — e a média do
+GDAL **ignora os pixels de nodata**. Isso é bom: um bloco de 10 m que cai meio em cima da borda
+sai com a média só do que existe, sem contaminação, e a borda não se perde.
+
+O que a média não diz é **onde não sobrou nada**. Para isso lemos a **máscara** do arquivo — que
+o GDAL deriva do nodata, 255 onde há dado e 0 onde não há — reduzida do mesmo jeito: ela zera só
+nos blocos inteiramente sem dado.
+
+```python
+mascara = src.read_masks(1, out_shape=(h, w), resampling=Resampling.average)
+valido = (mascara >= 255) & np.all(det > -5000, axis=0)   # o 2º teste é cinto e suspensório
+```
+
+O que **não** funciona é procurar o valor `-9999` na grade reduzida (ele não sobrevive à média),
+nem usar `Resampling.min` para farejá-lo: `min` e companhia só valem em reprojeção, não em
+leitura.
+:::
+
+```{python}
+#| eval: false
+with rasterio.open(entrada) as src:
+    escala = src.res[0] / DETECT_RES
+    h, w = int(round(src.height * escala)), int(round(src.width * escala))
+
+    # bandas na ordem exigida pelo OCM: Red, Green, NIR
+    det = src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape=(3, h, w),
+                   resampling=Resampling.average).astype("float32")
+    mascara = src.read_masks(1, out_shape=(h, w), resampling=Resampling.average)
+    t_det = src.transform * Affine.scale(src.width / w, src.height / h)
+
+valido = (mascara >= 255) & np.all(det > -5000, axis=0)
+det[:, ~valido] = 0.0     # o OCM ignora estes pixels (no_data_value=0)
+```
+
+## 2. Rodando o OmniCloudMask
+
+Na primeira execução ele baixa os pesos (algumas centenas de MB) do Hugging Face. Se a sua rede
+bloquear o HF, troque `model_download_source` para `"google_drive"`.
+
+O OCM trabalha em blocos de `PATCH` pixels com `OVERLAP` de sobreposição e faz a média nas
+emendas. Sobreposição generosa evita costura visível entre blocos — o padrão de 300 px sobre
+blocos de 1000 é conservador de propósito.
+
+```{python}
+#| eval: false
+from omnicloudmask import predict_from_array
+
+mask = predict_from_array(
+    det,
+    patch_size=PATCH,
+    patch_overlap=OVERLAP,
+    no_data_value=0,
+    apply_no_data_mask=True,
+    model_download_source="hugging_face",
+)
+mask = np.squeeze(np.asarray(mask)).astype("uint8")
+```
+
+Com GPU leva segundos; em CPU, alguns minutos. **Não precisa de GPU** — e é por isso que esta
+aula roda bem no Colab gratuito e no seu notebook sem placa.
+
+A composição da cena do curso:
+
+{{< embed ../colab/02_nuvens_omnicloudmask.ipynb#tbl-ocm-classes >}}
+
+## 3. Olhando antes de acreditar
+
+Nenhuma máscara de nuvem é perfeita, e a hora de descobrir os erros é agora — não depois de
+preencher a cena inteira com Sentinel-2. O notebook mostra a falsa cor e a máscara lado a lado,
+mais um zoom na maior mancha de nuvem.
+
+O que conferir:
+
+- **sombra deslocada**: a sombra fica do lado oposto ao Sol em relação à nuvem. Se a classe 3
+  aparece do lado errado, alguma banda está trocada na entrada;
+- **nuvem fina confundida com alvo claro**: telhado metálico, areia e pátio de concreto às vezes
+  entram como classe 2. Numa área urbana isso acontece mais;
+- **borda**: uma faixa de classe 2 em volta da nuvem espessa é **esperada e desejável** — é a
+  transição real, e é melhor que ela entre na máscara do que fique de fora;
+- **água**: corpo d'água escuro às vezes vira sombra. Se a sua AOI tem represa, olhe com atenção.
+
+{{< embed ../colab/02_nuvens_omnicloudmask.ipynb#fig-ocm-mascara >}}
+
+{{< embed ../colab/02_nuvens_omnicloudmask.ipynb#fig-ocm-zoom >}}
+
+::: {.callout-tip}
+## Nuvem pequena também serve
+
+Não é preciso uma cena metade encoberta para a aula funcionar. Uma mancha de poucos hectares
+sobre a área urbana já produz uma lacuna real, com borda real, e é o suficiente para a Aula 03
+mostrar o preenchimento — inclusive porque fica mais fácil enxergar a emenda no zoom.
+:::
+
+## 4. As três máscaras
+
+São três arquivos, com papéis diferentes:
+
+| arquivo | grade | para que serve |
+|---|---|---|
+| `*_cloudmask_10m.tif` | 10 m | a máscara na grade em que a rede realmente decidiu — é a que você audita |
+| `*_cloudmask_native.tif` | 2 m | a que a Aula 03 consome; **precisa** estar exatamente na grade do CBERS |
+| `*_clearmask_native.tif` | 2 m | versão binária (1 = utilizável), conveniente para multiplicar por outros rasters |
+
+Todos em `uint8` com nodata 255, compressão `deflate` **sem** `predictor` — em dado categórico o
+preditor horizontal atrapalha em vez de ajudar.
+
+```{python}
+#| eval: false
+nativa = np.full((nativo["height"], nativo["width"]), 255, dtype="uint8")
+reproject(source=mask, destination=nativa,
+          src_transform=t_det, src_crs=nativo["crs"],
+          dst_transform=nativo["transform"], dst_crs=nativo["crs"],
+          resampling=Resampling.nearest)          # categórico: só vizinho mais próximo
+```
+
+## 5. Aplicando a máscara na imagem
+
+Agora gravamos uma cópia da cena em que nuvem e sombra viram **nodata**, e não zero.
+
+::: {.callout-important}
+## Nodata, não zero
+
+Zero é um valor de reflectância legítimo. Um pixel zerado entra em qualquer estatística puxando
+a média para baixo sem avisar. Como nodata, ele é ignorado pelo rasterio, pelo QGIS e — o que
+mais importa na Aula 03 — pelo AROSICS, que não vai tentar achar ponto de amarração dentro do
+buraco.
+:::
+
+Duas escolhas de escrita que numa cena de 2 m fazem diferença de minutos e de gigabytes:
+
+- **escrita em faixas de linhas**: cada banda tem centenas de MB; ler e escrever em blocos mantém
+  o pico de memória baixo;
+- **`interleave="band"`**: com `pixel`, cada bloco do arquivo guarda as quatro bandas juntas —
+  escrevendo banda a banda, o GDAL recomprime os mesmos blocos quatro vezes, e a versão antiga
+  de cada bloco vira **espaço morto** dentro do arquivo. O resultado é um GeoTIFF maior que o
+  dado cru. Com `band`, cada banda tem seus próprios blocos e a escrita fica sequencial.
+
+```{python}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Escrita da imagem mascarada, em faixas"
+with rasterio.open(entrada) as src:
+    perfil = src.profile.copy()
+    nd = src.nodata if src.nodata is not None else -9999
+    for k in ("blockxsize", "blockysize", "tiled", "interleave"):
+        perfil.pop(k, None)
+    perfil.update(nodata=nd, compress="deflate", predictor=2, tiled=True,
+                  blockxsize=512, blockysize=512, BIGTIFF="IF_SAFER",
+                  interleave="band")
+    nublado = np.isin(nativa, [1, 2, 3])
+
+    with rasterio.open(mascarada, "w", **perfil) as dst:
+        for b in range(1, src.count + 1):
+            for r0 in range(0, src.height, 2048):
+                nr = min(2048, src.height - r0)
+                jan = Window(0, r0, src.width, nr)
+                dados = src.read(b, window=jan)
+                dados[nublado[r0:r0 + nr, :]] = nd
+                dst.write(dados, b, window=jan)
+            dst.set_band_description(b, src.descriptions[b - 1])
+```
+
+{{< embed ../colab/02_nuvens_omnicloudmask.ipynb#fig-ocm-antes-depois >}}
+
+## 6. Vale a pena preencher?
+
+A pergunta prática antes da Aula 03. Se a nuvem cobre 1% da AOI, muitas vezes compensa descartar
+esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área — e aí a
+substituição com Sentinel-2 super-resolvido paga o trabalho.
+
+Não existe limiar universal. O que existe é a informação — fração contaminada, área em hectares,
+composição por classe — e a sua decisão **registrada**. O notebook grava tudo isso no
+`.params.json` ao lado da máscara.
+
+::: {.callout-note}
+## Uma terceira saída
+
+Entre descartar e preencher com outro sensor existe o meio-termo de **compor com outra data do
+próprio CBERS**, se você tiver uma cena próxima e limpa naquele pedaço. Fica na mesma
+radiometria e na mesma resolução, sem super-resolução nenhuma. A Aula 03 reserva o código `2` da
+banda de procedência exatamente para esse caso.
+:::
+
+## O que ficou pronto
+
+```
+data/interim/pansharpening_<DATA>_boa_cloudmask_10m.tif      máscara na grade de detecção
+data/interim/pansharpening_<DATA>_boa_cloudmask_native.tif   máscara em 2 m   <- Aula 03
+data/interim/pansharpening_<DATA>_boa_clearmask_native.tif   binária, 1 = utilizável
+data/interim/pansharpening_<DATA>_boa_masked.tif             cena com lacunas <- Aula 03
+```
+
+Na [Aula 03](03-sen2sr.qmd) essas lacunas são preenchidas com Sentinel-2 levado de 10 m para
+2,5 m pelo SEN2SR, coregistrado com o CBERS pelo AROSICS e harmonizado radiometricamente antes
+da emenda.
+
+## Erros comuns nesta aula
+
+| O que aparece na tela | O que fazer |
+|---|---|
+| `ResamplingAlgorithmError: <Resampling.min: 9> can be used for warp operations but not for reads and writes` | `min`, `max`, `med`, `q1`, `q3` e `sum` só valem em reprojeção, não em leitura. Para leitura reduzida use `average`, `bilinear`, `cubic` ou `nearest` — e, para saber onde há nodata, `read_masks()` com `average`. |
+| O download dos pesos trava ou dá erro de rede | Troque `model_download_source="hugging_face"` por `"google_drive"`. |
+| A máscara sai vazia (100% `clear`) | Confira a ordem das bandas: o OCM espera **Red, Green, NIR** nessa ordem. Com o produto da Aula 01 (RGBN) são os índices 1, 2 e 4. |
+| A máscara marca a cena inteira como nuvem | Provavelmente a entrada está em escala errada (DN cru misturado com reflectância) ou o nodata não foi declarado no arquivo. |
+| Sombra aparece do lado errado da nuvem | Bandas trocadas na leitura. Verifique `src.descriptions` do arquivo de entrada. |
+| `MemoryError` em CPU | Reduza `PATCH` para 500 e `OVERLAP` para 150, ou aumente `DETECT_RES` para 20 m. |
+| A máscara em 2 m não bate com a grade do CBERS na Aula 03 | Você rodou a Aula 02 sobre um pansharpening diferente do que a Aula 03 está lendo. Refaça sobre o mesmo arquivo. |
+
+## Referências
+
+::: {#refs}
+:::
+
+### Documentação e software
+
+- [OmniCloudMask no GitHub](https://github.com/DPIRD-DMA/OmniCloudMask)
+- [rasterio — reamostragem na leitura](https://rasterio.readthedocs.io/en/stable/topics/resampling.html)

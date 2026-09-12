@@ -1,0 +1,105 @@
+{
+  "_fonte": "CRESDA - Centro de Aplicacao de Satelites de Recursos da China. 'Irradiancia solar equivalente no topo da atmosfera dos sensores de satelites civis de observacao terrestre' (Anexo 4), rev. 2024-12-22. Tabela 1, linha CB04A_WPM. https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html",
+  "_unidade": "W m-2 um-1",
+  "_espectro_solar": "SMARTS_ChKur (curva de irradiancia solar exoatmosferica usada pela CRESDA)",
+  "_incerteza_espectro_solar": "A CRESDA declara os valores como referencia: RSIS de diferentes instituicoes e metodos de amostragem distintos levam a ESUN diferentes. Divergencia observada contra os valores de WFI/CBERS-4 (Pinto et al. 2016): 0.23% a 2.42%.",
+  "_justificativa": [
+    "Os limites nominais das bandas MS do WPM coincidem com os do WFI e do MUX (Tabela 1 de Pinto et al. 2016): 450-520, 520-590, 630-690, 770-890 nm.",
+    "A Figura 1 de Pinto et al. mostra que as FREs de MUX e WFI tem formas VISIVELMENTE diferentes (no NIR a resposta do WFI decai a partir de ~800 nm enquanto a do MUX se mantem alta ate ~890 nm).",
+    "Apesar dessa diferenca de forma, a ESUN dos dois sensores diverge apenas 0.00% a 0.90% (max. no vermelho; 0.64% no NIR).",
+    "Conclusao: a ESUN e robusta a variacoes substanciais na forma da FRE desde que os limites de banda sejam os mesmos. Isso sustenta empiricamente a extensao para a WPM.",
+    "Incerteza adotada para o WPM: ~1%, coerente com a divergencia MUX-WFI observada."
+  ],
+  "_convencao_radiometrica": {
+    "equacao": "L = G * DN   (offset = 0)",
+    "unidade_ganho": "(W/(m2 sr um))/DN",
+    "fonte": "CONFIRMADA POR DUAS FONTES INDEPENDENTES: (1) CRESDA, Anexo 1 (coeficientes de calibracao absoluta em orbita), nota 1: 'L = Gain*DN + Bias'; quando nao ha Bias anotado, Bias = 0. Nao ha Bias listado para CB04A_WPM. (2) Pinto et al. 2016 (Eq. 1, Tabela 8) para MUX/WFI, com todos os interceptos estatisticamente consistentes com zero.",
+    "offset_confirmado_zero": "CONFIRMADO. Pinto et al. ajustaram G e offset por regressao linear sobre dois pontos (Dunas de Algodones via metodo baseado em reflectancia + Libya-4 via calibracao cruzada com Landsat-8/OLI). Com intercepto livre, TODOS os interceptos resultaram consistentes com zero (incertezas de 95% a 850%), e o grau de liberdade do ajuste e zero (2 pontos, 2 parametros). Os ganhos publicados sao os de intercepto FORCADO em zero, com R2 entre 0.98 e 1.00 e incerteza de 2.8-3.5%. Validacao independente contra Landsat-7/ETM+: diferenca media de 2.2% com intercepto zero contra 3.3% com intercepto livre. Justificativa fisica: sem energia incidente na abertura, a resposta esperada e zero.",
+    "coerencia_wpm": "O XML L4 do WPM traz apenas absoluteCalibrationCoefficient, sem campo de offset - consistente com offset zero. Alem disso, os coeficientes do WPM (0.18-0.30) produzem Lmax de 183-305 W/(m2 sr um) em 10 bits, mesma faixa do WFI (359-510, tambem 10 bits) e do MUX (362-428, 8 bits). A hipotese divisiva daria reflectancia de ate 24 na saturacao, fisicamente impossivel.",
+    "nota_valores": "Usar SEMPRE os coeficientes do XML da cena WPM. Os ganhos de Pinto et al. sao do MUX/WFI e NAO se aplicam ao WPM - apenas a CONVENCAO e transferivel."
+  },
+  "_ordem": "Chaves seguem a numeracao NATIVA das bandas CBERS-4A/WPM.",
+  "_bandas_nativas": {
+    "0": "PAN  0.45-0.90 um",
+    "1": "AZUL 0.45-0.52 um",
+    "2": "VERDE 0.52-0.59 um",
+    "3": "VERMELHO 0.63-0.69 um",
+    "4": "NIR 0.77-0.89 um"
+  },
+  "esun": {
+    "0": 1418.75,
+    "1": 1939.89,
+    "2": 1847.82,
+    "3": 1535.15,
+    "4": 1071.41
+  },
+  "_nota_pan": "A ESUN da banda 0 (PAN) NAO consta em Pinto et al. e permanece como estimativa grosseira. Isso e inofensivo: o Gram-Schmidt casa media e desvio da pancromatica com a componente GS1 antes de substituir, absorvendo qualquer escalonamento multiplicativo da PAN. Usada apenas se exp01 --pan for invocado, para o teste de invariancia. NAO usar para reflectancia absoluta da PAN.",
+  "_robustez_mux": {
+    "_uso": "Valores MUX para verificacao de robustez: rodar o experimento com os dois conjuntos e confirmar que a conclusao Lite vs Full nao muda.",
+    "1": 1958.0,
+    "2": 1852.0,
+    "3": 1559.0,
+    "4": 1091.0
+  },
+  "_provisorio": false,
+  "_conceito_sbaf": "Pinto et al. Secao 4.1 e Eq. 5 definem o Spectral Band Adjustment Factor, razao entre reflectancias simuladas de dois sensores obtidas convoluindo um perfil hiperespectral com as respectivas FREs. E a formulacao fisica do mesmo fenomeno que a harmonizacao empirica por momentos trata entre CBERS-4A e Sentinel-2. Util para fundamentar a secao de harmonizacao na dissertacao.",
+  "_metodo": "ESUN = integral(E(lambda)*S(lambda) dlambda) / integral(S(lambda) dlambda), onde E e a irradiancia solar exoatmosferica e S a FRE da banda. Valores derivados da FRE REAL do WPM pelo operador do sensor.",
+  "_status": "OFICIAL para CB04A_WPM. Nao e mais aproximacao por adocao do WFI.",
+  "_historico_adocao_wfi": {
+    "contexto": "Antes de localizar a fonte CRESDA, adotamos a ESUN do WFI/CBERS-4 (Pinto et al. 2016).",
+    "valores_adotados": {
+      "1": 1952,
+      "2": 1852,
+      "3": 1545,
+      "4": 1098
+    },
+    "erro_retrospectivo": {
+      "azul": "-0.62%",
+      "verde": "-0.23%",
+      "vermelho": "-0.64%",
+      "nir": "-2.42%"
+    },
+    "licao": "A adocao estava correta no visivel (<0.7%) mas errava 2.4% no NIR, justamente a banda de maior peso no NDVI. Efeito no NDVI: +0.004 (vegetacao densa) a +0.009 (solo exposto)."
+  },
+  "_coeficientes_cresda_2025": {
+    "_ATENCAO": "NAO usar diretamente sem investigar. Registrado para comparacao e teste.",
+    "valores": {
+      "PAN": 0.1541,
+      "B1": 0.226,
+      "B2": 0.1936,
+      "B3": 0.1464,
+      "B4": 0.1637
+    },
+    "modo_de_ganho_2025": {
+      "PAN": 3,
+      "B1": 2,
+      "B2": 3,
+      "B3": 4,
+      "B4": 2
+    },
+    "data_geracao": "julho-setembro de 2025",
+    "divergencia_vs_xml_inpe": {
+      "PAN": 1.197,
+      "B1": 1.288,
+      "B2": 1.538,
+      "B3": 1.588,
+      "B4": 1.093
+    },
+    "hipoteses_para_a_divergencia": [
+      "Modo de ganho: a CRESDA alerta para conferir modo de ganho e nivel de integracao do produto contra os do coeficiente publicado.",
+      "Degradacao temporal: o .cal do XML e de 2019-12-20 (lancamento); a CRESDA republica anualmente.",
+      "Definicao de produto: o DN do L4 ja passou pela correcao radiometrica do INPE, entao o coeficiente do XML pode ser especifico do produto e nao do sensor bruto."
+    ],
+    "argumento_a_favor_do_xml": "Com o coeficiente CRESDA no vermelho, a saturacao em 10 bits daria reflectancia 0.43 - baixo para um sensor projetado para nao estourar em alvos terrestres claros. Com o do XML, 0.68, mais plausivel.",
+    "janela_de_validade": "A CRESDA recomenda coeficientes gerados dentro de 6 meses da data de imageamento. A cena e de 2023-08; os coeficientes de 2025 estao fora da janela. Para seguir essa rota, obter os coeficientes de 2023 no Anexo 2 (historico 2008-2025).",
+    "decisao_atual": "Manter os coeficientes do XML da cena. Testar a alternativa CRESDA-2023 com exp01 --sanidade e comparar as faixas de reflectancia e NDVI contra alvos conhecidos."
+  },
+  "_recursos_cresda": {
+    "pagina": "https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html",
+    "anexo1_coef_2025": "PDF - coeficientes em orbita do ano corrente",
+    "anexo2_coef_historico": "RAR - coeficientes 2008-2025 por banda; CONTEM OS DE 2023",
+    "anexo3_FRE": "ZIP (xlsx) - funcoes de resposta espectral de 22 cargas uteis. CONTEM A FRE DO WPM. Permite (a) derivar a ESUN de forma independente e (b) calcular o SBAF entre WPM e Sentinel-2/MSI, fundamentando fisicamente a harmonizacao.",
+    "anexo4_esun": "PDF - fonte dos valores acima",
+    "contato": "Zeng Jian - zengjian@spacechina.com"
+  }
+}

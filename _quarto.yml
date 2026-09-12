@@ -5,14 +5,44 @@ project:
     - "*.qmd"
     - "aulas/*.qmd"
 
-# "auto" congela os resultados que voce executou na sua maquina.
-# Sem isso, o GitHub Actions tentaria rodar o SEN2SR sem GPU e sem
-# as imagens, e a publicacao do site falharia.
+# Este site NAO executa codigo ao renderizar. Desligar a execucao evita
+# iniciar um kernel Python (a causa dos erros de "Python nao encontrado" e
+# de conexao no preview) e deixa o build do GitHub Pages independente do
+# ambiente pesado.
+#
+# COMO AS SAIDAS APARECEM NO SITE, ENTAO?
+# Os blocos ```{python} das aulas sao so demonstracao (#| eval: false). As
+# figuras e tabelas de verdade vem dos notebooks JA EXECUTADOS, pelo
+# shortcode de embed:
+#
+#     {{< embed ../colab/01_toa_boa.ipynb#fig-fusao >}}
+#
+# Para isso a celula do notebook precisa de um rotulo na primeira linha:
+#
+#     #| label: fig-fusao
+#     #| fig-cap: "Legenda da figura"
+#
+# O ciclo de trabalho e:
+#   1. rodar o notebook no Jupyter Lab (pixi run lab) e SALVAR
+#   2. pixi run render
+#   3. commitar o .ipynb (com as saidas) E a pasta docs/
+#
+# O Quarto ainda gera uma previa navegavel de cada notebook em docs/colab/,
+# ligada por um "Source" ao lado de cada figura. Para desligar essas
+# previas (e cortar pela metade o peso de docs/), acrescente aqui:
+#   website:
+#     notebook-links: false
 execute:
-  freeze: auto
-  warning: false
+  enabled: false
 
 lang: pt
+
+# Bibliografia e estilo ABNT, validos para TODAS as paginas do site.
+# ATENCAO: estes arquivos ficam FORA de docs/. A pasta docs/ e a saida do
+# Quarto: ele limpa e regenera o site_libs/ a cada render, e apaga qualquer
+# coisa que voce guardar la dentro. Fonte fica no repositorio, nunca na saida.
+bibliography: "referencias/Bibliotecas Python.bib"
+csl: "referencias/associacao-brasileira-de-normas-tecnicas.csl"
 
 website:
   title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2"

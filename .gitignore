@@ -29,9 +29,6 @@ __pycache__/
 env_local/
 
 # ---- pixi ----
-# A pasta do ambiente e local e nao vai pro Git.
-# ATENCAO: o pixi.lock NAO entra aqui - ele garante a reproducao e
-# precisa ser versionado.
 .pixi/
 
 # ---- Sistema ----
@@ -40,3 +37,6 @@ Thumbs.db
 desktop.ini
 
 **/*.quarto_ipynb
+
+# ---- pessoal ----
+colab/00_aquisicao_cbers_cipo.ipynb

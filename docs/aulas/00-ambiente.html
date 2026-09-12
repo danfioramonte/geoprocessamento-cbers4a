@@ -62,7 +62,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -106,6 +106,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Procurar"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -194,13 +197,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../aulas/01-toa-boa.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aula 01 — De DN para TOA e BOA</span></a>
+ <span class="menu-text">Aula 01 — De DN para reflectância (TOA e BOA)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../aulas/02-omnicloudmask.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aula 02 — Detecção de nuvens com OmniCloudMask</span></a>
+ <span class="menu-text">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -240,23 +243,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#o-que-vamos-aprender" id="toc-o-que-vamos-aprender" class="nav-link active" data-scroll-target="#o-que-vamos-aprender">O que vamos aprender</a></li>
   <li><a href="#passo-1-baixar-o-material-do-curso" id="toc-passo-1-baixar-o-material-do-curso" class="nav-link" data-scroll-target="#passo-1-baixar-o-material-do-curso">Passo 1 — Baixar o material do curso</a></li>
-  <li><a href="#passo-2-instalar-o-pixi" id="toc-passo-2-instalar-o-pixi" class="nav-link" data-scroll-target="#passo-2-instalar-o-pixi">Passo 2 — Instalar o pixi</a></li>
-  <li><a href="#passo-3-criar-o-ambiente" id="toc-passo-3-criar-o-ambiente" class="nav-link" data-scroll-target="#passo-3-criar-o-ambiente">Passo 3 — Criar o ambiente</a></li>
-  <li><a href="#passo-4-conferir-se-deu-certo" id="toc-passo-4-conferir-se-deu-certo" class="nav-link" data-scroll-target="#passo-4-conferir-se-deu-certo">Passo 4 — Conferir se deu certo</a></li>
-  <li><a href="#passo-5-abrir-o-jupyter-lab" id="toc-passo-5-abrir-o-jupyter-lab" class="nav-link" data-scroll-target="#passo-5-abrir-o-jupyter-lab">Passo 5 — Abrir o Jupyter Lab</a></li>
-  <li><a href="#passo-6---baixando-a-imagem-cbers-4a-via-api-stac" id="toc-passo-6---baixando-a-imagem-cbers-4a-via-api-stac" class="nav-link" data-scroll-target="#passo-6---baixando-a-imagem-cbers-4a-via-api-stac">Passo 6 - Baixando a imagem CBERS-4A via API STAC</a>
+  <li><a href="#passo-2-instalar-o-pixi" id="toc-passo-2-instalar-o-pixi" class="nav-link" data-scroll-target="#passo-2-instalar-o-pixi">Passo 2 — Instalar o pixi</a>
   <ul class="collapse">
-  <li><a href="#a-coleção-e-as-bandas" id="toc-a-coleção-e-as-bandas" class="nav-link" data-scroll-target="#a-coleção-e-as-bandas">6.1 A coleção e as bandas</a></li>
-  <li><a href="#preparando-o-ambiente-da-aquisição" id="toc-preparando-o-ambiente-da-aquisição" class="nav-link" data-scroll-target="#preparando-o-ambiente-da-aquisição">6.2 Preparando o ambiente da aquisição</a></li>
-  <li><a href="#configuração-e-imports" id="toc-configuração-e-imports" class="nav-link" data-scroll-target="#configuração-e-imports">6.3 Configuração e imports</a></li>
-  <li><a href="#definindo-a-área-de-interesse-aoi" id="toc-definindo-a-área-de-interesse-aoi" class="nav-link" data-scroll-target="#definindo-a-área-de-interesse-aoi">6.4 Definindo a área de interesse (AOI)</a></li>
-  <li><a href="#buscando-e-escolhendo-a-cena" id="toc-buscando-e-escolhendo-a-cena" class="nav-link" data-scroll-target="#buscando-e-escolhendo-a-cena">6.5 Buscando e escolhendo a cena</a></li>
-  <li><a href="#pré-visualização-em-rgb" id="toc-pré-visualização-em-rgb" class="nav-link" data-scroll-target="#pré-visualização-em-rgb">6.6 Pré-visualização em RGB</a></li>
-  <li><a href="#exportando-as-bandas-para-dataraw" id="toc-exportando-as-bandas-para-dataraw" class="nav-link" data-scroll-target="#exportando-as-bandas-para-dataraw">6.7 Exportando as bandas para <code>data/raw</code></a></li>
-  <li><a href="#conferindo-o-resultado" id="toc-conferindo-o-resultado" class="nav-link" data-scroll-target="#conferindo-o-resultado">6.8 Conferindo o resultado</a></li>
+  <li><a href="#criar-o-ambiente" id="toc-criar-o-ambiente" class="nav-link" data-scroll-target="#criar-o-ambiente">2.1 Criar o ambiente</a></li>
+  <li><a href="#conferir-se-deu-certo" id="toc-conferir-se-deu-certo" class="nav-link" data-scroll-target="#conferir-se-deu-certo">2.2 Conferir se deu certo</a></li>
+  <li><a href="#abrir-o-jupyter-lab" id="toc-abrir-o-jupyter-lab" class="nav-link" data-scroll-target="#abrir-o-jupyter-lab">2.3 Abrir o Jupyter Lab</a></li>
+  </ul></li>
+  <li><a href="#passo-3---baixando-a-imagem-cbers-4a-via-api-stac" id="toc-passo-3---baixando-a-imagem-cbers-4a-via-api-stac" class="nav-link" data-scroll-target="#passo-3---baixando-a-imagem-cbers-4a-via-api-stac">Passo 3 - Baixando a imagem CBERS-4A via API STAC</a>
+  <ul class="collapse">
+  <li><a href="#a-coleção-e-as-bandas" id="toc-a-coleção-e-as-bandas" class="nav-link" data-scroll-target="#a-coleção-e-as-bandas">3.1 A coleção e as bandas</a></li>
+  <li><a href="#preparando-o-ambiente-da-aquisição-colab" id="toc-preparando-o-ambiente-da-aquisição-colab" class="nav-link" data-scroll-target="#preparando-o-ambiente-da-aquisição-colab">3.2 Preparando o ambiente da aquisição (Colab)</a></li>
+  <li><a href="#configuração-e-imports" id="toc-configuração-e-imports" class="nav-link" data-scroll-target="#configuração-e-imports">3.3 Configuração e imports</a></li>
+  <li><a href="#definindo-a-área-de-interesse-aoi" id="toc-definindo-a-área-de-interesse-aoi" class="nav-link" data-scroll-target="#definindo-a-área-de-interesse-aoi">3.4 Definindo a área de interesse (AOI)</a></li>
+  <li><a href="#buscando-e-escolhendo-a-cena" id="toc-buscando-e-escolhendo-a-cena" class="nav-link" data-scroll-target="#buscando-e-escolhendo-a-cena">3.5 Buscando e escolhendo a cena</a></li>
+  <li><a href="#pré-visualização-em-rgb" id="toc-pré-visualização-em-rgb" class="nav-link" data-scroll-target="#pré-visualização-em-rgb">3.6 Pré-visualização em RGB</a></li>
+  <li><a href="#exportando-as-bandas-para-dataraw" id="toc-exportando-as-bandas-para-dataraw" class="nav-link" data-scroll-target="#exportando-as-bandas-para-dataraw">3.7 Exportando as bandas para <code>data/raw</code></a></li>
+  <li><a href="#conferindo-o-resultado" id="toc-conferindo-o-resultado" class="nav-link" data-scroll-target="#conferindo-o-resultado">3.8 Conferindo o resultado</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="..\colab\00_aquisicao_cbers-preview.html"><i class="bi bi-journal-code"></i>Aula 00 — Aquisição da imagem CBERS-4A/WPM via STAC</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -297,7 +302,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="o-que-vamos-aprender" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-vamos-aprender">O que vamos aprender</h2>
 <p>Seja muito bem-vindo(a) à primeira aula dessa mini série!</p>
-<p>Nesta aula, você vai preparar o ambiente Python que roda <strong>todas</strong> as aulas do curso: a correção atmosférica do CBERS-4A (TOA e BOA), a remoção de nuvens com o OmniCloudMask e a super-resolução do Sentinel-2 com o SEN2SR. Um “ambiente” é uma caixa isolada com uma versão do Python e um conjunto de bibliotecas fixas — que permite você gerenciar tudo de forma organizada, sem conflitos e sem mexer alterar arquivos do seu sistema.</p>
+<p>Nesta aula, você vai preparar o ambiente Python que roda <strong>todas</strong> as aulas do curso: a correção atmosférica do CBERS-4A (TOA e BOA), a remoção de nuvens com o OmniCloudMask e a super-resolução do Sentinel-2 com o SEN2SR.</p>
+<p>Um “ambiente” é uma caixa isolada com uma versão do Python e um conjunto de bibliotecas fixas — que permite você gerenciar tudo de forma organizada, sem conflitos e sem mexer alterar arquivos do seu sistema.</p>
 <p>Para montar esse ambiente vamos usar o gerenciador de ambientes <strong>pixi</strong>. Ele lê um arquivo chamado <code>pixi.toml</code> (que já vem no repositório do curso), baixa o próprio Python e todas as bibliotecas na versão certa, e registra tudo num arquivo <code>pixi.lock</code>. Esse <code>pixi.lock</code> é o que garante que o ambiente da sua máquina seja <strong>idêntico</strong> ao que utilizei no vídeo.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -314,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>A correção atmosférica <strong>BOA</strong> depende do programa <strong>Py6S</strong>, e o <strong>coregistro</strong> depende do <strong>GDAL</strong>. Esses binários, no Windows, só funcionam corretamente com <strong>conda-forge</strong>.</li>
 <li>Os modelos de aprendizado profundo (<code>omnicloudmask</code>, <code>sen2sr</code>, <code>mlstac</code>) só existem no <strong>PyPI</strong> (o repositório do <code>pip</code>).</li>
 </ul>
-<p>O <strong>pixi</strong> une os dois mundos — conda-forge e PyPI — num único arquivo e num único <code>pixi.lock</code>. Na prática, possibilita que você instale o seu ambiente de maneira correta e sem preocupações, já que esse ambiente foi testado previamente e está pronto para uso, evitando que você faça manualmente e te gere problemas.</p>
+<p>O <strong>pixi</strong> une os dois mundos — conda-forge e PyPI — num único arquivo e num único <code>pixi.lock</code>. Na prática, possibilita que você instale todas as bibliotecas no seu computador de maneira prática e sem preocupações, já que esse ambiente foi testado previamente e está pronto para uso, evitando que você precise rodar comandos manualmente e instalar diferentes versões, que podem te gerar incompatibilidades.</p>
 </div>
 </div>
 <p>As principais bibliotecas do ambiente são: <code>numpy</code>, <code>pandas</code>, <code>geopandas</code>, <code>rasterio</code>, <code>matplotlib</code>, <code>py6s</code> (BOA), <code>arosics</code> (coregistro), <code>torch</code>, <code>omnicloudmask</code>, <code>sen2sr</code> e <code>cubo</code>. Você não precisa instalar nada disso à mão: o <code>pixi.toml</code> já lista tudo.</p>
@@ -322,11 +328,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="passo-1-baixar-o-material-do-curso" class="level2">
 <h2 class="anchored" data-anchor-id="passo-1-baixar-o-material-do-curso">Passo 1 — Baixar o material do curso</h2>
 <p>Você tem duas opções.</p>
-<p><strong>Com Git</strong> (recomendado, facilita receber atualizações):</p>
+<p><strong>Com Git (se você tiver Git instalado no seu computador)</strong>:</p>
+<p>Abra o Powershell no seu computador e digite:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">cd</span> C<span class="op">:</span>\geo</span>
 <span id="cb1-2"><a href="#cb1-2"></a>git clone https<span class="op">://</span>github<span class="op">.</span><span class="fu">com</span><span class="op">/</span>danfioramonte<span class="op">/</span>geoprocessamento-cbers4a<span class="op">.</span><span class="fu">git</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">cd</span> geoprocessamento-cbers4a</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Sem Git:</strong> na <a href="https://github.com/danfioramonte/geoprocessamento-cbers4a">página do repositório</a>, clique em <strong>Code → Download ZIP</strong>, extraia para <code>C:\geo\</code> e entre na pasta pelo terminal.</p>
+<p><strong>Sem Git:</strong> na <a href="https://github.com/danfioramonte/geoprocessamento-cbers4a" target="_blank">página do repositório</a>, clique em <strong>Code → Download ZIP</strong>, extraia para <code>C:\geo\</code> e entre na pasta pelo terminal.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -337,9 +344,12 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Trabalhe em um caminho <strong>sem acentos e sem espaços</strong>, como <code>C:\geo\</code>. Pastas como <code>C:\Users\João Paulo\Área de Trabalho\</code> causam erros de leitura no GDAL que são difíceis de diagnosticar. Evite também o OneDrive: ele tenta sincronizar cada GeoTIFF gerado e trava o processamento.</p>
+<p>Trabalhe em um caminho <strong>sem acentos e sem espaços</strong>, como <code>C:\geo\</code>. Pastas como <code>C:\Users\João Paulo\Área de Trabalho\</code> causam erros de leitura no GDAL que são difíceis de diagnosticar. Evite também processar localmente arquivos em nuvem (OneDrive/Google Drive): ele tenta sincronizar cada GeoTIFF e pode travar o processamento.</p>
 </div>
 </div>
+</section>
+<section id="passo-2-instalar-o-pixi" class="level2">
+<h2 class="anchored" data-anchor-id="passo-2-instalar-o-pixi">Passo 2 — Instalar o pixi</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -350,34 +360,30 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Os passos 2 ao 5 são para quem vai processar na própria máquina. Se você pretende usar o <strong>Google Colab</strong>, não precisa instalar nada — pode pular direto para o passo <strong>VERIFICAR</strong>*. Mas lembre que o Colab apaga os arquivos ao encerrar a sessão e tem limites de tempo e disco; para áreas maiores, a instalação local compensa.</p>
+<p>O passo 2 é para quem vai processar na própria máquina. Se você pretende usar o <strong>Google Colab</strong>, não precisa instalar nada — pode pular direto para o passo 3. Mas lembre que o Colab apaga os arquivos ao encerrar a sessão e tem limites de tempo e disco; para áreas maiores, a instalação local compensa.</p>
 </div>
 </div>
-</section>
-<section id="passo-2-instalar-o-pixi" class="level2">
-<h2 class="anchored" data-anchor-id="passo-2-instalar-o-pixi">Passo 2 — Instalar o pixi</h2>
 <p>O pixi é um único programa. Você o instala <strong>uma vez</strong> na sua máquina.</p>
-<p>Abra o <strong>PowerShell</strong> (menu Iniciar → digite “PowerShell”) e cole:</p>
+<p>Abra o <strong>PowerShell</strong> (menu Iniciar → digite “PowerShell” → executar como Administrador) e cole:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm -useb https://pixi.sh/install.ps1 | iex"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Depois <strong>feche e reabra</strong> o terminal, para o PATH ser atualizado. Para verificar se funcionou, no <strong>PowerShell</strong>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1"></a>pixi <span class="op">--</span>version</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se aparecer um número de versão, está pronto. Você <strong>não</strong> precisa instalar Python nem Miniforge — o pixi cuida do Python sozinho.</p>
-</section>
-<section id="passo-3-criar-o-ambiente" class="level2">
-<h2 class="anchored" data-anchor-id="passo-3-criar-o-ambiente">Passo 3 — Criar o ambiente</h2>
-<p>Abra o <strong>PowerShell</strong> e entre na pasta do projeto:</p>
+<p>Se aparecer um número de versão, está pronto. Você <strong>não</strong> precisa instalar Python — o pixi cuida do Python sozinho.</p>
+<section id="criar-o-ambiente" class="level3">
+<h3 class="anchored" data-anchor-id="criar-o-ambiente">2.1 Criar o ambiente</h3>
+<p>Abra o <strong>PowerShell</strong> e acesse a pasta do projeto:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">cd</span> C<span class="op">:</span>\geo\geoprocessamento-cbers4a</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Dentro da pasta do projeto, rode:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1"></a>pixi install</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>O pixi vai ler o <code>pixi.toml</code>, baixar o Python, o GDAL, o PyTorch e todo o resto, e gerar o <code>pixi.lock</code>. <strong>Na primeira vez leva alguns minutos</strong> — é normal a barra parecer parada. Você só faz isso uma vez; depois o ambiente já está pronto.</p>
+<p>O pixi vai ler o <code>pixi.toml</code>, baixar o Python, o GDAL, o PyTorch e todo o resto, e gerar o <code>pixi.lock</code>. <strong>Atenção: essa etapa leva alguns minutos</strong>. Você só faz isso uma vez; depois o ambiente já está pronto.</p>
 </section>
-<section id="passo-4-conferir-se-deu-certo" class="level2">
-<h2 class="anchored" data-anchor-id="passo-4-conferir-se-deu-certo">Passo 4 — Conferir se deu certo</h2>
+<section id="conferir-se-deu-certo" class="level3">
+<h3 class="anchored" data-anchor-id="conferir-se-deu-certo">2.2 Conferir se deu certo</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1"></a>pixi run check</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Esse comando roda o <code>verificar_ambiente.py</code> dentro do ambiente e lista, uma por uma, cada biblioteca — inclusive o executável do <strong>6S</strong> (que o BOA usa). Se algo aparecer como <code>[FALHA]</code>, a própria saída diz o que fazer.</p>
 </section>
-<section id="passo-5-abrir-o-jupyter-lab" class="level2">
-<h2 class="anchored" data-anchor-id="passo-5-abrir-o-jupyter-lab">Passo 5 — Abrir o Jupyter Lab</h2>
+<section id="abrir-o-jupyter-lab" class="level3">
+<h3 class="anchored" data-anchor-id="abrir-o-jupyter-lab">2.3 Abrir o Jupyter Lab</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb7-1"><a href="#cb7-1"></a>pixi run lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Pronto: o Jupyter Lab abre <strong>já dentro do ambiente correto</strong>. Repare que não existe passo de “ativar ambiente” — o <code>pixi run</code> sempre usa o ambiente do projeto. Esse é o comando que você vai usar no início de cada aula.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -393,14 +399,13 @@ Nota
 <p>Toda vez que for trabalhar, abra o terminal, entre na pasta do projeto e use:</p>
 <ul>
 <li><code>pixi run lab</code> — abre o Jupyter Lab</li>
-<li><code>pixi run check</code> — confere o ambiente quando algo der errado</li>
-<li><code>pixi run preview</code> — pré-visualiza o site do curso (se você for editá-lo)</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="passo-6---baixando-a-imagem-cbers-4a-via-api-stac" class="level2">
-<h2 class="anchored" data-anchor-id="passo-6---baixando-a-imagem-cbers-4a-via-api-stac">Passo 6 - Baixando a imagem CBERS-4A via API STAC</h2>
+</section>
+<section id="passo-3---baixando-a-imagem-cbers-4a-via-api-stac" class="level2">
+<h2 class="anchored" data-anchor-id="passo-3---baixando-a-imagem-cbers-4a-via-api-stac">Passo 3 - Baixando a imagem CBERS-4A via API STAC</h2>
 <p>O STAC (<em>SpatioTemporal Asset Catalog</em>, ou Catálogo de Ativos Espaço-Temporais) é um site que organiza imagens de satélite de diversos provedores, incluindo o <a href="https://data.inpe.br/bdc/explorer/explore">Brazil Data Cube</a> (BDC - do INPE) que fornece as imagens CBERS-4A. Graças ao STAC, você pode “pré-processar” a imagem antes de baixá-la, como iremos fazer nesse tutorial.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -416,20 +421,15 @@ Nota
 <p>Ao fazer isso, baixamos diversas bandas espectrais de uma só vez, já recortadas para a área de interesse, economizando tempo e espaço em disco.</p>
 </div>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
-<figcaption>Abrir no Colab</figcaption>
-</figure>
-</div>
-<p>Todo o código abaixo está no notebook <strong><code>colab/00_aquisicao_cbers.ipynb</code></strong>. Você pode rodá-lo de duas formas:</p>
+<p><a href="https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
+<p>Todo o código abaixo está na pasta <strong><code>colab/00_aquisicao_cbers.ipynb</code></strong>. Você pode rodá-lo de duas formas:</p>
 <ul>
 <li><strong>Local (recomendado):</strong> com o ambiente já pronto, rode <code>pixi run lab</code>, abra o notebook e execute célula a célula. Os arquivos caem direto em <code>data/raw</code>, que é onde a Aula 01 vai procurar.</li>
 <li><strong>Colab:</strong> clique no botão acima. A primeira célula instala as bibliotecas na sessão; no fim, baixe os GeoTIFFs (ou salve no seu Drive).</li>
 </ul>
 <section id="a-coleção-e-as-bandas" class="level3">
-<h3 class="anchored" data-anchor-id="a-coleção-e-as-bandas">6.1 A coleção e as bandas</h3>
-<p>Vamos usar a coleção <strong><code>CB4A-WPM-L4-DN-1</code></strong> do BDC: imagens do sensor WPM, ortorretificadas, em <strong>números digitais</strong> (<code>int16</code>, <code>nodata = 0</code>), <strong>sem</strong> correção atmosférica — a correção é justamente o assunto da Aula 01.</p>
+<h3 class="anchored" data-anchor-id="a-coleção-e-as-bandas">3.1 A coleção e as bandas</h3>
+<p>Vamos usar a coleção <strong><code>CB4A-WPM-L4-DN-1</code></strong> do BDC: imagens do sensor WPM, ortorretificadas, em <strong>números digitais</strong> (<code>int16</code>, <code>nodata = 0</code>). A tabela abaixo resume as bandas que vamos baixar:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -478,19 +478,18 @@ Nota
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Duas particularidades desta coleção
+<span class="screen-reader-only">Importante</span>Uma particularidade desta coleção
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>1. Não há metadado de nuvem.</strong> O campo <code>eo:cloud_cover</code> vem vazio em todas as cenas WPM L4-DN, e o servidor <strong>ignora</strong> o filtro de nuvem na busca. Por isso não confiamos na query: escolhemos a cena olhando a <strong>miniatura</strong> e uma <strong>estimativa de nuvem calculada na própria AOI</strong> (seção 6.5).</p>
-<p><strong>2. Os arquivos não são COG.</strong> São TIFFs <em>striped</em> (bloco = 1 linha inteira), sem <em>overviews</em>. Na prática: ler um recorte exige baixar as <strong>linhas inteiras</strong> que o cruzam — a largura da AOI é quase de graça, mas a <strong>altura custa caro</strong>. A cena PAN tem ~56.000 × 57.700 px (3,2 gigapixels): <strong>comece com uma AOI pequena</strong> (5–10 km) e aumente depois.</p>
+<p><strong>1. Não há metadado de nuvem.</strong> O campo <code>eo:cloud_cover</code> (variável do STAC) vem vazio em todas as cenas da coleção WPM L4-DN. Ou seja: não dá para filtrar por nuvem na consulta. A escolha da cena é <strong>visual</strong>, pela miniatura (seção 3.5) e pela pré-visualização da AOI (seção 3.6) — nós iremos fazer a detecção de nuvem na Aula 02.</p>
 </div>
 </div>
 </section>
-<section id="preparando-o-ambiente-da-aquisição" class="level3">
-<h3 class="anchored" data-anchor-id="preparando-o-ambiente-da-aquisição">6.2 Preparando o ambiente da aquisição</h3>
+<section id="preparando-o-ambiente-da-aquisição-colab" class="level3">
+<h3 class="anchored" data-anchor-id="preparando-o-ambiente-da-aquisição-colab">3.2 Preparando o ambiente da aquisição (Colab)</h3>
 <p>A primeira célula só faz diferença no Colab (instala as bibliotecas na sessão). Localmente, com o <code>pixi</code>, ela não faz nada — o ambiente já tem tudo.</p>
-<div id="8e14874f" class="cell" data-execution_count="1">
+<div id="f999966c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> sys</span>
 <span id="cb8-2"><a href="#cb8-2"></a></span>
 <span id="cb8-3"><a href="#cb8-3"></a>NO_COLAB <span class="op">=</span> <span class="st">"google.colab"</span> <span class="kw">in</span> sys.modules</span>
@@ -500,9 +499,9 @@ Nota
 </div>
 </section>
 <section id="configuração-e-imports" class="level3">
-<h3 class="anchored" data-anchor-id="configuração-e-imports">6.3 Configuração e imports</h3>
+<h3 class="anchored" data-anchor-id="configuração-e-imports">3.3 Configuração e imports</h3>
 <p>O bloco define alguns ajustes do GDAL para leitura remota <strong>antes</strong> de importar o <code>rasterio</code>, aponta o endereço do STAC do INPE e o mapa de bandas, e cria a pasta de saída <code>data/raw</code>.</p>
-<div id="f4d947d4" class="cell" data-execution_count="2">
+<div id="b6125810" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> os</span>
 <span id="cb9-2"><a href="#cb9-2"></a></span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="co"># ajustes de GDAL para leitura remota (defina ANTES de importar o rasterio)</span></span>
@@ -544,9 +543,9 @@ Nota
 </div>
 </section>
 <section id="definindo-a-área-de-interesse-aoi" class="level3">
-<h3 class="anchored" data-anchor-id="definindo-a-área-de-interesse-aoi">6.4 Definindo a área de interesse (AOI)</h3>
+<h3 class="anchored" data-anchor-id="definindo-a-área-de-interesse-aoi">3.4 Definindo a área de interesse (AOI)</h3>
 <p>A AOI é um retângulo <code>[oeste, sul, leste, norte]</code> em graus (<strong>EPSG:4326</strong>). O exemplo cobre a área urbana e o horto florestal de <strong>Rio Claro/SP</strong>. Para a sua região, pegue as coordenadas no <a href="https://bboxfinder.com/">bbox finder</a> e troque os valores. <strong>Comece pequeno</strong> (~4 km) para experimentar.</p>
-<div id="655c28fe" class="cell" data-execution_count="3">
+<div id="e831d96d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>AOI_BBOX <span class="op">=</span> [<span class="op">-</span><span class="fl">47.596712</span>, <span class="op">-</span><span class="fl">22.467523</span>, <span class="op">-</span><span class="fl">47.495068</span>, <span class="op">-</span><span class="fl">22.374216</span>]</span>
 <span id="cb10-2"><a href="#cb10-2"></a>AOI_NOME <span class="op">=</span> <span class="st">"rio_claro"</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
@@ -567,7 +566,7 @@ Nota
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Se preferir a geometria de um município ao retângulo, instale o <code>geobr</code> (<code>pixi add geobr</code>) e troque a célula acima por:</p>
+<p>Se preferir a geometria de um município ao retângulo, o <code>geobr</code> já vem no ambiente do curso — troque a célula acima por:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> geobr</span>
 <span id="cb11-2"><a href="#cb11-2"></a>muni <span class="op">=</span> geobr.read_municipality(year<span class="op">=</span><span class="dv">2020</span>)</span>
 <span id="cb11-3"><a href="#cb11-3"></a>alvo <span class="op">=</span> muni.loc[(muni[<span class="st">"abbrev_state"</span>] <span class="op">==</span> <span class="st">"SP"</span>) <span class="op">&amp;</span> (muni[<span class="st">"name_muni"</span>] <span class="op">==</span> <span class="st">"Rio Claro"</span>)].iloc[<span class="dv">0</span>]</span>
@@ -578,7 +577,7 @@ Nota
 </div>
 </div>
 <p>Um mapinha rápido ajuda a conferir se o retângulo caiu no lugar certo:</p>
-<div id="980f7bd1" class="cell" data-execution_count="4">
+<div id="5372b921" class="cell">
 <details class="code-fold">
 <summary>Mapa da AOI (opcional)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="im">import</span> folium</span>
@@ -595,9 +594,9 @@ Nota
 </div>
 </section>
 <section id="buscando-e-escolhendo-a-cena" class="level3">
-<h3 class="anchored" data-anchor-id="buscando-e-escolhendo-a-cena">6.5 Buscando e escolhendo a cena</h3>
+<h3 class="anchored" data-anchor-id="buscando-e-escolhendo-a-cena">3.5 Buscando e escolhendo a cena</h3>
 <p>A busca por <code>bbox</code> retorna toda cena cujo contorno cruza a AOI — inclusive as que só encostam numa quina e cobrem a sua área apenas com <code>nodata</code>. Por isso, depois de buscar, a gente <strong>filtra no olho</strong> (miniaturas) e por um <strong>diagnóstico na AOI</strong>.</p>
-<div id="4abf7b7d" class="cell" data-execution_count="5">
+<div id="259b1718" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">def</span> buscar_cenas(bbox, datetime_range, collection<span class="op">=</span>COLLECTION, limite<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb13-2"><a href="#cb13-2"></a>    <span class="co">"""Busca cenas no STAC e devolve (lista_de_items, DataFrame com o resumo)."""</span></span>
 <span id="cb13-3"><a href="#cb13-3"></a>    busca <span class="op">=</span> client.search(collections<span class="op">=</span>[collection], bbox<span class="op">=</span>bbox,</span>
@@ -621,7 +620,7 @@ Nota
 <span id="cb13-21"><a href="#cb13-21"></a>df</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Cada cena traz uma <strong>miniatura</strong> (PNG leve da cena inteira) — a forma mais rápida de ver se ela está limpa e se cobre a sua região:</p>
-<div id="ad870830" class="cell" data-execution_count="6">
+<div id="945c88b2" class="cell">
 <details class="code-fold">
 <summary>Função mostrar_thumbnails()</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> mostrar_thumbnails(items, df, n<span class="op">=</span><span class="dv">8</span>, colunas<span class="op">=</span><span class="dv">4</span>):</span>
@@ -650,8 +649,8 @@ Nota
 <span id="cb14-24"><a href="#cb14-24"></a>mostrar_thumbnails(items, df, n<span class="op">=</span><span class="dv">8</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>A miniatura mostra a cena <strong>inteira</strong> (~110 km de lado); a nuvem pode estar longe da AOI ou bem em cima dela. As funções abaixo leem uma versão reduzida <strong>só da AOI</strong> e calculam, para cada cena candidata: a <strong>cobertura</strong> (% de pixels válidos) e uma <strong>estimativa de nuvem</strong> sobre a AOI. É uma heurística para <em>ranquear</em> cenas, não uma máscara oficial — a remoção de nuvem de verdade é a Aula 02.</p>
-<div id="7465e8f9" class="cell" data-execution_count="7">
+<p>As funções abaixo leem <strong>só a AOI</strong> de um arquivo remoto, opcionalmente decimada. Elas são usadas aqui, na pré-visualização (seção 3.6) e na exportação (seção 3.7) — então rode esta célula mesmo que você já saiba qual cena quer.</p>
+<div id="366fb5ea" class="cell">
 <details class="code-fold">
 <summary>Funções de leitura da AOI (reprojetar_bounds, janela_da_aoi, ler_aoi)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">def</span> reprojetar_bounds(bounds, de<span class="op">=</span><span class="st">"EPSG:4326"</span>, para<span class="op">=</span><span class="va">None</span>):</span>
@@ -693,52 +692,46 @@ Nota
 <span id="cb15-37"><a href="#cb15-37"></a>        <span class="cf">return</span> dados, transform, src.crs</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="7fd9bb19" class="cell" data-execution_count="8">
-<details class="code-fold">
-<summary>Diagnóstico de nuvem/cobertura na AOI (diagnosticar_aoi, diagnosticar_lista)</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>SATURACAO <span class="op">=</span> <span class="dv">1023</span>  <span class="co"># o WPM e de 10 bits, guardado em int16</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a></span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="kw">def</span> diagnosticar_aoi(item, bbox, max_dim<span class="op">=</span><span class="dv">150</span>, limiar_brilho<span class="op">=</span><span class="fl">0.7</span> <span class="op">*</span> SATURACAO):</span>
-<span id="cb16-5"><a href="#cb16-5"></a>    azul, <span class="op">*</span>_ <span class="op">=</span> ler_aoi(item.assets[<span class="st">"BAND1"</span>].href, bbox, max_dim<span class="op">=</span>max_dim)</span>
-<span id="cb16-6"><a href="#cb16-6"></a>    nir, <span class="op">*</span>_ <span class="op">=</span> ler_aoi(item.assets[<span class="st">"BAND4"</span>].href, bbox, max_dim<span class="op">=</span>max_dim)</span>
-<span id="cb16-7"><a href="#cb16-7"></a>    azul <span class="op">=</span> np.ma.filled(azul.astype(<span class="st">"float32"</span>), <span class="dv">0</span>)</span>
-<span id="cb16-8"><a href="#cb16-8"></a>    nir <span class="op">=</span> np.ma.filled(nir.astype(<span class="st">"float32"</span>), <span class="dv">0</span>)</span>
-<span id="cb16-9"><a href="#cb16-9"></a>    validos <span class="op">=</span> (azul <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (nir <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb16-10"><a href="#cb16-10"></a>    <span class="cf">if</span> <span class="kw">not</span> validos.<span class="bu">any</span>():</span>
-<span id="cb16-11"><a href="#cb16-11"></a>        <span class="cf">return</span> {<span class="st">"cobertura_aoi_%"</span>: <span class="fl">0.0</span>, <span class="st">"nuvens_est_%"</span>: np.nan, <span class="st">"brilho_p98"</span>: np.nan}</span>
-<span id="cb16-12"><a href="#cb16-12"></a>    <span class="co"># nuvem: perto da saturacao no azul E espectralmente chapada (NIR nao dispara)</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a>    nuvem <span class="op">=</span> validos <span class="op">&amp;</span> (azul <span class="op">&gt;</span> limiar_brilho) <span class="op">&amp;</span> (nir <span class="op">&lt;</span> <span class="fl">1.6</span> <span class="op">*</span> azul)</span>
-<span id="cb16-14"><a href="#cb16-14"></a>    <span class="cf">return</span> {</span>
-<span id="cb16-15"><a href="#cb16-15"></a>        <span class="st">"cobertura_aoi_%"</span>: <span class="bu">round</span>(<span class="dv">100</span> <span class="op">*</span> validos.<span class="bu">sum</span>() <span class="op">/</span> validos.size, <span class="dv">1</span>),</span>
-<span id="cb16-16"><a href="#cb16-16"></a>        <span class="st">"nuvens_est_%"</span>: <span class="bu">round</span>(<span class="dv">100</span> <span class="op">*</span> nuvem.<span class="bu">sum</span>() <span class="op">/</span> validos.<span class="bu">sum</span>(), <span class="dv">1</span>),</span>
-<span id="cb16-17"><a href="#cb16-17"></a>        <span class="st">"brilho_p98"</span>: <span class="bu">int</span>(np.percentile(azul[validos], <span class="dv">98</span>)),</span>
-<span id="cb16-18"><a href="#cb16-18"></a>    }</span>
-<span id="cb16-19"><a href="#cb16-19"></a></span>
-<span id="cb16-20"><a href="#cb16-20"></a></span>
-<span id="cb16-21"><a href="#cb16-21"></a><span class="kw">def</span> diagnosticar_lista(items, df, n<span class="op">=</span><span class="dv">6</span>, <span class="op">**</span>kwargs):</span>
-<span id="cb16-22"><a href="#cb16-22"></a>    resultados <span class="op">=</span> []</span>
-<span id="cb16-23"><a href="#cb16-23"></a>    <span class="cf">for</span> _, row <span class="kw">in</span> df.head(n).iterrows():</span>
-<span id="cb16-24"><a href="#cb16-24"></a>        idx <span class="op">=</span> <span class="bu">int</span>(row[<span class="st">"idx"</span>])</span>
-<span id="cb16-25"><a href="#cb16-25"></a>        <span class="cf">try</span>:</span>
-<span id="cb16-26"><a href="#cb16-26"></a>            diag <span class="op">=</span> diagnosticar_aoi(items[idx], AOI_BBOX, <span class="op">**</span>kwargs)</span>
-<span id="cb16-27"><a href="#cb16-27"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> erro:</span>
-<span id="cb16-28"><a href="#cb16-28"></a>            diag <span class="op">=</span> {<span class="st">"cobertura_aoi_%"</span>: np.nan, <span class="st">"nuvens_est_%"</span>: np.nan,</span>
-<span id="cb16-29"><a href="#cb16-29"></a>                    <span class="st">"brilho_p98"</span>: np.nan, <span class="st">"erro"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="bu">type</span>(erro)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>erro<span class="sc">}</span><span class="ss">"</span>}</span>
-<span id="cb16-30"><a href="#cb16-30"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss">] </span><span class="sc">{</span>row[<span class="st">'data'</span>]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>row[<span class="st">'orbita_ponto'</span>]<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>diag<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-31"><a href="#cb16-31"></a>        resultados.append({<span class="st">"idx"</span>: idx, <span class="op">**</span>diag})</span>
-<span id="cb16-32"><a href="#cb16-32"></a>    <span class="cf">return</span> df.merge(pd.DataFrame(resultados), on<span class="op">=</span><span class="st">"idx"</span>, how<span class="op">=</span><span class="st">"left"</span>)</span>
-<span id="cb16-33"><a href="#cb16-33"></a></span>
-<span id="cb16-34"><a href="#cb16-34"></a></span>
-<span id="cb16-35"><a href="#cb16-35"></a>df_diag <span class="op">=</span> diagnosticar_lista(items, df, n<span class="op">=</span><span class="dv">6</span>)</span>
-<span id="cb16-36"><a href="#cb16-36"></a><span class="co"># candidatas: cobrem a AOI de verdade e tem pouca nuvem</span></span>
-<span id="cb16-37"><a href="#cb16-37"></a>(df_diag[df_diag[<span class="st">"cobertura_aoi_%"</span>] <span class="op">&gt;</span> <span class="dv">95</span>]</span>
-<span id="cb16-38"><a href="#cb16-38"></a> .sort_values([<span class="st">"nuvens_est_%"</span>, <span class="st">"brilho_p98"</span>])</span>
-<span id="cb16-39"><a href="#cb16-39"></a> [[<span class="st">"idx"</span>, <span class="st">"id"</span>, <span class="st">"data"</span>, <span class="st">"orbita_ponto"</span>, <span class="st">"cobertura_aoi_%"</span>, <span class="st">"nuvens_est_%"</span>, <span class="st">"brilho_p98"</span>]])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
+<p>Com elas em mãos, dá para responder de graça uma pergunta que vale centenas de megabytes: <strong>a cena cobre mesmo a sua AOI?</strong> A busca por <code>bbox</code> usa o <em>contorno</em> da cena, e é comum uma cena aparecer no resultado com <strong>0% de cobertura real</strong> — o retângulo dela cruza a AOI, mas ali só tem <code>nodata</code>.</p>
+<div id="e27d3bb6" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">def</span> cobertura_da_aoi(item, bbox, max_dim<span class="op">=</span><span class="dv">150</span>):</span>
+<span id="cb16-2"><a href="#cb16-2"></a>    <span class="co">"""% da AOI com dado valido nesta cena, a partir de uma leitura reduzida do azul."""</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a>    azul, <span class="op">*</span>_ <span class="op">=</span> ler_aoi(item.assets[<span class="st">"BAND1"</span>].href, bbox, max_dim<span class="op">=</span>max_dim)</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    validos <span class="op">=</span> np.ma.filled(azul.astype(<span class="st">"float32"</span>), <span class="dv">0</span>) <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>    <span class="cf">return</span> <span class="bu">round</span>(<span class="dv">100</span> <span class="op">*</span> validos.<span class="bu">sum</span>() <span class="op">/</span> validos.size, <span class="dv">1</span>)</span>
+<span id="cb16-6"><a href="#cb16-6"></a></span>
+<span id="cb16-7"><a href="#cb16-7"></a></span>
+<span id="cb16-8"><a href="#cb16-8"></a>linhas <span class="op">=</span> []</span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="cf">for</span> _, row <span class="kw">in</span> df.head(<span class="dv">6</span>).iterrows():</span>
+<span id="cb16-10"><a href="#cb16-10"></a>    idx <span class="op">=</span> <span class="bu">int</span>(row[<span class="st">"idx"</span>])</span>
+<span id="cb16-11"><a href="#cb16-11"></a>    <span class="cf">try</span>:</span>
+<span id="cb16-12"><a href="#cb16-12"></a>        pct <span class="op">=</span> cobertura_da_aoi(items[idx], AOI_BBOX)</span>
+<span id="cb16-13"><a href="#cb16-13"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> erro:</span>
+<span id="cb16-14"><a href="#cb16-14"></a>        pct <span class="op">=</span> np.nan</span>
+<span id="cb16-15"><a href="#cb16-15"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss">] falhou: </span><span class="sc">{</span><span class="bu">type</span>(erro)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>erro<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16"></a>    linhas.append({<span class="st">"idx"</span>: idx, <span class="st">"cobertura_aoi_%"</span>: pct})</span>
+<span id="cb16-17"><a href="#cb16-17"></a></span>
+<span id="cb16-18"><a href="#cb16-18"></a>df_cob <span class="op">=</span> df.merge(pd.DataFrame(linhas), on<span class="op">=</span><span class="st">"idx"</span>, how<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb16-19"><a href="#cb16-19"></a>df_cob[[<span class="st">"idx"</span>, <span class="st">"id"</span>, <span class="st">"data"</span>, <span class="st">"orbita_ponto"</span>, <span class="st">"cobertura_aoi_%"</span>]]</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Escolha o número da coluna <code>idx</code> da melhor cena e coloque em <code>ESCOLHA</code>:</p>
-<div id="89b4d912" class="cell" data-execution_count="9">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Por que não estimar a nuvem por limiar de brilho aqui
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A versão anterior deste material calculava também uma “nuvem estimada” na AOI, por limiar de brilho no azul. Tirei: testei na cena que uso no curso — que tem nuvem de sobra para a Aula 02 — e a heurística dava <strong>0,2%</strong>. Um número que engana é pior que número nenhum, porque dá confiança onde não deveria.</p>
+<p>Nuvem, aqui, quem julga é você: na miniatura e na pré-visualização. E depois a Aula 02, com um modelo treinado exatamente para isso.</p>
+</div>
+</div>
+<p>Agora escolha o <code>idx</code> e coloque em <code>ESCOLHA</code>. Dois critérios: <code>cobertura_aoi_%</code> acima de 95, e <strong>nuvem sobre uma parte da AOI</strong>.</p>
+<p>O segundo vai contra o instinto, e é de propósito. Normalmente você quer a cena mais limpa possível; mas nas Aulas 02 e 03 a gente detecta nuvem e preenche o buraco com Sentinel-2 super-resolvido, e para isso <strong>precisa de nuvem</strong>. Não precisa ser muita: uma mancha pequena sobre a área urbana já dá o que fazer nas duas aulas seguintes.</p>
+<p>A cena de referência do curso é a <code>CBERS_4A_WPM_20260301_203_141_L4</code> (01/03/2026). Se você escolher outra, <strong>anote o <code>id</code></strong>: as Aulas 01, 02 e 03 pedem esse identificador na célula de configuração.</p>
+<div id="8f5ebfbd" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>ESCOLHA <span class="op">=</span> <span class="dv">1</span>  <span class="co"># &lt;-- troque pelo "idx" da cena desejada</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a></span>
 <span id="cb17-3"><a href="#cb17-3"></a>item <span class="op">=</span> items[ESCOLHA]</span>
@@ -748,9 +741,9 @@ Nota
 </div>
 </section>
 <section id="pré-visualização-em-rgb" class="level3">
-<h3 class="anchored" data-anchor-id="pré-visualização-em-rgb">6.6 Pré-visualização em RGB</h3>
+<h3 class="anchored" data-anchor-id="pré-visualização-em-rgb">3.6 Pré-visualização em RGB</h3>
 <p>Antes de baixar tudo em resolução total, vale conferir a cena com uma composição colorida da AOI. O contraste é por <strong>percentil</strong> (2%–98%), ignorando o <code>nodata</code>.</p>
-<div id="e9ded03d" class="cell" data-execution_count="10">
+<div id="49049825" class="cell">
 <details class="code-fold">
 <summary>Funções de visualização (stretch, preview_rgb)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">def</span> stretch(array, low_pct<span class="op">=</span><span class="dv">2</span>, high_pct<span class="op">=</span><span class="dv">98</span>):</span>
@@ -776,10 +769,26 @@ Nota
 <span id="cb18-21"><a href="#cb18-21"></a>rgb <span class="op">=</span> preview_rgb(item, AOI_BBOX)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-preview-rgb" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div id="fig-preview-rgb" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-preview-rgb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="00-ambiente_files/figure-html/..-colab-00_aquisicao_cbers-fig-preview-rgb-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-preview-rgb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Pré-visualização em cor natural (R/G/B) do recorte da AOI, antes de exportar.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="..\colab\00_aquisicao_cbers-preview.html#cell-fig-preview-rgb">Fonte: Aula 00 — Aquisição da imagem CBERS-4A/WPM via STAC</a></div>
 <p>Se não gostou da cena, volte na célula do <code>ESCOLHA</code>, troque o <code>idx</code> e rode de novo. Satisfeito? Siga para a exportação.</p>
 </section>
 <section id="exportando-as-bandas-para-dataraw" class="level3">
-<h3 class="anchored" data-anchor-id="exportando-as-bandas-para-dataraw">6.7 Exportando as bandas para <code>data/raw</code></h3>
+<h3 class="anchored" data-anchor-id="exportando-as-bandas-para-dataraw">3.7 Exportando as bandas para <code>data/raw</code></h3>
 <p>Agora lemos em <strong>resolução total</strong> e gravamos GeoTIFF preservando o <code>dtype</code> original (<code>int16</code>, DN), o <code>nodata = 0</code>, o CRS e o <code>transform</code> do recorte — com compressão <code>deflate</code> e <em>tiling</em>. Saem 5 GeoTIFFs (um por banda) + os XML de metadados de cada banda, todos em <code>data/raw</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -794,7 +803,7 @@ Aviso
 <p>A <strong>PAN</strong> é de longe a mais demorada (4× mais linhas e colunas que as MS). Numa AOI de 4 × 4 km: cada banda MS leva alguns segundos e a PAN pode levar ~45 s. Se a conexão com o INPE cair no meio, <strong>rode a célula de novo</strong> — o que já baixou é reaproveitado.</p>
 </div>
 </div>
-<div id="7fca8be0" class="cell" data-execution_count="11">
+<div id="eeb186ba" class="cell">
 <details class="code-fold">
 <summary>Funções de exportação (exportar_banda, exportar_xml, exportar_cena, empilhar)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">def</span> exportar_banda(href, bbox, caminho_saida):</span>
@@ -864,7 +873,7 @@ Aviso
 <span id="cb19-65"><a href="#cb19-65"></a>    <span class="cf">return</span> caminho_saida</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="5b5bee47" class="cell" data-execution_count="12">
+<div id="87e54387" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># baixa as 5 bandas + XML para data/raw</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a>arquivos <span class="op">=</span> exportar_cena(item, AOI_BBOX, AOI_NOME)</span>
 <span id="cb20-3"><a href="#cb20-3"></a></span>
@@ -878,9 +887,9 @@ Aviso
 </div>
 </section>
 <section id="conferindo-o-resultado" class="level3">
-<h3 class="anchored" data-anchor-id="conferindo-o-resultado">6.8 Conferindo o resultado</h3>
+<h3 class="anchored" data-anchor-id="conferindo-o-resultado">3.8 Conferindo o resultado</h3>
 <p>Abrindo os arquivos locais para garantir que o recorte, a georreferência e os valores estão certos:</p>
-<div id="f20ff715" class="cell" data-execution_count="13">
+<div id="03e92c36" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(stack_rgbn) <span class="im">as</span> src:</span>
 <span id="cb21-2"><a href="#cb21-2"></a>    <span class="bu">print</span>(<span class="st">"CRS:      "</span>, src.crs)</span>
 <span id="cb21-3"><a href="#cb21-3"></a>    <span class="bu">print</span>(<span class="st">"shape:    "</span>, src.height, <span class="st">"x"</span>, src.width, <span class="ss">f"(</span><span class="sc">{</span>src<span class="sc">.</span>count<span class="sc">}</span><span class="ss"> bandas, </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
@@ -900,6 +909,31 @@ Aviso
 <span id="cb21-17"><a href="#cb21-17"></a>    ax.axis(<span class="st">"off"</span>)</span>
 <span id="cb21-18"><a href="#cb21-18"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-exportacao" class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>CRS:        EPSG:32723
+shape:      1314 x 1287 (4 bandas, int16)
+resolução:  (8.0, 8.0) m
+bounds:     BoundingBox(left=232788.0, bottom=7513110.0, right=243084.0, top=7523622.0)
+descrições: ('red', 'green', 'blue', 'nir')
+
+PAN -&gt; 5257 x 5146 | resolução: (2.0, 2.0) m</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-exportacao" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-exportacao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="00-ambiente_files/figure-html/..-colab-00_aquisicao_cbers-fig-exportacao-output-2.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-exportacao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Visualização rápida do recorte exportado: RGB, falsa cor NIR/R/G e PAN.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -914,7 +948,7 @@ Aviso
 <p>Um lembrete de vocabulário para a próxima aula: o CRS de saída herda a zona UTM da cena. Se você baixar cenas de <strong>órbitas diferentes</strong> para a mesma AOI, elas podem cair em zonas UTM distintas — nesse caso, reprojete antes de comparar.</p>
 </div>
 </div>
-<p>Travou em algum ponto? A página de <a href="../aulas/99-erros-comuns.html">erros comuns</a> tem as mensagens mais frequentes e o que fazer com cada uma.</p>
+<p>Travou em algum ponto? A página de <a href="../aulas/99-erros-comuns.html" target="_blank">erros comuns</a> apresenta as mensagens mais frequentes e o que fazer com cada uma.</p>
 
 
 </section>

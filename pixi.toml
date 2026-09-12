@@ -2,8 +2,9 @@
 # pixi.toml — ambiente do grupo de estudo MAPEAR (geoprocessamento CBERS-4A)
 # ----------------------------------------------------------------------------
 # Um ambiente unico e reproduzivel para TODAS as aulas, no Windows, incluindo a
-# correcao BOA (via 6S) e o coregistro (AROSICS) — que no Windows so saem pelo
-# conda-forge — junto com os pacotes de deep learning, que so existem no PyPI.
+# correcao BOA (via 6S), o coregistro (AROSICS) e o deep learning (PyTorch) —
+# tudo pela pilha nativa do conda-forge. So os pacotes de modelo que nao existem
+# no conda-forge (omnicloudmask, sen2sr, mlstac, cubo) vem do PyPI.
 #
 # COMO USAR
 #   1. Instale o pixi uma vez (ver Aula 00).
@@ -14,15 +15,19 @@
 #        pixi run preview    # pre-visualiza o site Quarto
 #
 # LOGICA DA DIVISAO DE CANAIS
-#   [dependencies]      -> conda-forge. Traz os BINARIOS que o pip nao entrega no
-#                          Windows: o GDAL (base do rasterio/geopandas/AROSICS) e
-#                          o executavel 6S (que o Py6S chama para o BOA).
-#   [pypi-dependencies] -> PyPI, resolvido pelo uv por dentro do pixi. Os pacotes
-#                          de deep learning que so existem la.
+#   [dependencies]      -> conda-forge. Traz os BINARIOS (GDAL, o executavel 6S)
+#                          E o PyTorch (pytorch-cpu). Manter o torch no mesmo
+#                          canal do numpy/scipy evita o conflito de OpenMP/MKL no
+#                          Windows, que derruba o kernel do Jupyter ao importar.
+#   [pypi-dependencies] -> PyPI (via uv, por dentro do pixi). Apenas o que NAO
+#                          existe no conda-forge: os pacotes de modelo e o geobr.
+#                          Os de modelo dependem de torch; o pixi mapeia o
+#                          "pytorch" do conda para o "torch" do PyPI, entao nao
+#                          ha download duplicado.
 #
-# NUNCA misture "pip install rasterio/gdal" aqui: o conda-forge ja cuida disso, e
-# instalar por cima quebra a ligacao com a libgdal. Para adicionar um pacote,
-# use  pixi add <nome>  (conda-forge)  ou  pixi add --pypi <nome>  (PyPI).
+# NUNCA misture "pip install rasterio/gdal/torch" aqui: o conda-forge ja cuida
+# disso. Para adicionar um pacote, use  pixi add <nome>  (conda-forge)  ou
+# pixi add --pypi <nome>  (PyPI).
 #
 # VERSOES: antes de gravar cada video, rode  pixi list  e considere fixar as
 # versoes no pixi.lock (que deve ser versionado no Git). Um video e permanente e
@@ -35,10 +40,10 @@ channels = ["conda-forge"]
 platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
 
 # ----------------------------------------------------------------------------
-# conda-forge — base, stack geoespacial, cientifico, atmosferico e coregistro
+# conda-forge — base, geoespacial, cientifico, atmosferico, coregistro e torch
 # ----------------------------------------------------------------------------
 [dependencies]
-python = "3.11.*"
+python = "3.12.*"
 
 # stack geoespacial (o conda-forge traz GDAL/GEOS/PROJ como binarios)
 gdal = "*"
@@ -58,6 +63,12 @@ scikit-image = "*"
 scikit-learn = "*"
 matplotlib-base = "*"       # notebooks usam backend inline; -base evita puxar Qt
 
+# deep learning — PyTorch de CPU pelo conda-forge (pilha nativa coerente).
+# SEN2SR Lite e OmniCloudMask rodam em CPU; nenhum script do curso precisa de GPU.
+# Placa NVIDIA? Veja o bloco de GPU (comentado) no fim do arquivo.
+pytorch-cpu = "*"
+torchvision = "*"
+
 # correcao atmosferica — BOA  (Aula 01, exp01 --nivel boa)
 py6s = "*"
 sixs = "*"                  # o EXECUTAVEL 6S; build win-64 disponivel no conda-forge
@@ -71,8 +82,8 @@ planetary-computer = "*"
 requests = "*"             # download dos assets/thumbnails/XML do STAC do INPE
 folium = "*"               # mapinha opcional da AOI (Aula 00)
 pillow = "*"               # abre as miniaturas (thumbnails) das cenas (Aula 00)
-# geobr = "*"              # opcional: AOI a partir do poligono de um municipio
-#                           (descomente e rode "pixi install", ou use "pixi add geobr")
+# geobr NAO existe no conda-forge (so o r-geobr, que e do R). Ele esta la
+# embaixo, em [pypi-dependencies].
 
 # ambiente de trabalho + toolchain do site
 jupyterlab = "*"
@@ -81,17 +92,44 @@ tqdm = "*"
 quarto = "*"                # permite  pixi run preview / render  sem Quarto do sistema
 
 # ----------------------------------------------------------------------------
-# PyPI (via uv, por cima do conda) — deep learning e pacotes so-PyPI.
-# torch/torchvision fixados no indice de CPU: SEN2SR Lite e OmniCloudMask rodam
-# em CPU. Se voce tem placa NVIDIA, veja a nota no fim deste arquivo.
+# PyPI (via uv, por cima do conda) — apenas os pacotes de modelo que NAO estao
+# no conda-forge. Todos dependem de torch, que ja vem do conda-forge acima.
 # ----------------------------------------------------------------------------
 [pypi-dependencies]
-torch = { version = "*", index = "https://download.pytorch.org/whl/cpu" }
-torchvision = { version = "*", index = "https://download.pytorch.org/whl/cpu" }
 omnicloudmask = "*"
 sen2sr = "*"
 mlstac = "*"
 cubo = "*"
+geobr = ">=2.0.0"           # AOI pelo poligono de um municipio (Aula 00, opcao B).
+                            # So existe no PyPI; usa o geopandas que ja veio do
+                            # conda-forge, entao nao ha download duplicado.
+                            #
+                            # O ">=2.0.0" e OBRIGATORIO. As versoes antigas (ate a
+                            # 0.1.9) so publicaram "sdist" no PyPI, e o setup.py delas
+                            # tenta ler um README que nao vem dentro do pacote — e
+                            # exatamente a falha
+                            #   FileNotFoundError: ...\src\master-README.md
+                            # Da 2.0.0 em diante existe wheel pronta, que nao precisa
+                            # de build nenhum.
+
+# ----------------------------------------------------------------------------
+# ajuste fino do resolvedor de PyPI
+# ----------------------------------------------------------------------------
+# O geobr 2.0.0 declara tetos de versao apertados (geopandas<=1.1.2 e
+# shapely<=2.1.0). O conda-forge instala versoes mais novas (geopandas 1.1.4,
+# shapely 2.1.2) e, sem este bloco, o uv julga o geobr 2.0.0 "incompativel", vai
+# caindo de versao ate os sdists quebrados e derruba o  pixi install.
+#
+# Esses tetos sao so conservadorismo do empacotamento (o Poetry poe teto em tudo):
+# testado, o geobr 2.0.0 importa e funciona com geopandas 1.1.4 e shapely 2.1.2.
+# O bloco abaixo manda o uv ignorar os dois tetos e usar o que o conda-forge ja
+# instalou.
+#
+# ATENCAO: dependency-overrides desliga a checagem de versao do pacote listado em
+# TODAS as dependencias PyPI. Use so quando souber que o teto e falso, como aqui.
+[pypi-options.dependency-overrides]
+geopandas = "*"
+shapely = "*"
 
 # ----------------------------------------------------------------------------
 # atalhos:  pixi run <tarefa>
@@ -103,13 +141,17 @@ preview = "quarto preview"
 render = "quarto render"
 
 # ============================================================================
-# GPU (opcional). O ambiente acima e de CPU, que roda em qualquer maquina. Se
-# voce tem placa NVIDIA e quer acelerar, NAO edite o bloco de CPU acima; crie um
-# ambiente extra com um "feature" de CUDA. Esboco (descomente e ajuste a versao):
+# GPU (opcional). O ambiente acima e de CPU e roda em qualquer maquina. Se voce
+# tem placa NVIDIA e quer acelerar, NAO edite o bloco de CPU acima; crie um
+# ambiente extra com um "feature" de CUDA, tambem pelo conda-forge. Esboco
+# (descomente e ajuste a versao do CUDA a sua placa):
 #
-# [feature.gpu.pypi-dependencies]
-# torch = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
-# torchvision = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
+# [feature.gpu.system-requirements]
+# cuda = "12.0"
+#
+# [feature.gpu.dependencies]
+# pytorch-gpu = "*"
+# cuda-version = "12.*"
 #
 # [environments]
 # gpu = ["gpu"]

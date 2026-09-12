@@ -3,26 +3,25 @@ title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2"
 subtitle: "CBERS-4A e Sentinel-2: da correção atmosférica à substituição de pixels"
 author: "Danilo Fioramonte"
 date: "2026-09-03"
-bibliography: docs/site_libs/quarto-ref/Bibliotecas Python.bib
-csl: docs/site_libs/quarto-ref/associacao-brasileira-de-normas-tecnicas.csl
 ---
 
-O presente material foi elaborado a partir de uma etapa de pesquisa de mestrado em Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (*Digital Number*) para reflectância de topo de atmosfera (*top-of-atmosphere*) - TOA e posteriormente para reflectância de superfície - BOA), a remoção de nuvens utilizando aprendizado profundo (biblioteca *OmniCloudMask*) [@wright_training_2025] e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2 metros de resolução espacial utilizando o modelo SEN2SR) [@aybar_radiometrically_2026].
+O presente material foi elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (*Digital Number*) para reflectância de topo de atmosfera (*top-of-atmosphere*) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca *OmniCloudMask*) [@wright_training_2025]; e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2 metros de resolução espacial utilizando o modelo SEN2SR) [@aybar_radiometrically_2026].
 
-Cada aula contém vídeo, código comentado e duas trilhas de execução: Google Colab, para quem não tem placa de vídeo e instalação local no Windows.
+Cada aula contém vídeo, código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - **Recomendado**) e Google Colab para quem não tem uma máquina com placa de vídeo.
 
 ::: {.callout-note}
-A instalação local (usando `miniforge`) é recomendada para usuários que precisam processar áreas maiores, tendo em vista que o Google Colab tem limitações de tempo de execução e de espaço em disco. A instalação local também é recomendada para quem deseja aprender a instalar e configurar ambientes Python, tendo em vista que essa é uma habilidade importante para trabalhar com dados geoespaciais.
+## Recomendações de instalação
+A instalação local (usando `pixi`) é recomendada para usuários que precisam processar áreas maiores, tendo em vista que o Google Colab tem limitações de tempo de execução e de espaço em disco. A instalação local também é recomendada para quem deseja aprender a instalar e configurar ambientes Python, tendo em vista que essa é uma habilidade importante para trabalhar com dados geoespaciais.
 :::
 
-Não é preciso ter experiência com Python, Miniforge ou GitHub. A Aula 00 começa do
+Não é preciso ter experiência com Python, pixi ou GitHub. A Aula 00 começa do
 zero absoluto.
 
 ## Cronograma de aulas
 
 | Aula | Assunto |
 |------|---------|
-| [00](aulas/00-ambiente.qmd) | Instalando o Miniforge e preparando o ambiente |
+| [00](aulas/00-ambiente.qmd) | Instalando o pixi e preparando o ambiente |
 | [01](aulas/01-toa-boa.qmd) | Convertendo DN do CBERS-4A para reflectância TOA e BOA  |
 | [02](aulas/02-omnicloudmask.qmd) | Detectando e removendo pixels de nuvens com OmniCloudMask |
 | [03](aulas/03-sen2sr.qmd) | Substituindo pixels usando SEN2SR e Sentinel-2 |

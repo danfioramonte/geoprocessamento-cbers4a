@@ -1,0 +1,31 @@
+{
+  "gerado_em": "2026-09-10T21:04:35",
+  "aula": "02",
+  "cena": "CBERS_4A_WPM_20260301_203_141_L4",
+  "nivel": "boa",
+  "entrada": "data\\interim\\pansharpening_20260301_boa.tif",
+  "detect_res_m": 10.0,
+  "patch_size": 1000,
+  "patch_overlap": 300,
+  "bandas_usadas": {
+    "red": 1,
+    "green": 2,
+    "nir": 4
+  },
+  "px_validos": 27036589,
+  "px_nuvem_sombra": 3445745,
+  "frac_contaminada": 0.1274,
+  "area_contaminada_ha": 1378.3,
+  "por_classe": {
+    "clear": 23590844,
+    "thick_cloud": 2011205,
+    "thin_cloud": 0,
+    "cloud_shadow": 1434540
+  },
+  "saidas": {
+    "mascara_deteccao": "data\\interim\\pansharpening_20260301_boa_cloudmask_10m.tif",
+    "mascara_nativa": "data\\interim\\pansharpening_20260301_boa_cloudmask_native.tif",
+    "mascara_clear": "data\\interim\\pansharpening_20260301_boa_clearmask_native.tif",
+    "imagem_mascarada": "data\\interim\\pansharpening_20260301_boa_masked.tif"
+  }
+}

@@ -11,12 +11,9 @@ date: "2026-09-03"
 
 Seja muito bem-vindo(a) à primeira aula dessa mini série!
 
-Nesta aula, você vai preparar o ambiente Python que roda **todas** as aulas do
-curso: a correção atmosférica do CBERS-4A (TOA e BOA), a remoção de nuvens com
-o OmniCloudMask e a super-resolução do Sentinel-2 com o SEN2SR. Um "ambiente" é
-uma caixa isolada com uma versão do Python e um conjunto de bibliotecas fixas —
-que permite você gerenciar tudo de forma organizada, sem conflitos e sem mexer
-alterar arquivos do seu sistema.
+Nesta aula, você vai preparar o ambiente Python que roda **todas** as aulas do curso: a correção atmosférica do CBERS-4A (TOA e BOA), a remoção de nuvens com o OmniCloudMask e a super-resolução do Sentinel-2 com o SEN2SR. 
+
+Um "ambiente" é uma caixa isolada com uma versão do Python e um conjunto de bibliotecas fixas — que permite você gerenciar tudo de forma organizada, sem conflitos e sem mexer alterar arquivos do seu sistema.
 
 Para montar esse ambiente vamos usar o gerenciador de ambientes **pixi**. Ele lê um arquivo chamado `pixi.toml` (que já vem no repositório do curso), baixa o próprio Python e todas as bibliotecas na versão certa, e registra tudo num arquivo `pixi.lock`. Esse `pixi.lock` é o que garante que o ambiente da sua máquina seja **idêntico** ao que utilizei no vídeo.
 
@@ -29,7 +26,7 @@ Windows:
 - A correção atmosférica **BOA** depende do programa **Py6S**, e o **coregistro** depende do **GDAL**. Esses binários, no Windows, só funcionam corretamente com **conda-forge**.
 - Os modelos de aprendizado profundo (`omnicloudmask`, `sen2sr`, `mlstac`) só existem no **PyPI** (o repositório do `pip`).
 
-O **pixi** une os dois mundos — conda-forge e PyPI — num único arquivo e num único `pixi.lock`. Na prática, possibilita que você instale o seu ambiente de maneira correta e sem preocupações, já que esse ambiente foi testado previamente e está pronto para uso, evitando que você faça manualmente e te gere problemas.
+O **pixi** une os dois mundos — conda-forge e PyPI — num único arquivo e num único `pixi.lock`. Na prática, possibilita que você instale todas as bibliotecas no seu computador de maneira prática e sem preocupações, já que esse ambiente foi testado previamente e está pronto para uso, evitando que você precise rodar comandos manualmente e instalar diferentes versões, que podem te gerar incompatibilidades.
 :::
 
 As principais bibliotecas do ambiente são: `numpy`, `pandas`, `geopandas`,
@@ -42,7 +39,9 @@ o `pixi.toml` já lista tudo.
 
 Você tem duas opções.
 
-**Com Git** (recomendado, facilita receber atualizações):
+**Com Git (se você tiver Git instalado no seu computador)**:
+
+Abra o Powershell no seu computador e digite:
 
 ```powershell
 cd C:\geo
@@ -50,26 +49,25 @@ git clone https://github.com/danfioramonte/geoprocessamento-cbers4a.git
 cd geoprocessamento-cbers4a
 ```
 
-**Sem Git:** na [página do repositório](https://github.com/danfioramonte/geoprocessamento-cbers4a),
+**Sem Git:** na [página do repositório](https://github.com/danfioramonte/geoprocessamento-cbers4a){target="_blank"},
 clique em **Code → Download ZIP**, extraia para `C:\geo\` e entre na pasta pelo
 terminal.
 
 ::: {.callout-warning}
 Trabalhe em um caminho **sem acentos e sem espaços**, como `C:\geo\`. Pastas
 como `C:\Users\João Paulo\Área de Trabalho\` causam erros de leitura no GDAL que
-são difíceis de diagnosticar. Evite também o OneDrive: ele tenta sincronizar
-cada GeoTIFF gerado e trava o processamento.
-:::
-
-::: {.callout-note}
-Os passos 2 ao 5 são para quem vai processar na própria máquina. Se você pretende usar o **Google Colab**, não precisa instalar nada — pode pular direto para o  passo **VERIFICAR***. Mas lembre que o Colab apaga os arquivos ao encerrar a sessão e tem limites de tempo e disco; para áreas maiores, a instalação local compensa.
+são difíceis de diagnosticar. Evite também processar localmente arquivos em nuvem (OneDrive/Google Drive): ele tenta sincronizar
+cada GeoTIFF e pode travar o processamento.
 :::
 
 ## Passo 2 — Instalar o pixi
 
+::: {.callout-note}
+O passo 2 é para quem vai processar na própria máquina. Se você pretende usar o **Google Colab**, não precisa instalar nada — pode pular direto para o  passo 3. Mas lembre que o Colab apaga os arquivos ao encerrar a sessão e tem limites de tempo e disco; para áreas maiores, a instalação local compensa.
+:::
 O pixi é um único programa. Você o instala **uma vez** na sua máquina.
 
-Abra o **PowerShell** (menu Iniciar → digite "PowerShell") e cole:
+Abra o **PowerShell** (menu Iniciar → digite "PowerShell" → executar como Administrador) e cole:
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
@@ -83,10 +81,10 @@ pixi --version
 ```
 
 Se aparecer um número de versão, está pronto. Você **não** precisa instalar
-Python nem Miniforge — o pixi cuida do Python sozinho.
+Python — o pixi cuida do Python sozinho.
 
-## Passo 3 — Criar o ambiente
-Abra o **PowerShell** e entre na pasta do projeto:
+### 2.1 Criar o ambiente
+Abra o **PowerShell** e acesse a pasta do projeto:
 ```powershell
 cd C:\geo\geoprocessamento-cbers4a
 ```
@@ -98,10 +96,9 @@ pixi install
 ```
 
 O pixi vai ler o `pixi.toml`, baixar o Python, o GDAL, o PyTorch e todo o resto,
-e gerar o `pixi.lock`. **Na primeira vez leva alguns minutos** — é normal a barra
-parecer parada. Você só faz isso uma vez; depois o ambiente já está pronto.
+e gerar o `pixi.lock`. **Atenção: essa etapa leva alguns minutos**. Você só faz isso uma vez; depois o ambiente já está pronto.
 
-## Passo 4 — Conferir se deu certo
+### 2.2 Conferir se deu certo
 
 ```powershell
 pixi run check
@@ -111,7 +108,7 @@ Esse comando roda o `verificar_ambiente.py` dentro do ambiente e lista, uma por
 uma, cada biblioteca — inclusive o executável do **6S** (que o BOA usa). Se algo
 aparecer como `[FALHA]`, a própria saída diz o que fazer.
 
-## Passo 5 — Abrir o Jupyter Lab
+### 2.3 Abrir o Jupyter Lab
 
 ```powershell
 pixi run lab
@@ -127,12 +124,10 @@ projeto. Esse é o comando que você vai usar no início de cada aula.
 Toda vez que for trabalhar, abra o terminal, entre na pasta do projeto e use:
 
 - `pixi run lab` — abre o Jupyter Lab
-- `pixi run check` — confere o ambiente quando algo der errado
-- `pixi run preview` — pré-visualiza o site do curso (se você for editá-lo)
 
 :::
 
-## Passo 6 - Baixando a imagem CBERS-4A via API STAC
+## Passo 3 - Baixando a imagem CBERS-4A via API STAC
 
 O STAC (*SpatioTemporal Asset Catalog*, ou Catálogo de Ativos Espaço-Temporais) é um site que organiza imagens de satélite de diversos provedores, incluindo o [Brazil Data Cube](https://data.inpe.br/bdc/explorer/explore) (BDC - do INPE) que fornece as imagens CBERS-4A. Graças ao STAC, você pode "pré-processar" a imagem antes de baixá-la, como iremos fazer nesse tutorial.
 
@@ -144,9 +139,9 @@ Nós vamos baixar uma imagem CBERS-4a do sensor WPM, com uma área de interesse 
 Ao fazer isso, baixamos diversas bandas espectrais de uma só vez, já recortadas para a área de interesse, economizando tempo e espaço em disco.
 :::
 
-[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb)
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb){target="_blank"}
 
-Todo o código abaixo está no notebook **`colab/00_aquisicao_cbers.ipynb`**. Você
+Todo o código abaixo está na pasta **`colab/00_aquisicao_cbers.ipynb`**. Você
 pode rodá-lo de duas formas:
 
 - **Local (recomendado):** com o ambiente já pronto, rode `pixi run lab`, abra o
@@ -155,11 +150,10 @@ pode rodá-lo de duas formas:
 - **Colab:** clique no botão acima. A primeira célula instala as bibliotecas na
   sessão; no fim, baixe os GeoTIFFs (ou salve no seu Drive).
 
-### 6.1 A coleção e as bandas
+### 3.1 A coleção e as bandas
 
 Vamos usar a coleção **`CB4A-WPM-L4-DN-1`** do BDC: imagens do sensor WPM,
-ortorretificadas, em **números digitais** (`int16`, `nodata = 0`), **sem**
-correção atmosférica — a correção é justamente o assunto da Aula 01.
+ortorretificadas, em **números digitais** (`int16`, `nodata = 0`). A tabela abaixo resume as bandas que vamos baixar:
 
 | asset | banda | faixa espectral | resolução |
 |---|---|---|---|
@@ -170,21 +164,15 @@ correção atmosférica — a correção é justamente o assunto da Aula 01.
 | `BAND4` | NIR | 0,77–0,89 µm | 8 m |
 
 ::: {.callout-important}
-## Duas particularidades desta coleção
+## Uma particularidade desta coleção
 
-**1. Não há metadado de nuvem.** O campo `eo:cloud_cover` vem vazio em todas as
-cenas WPM L4-DN, e o servidor **ignora** o filtro de nuvem na busca. Por isso não
-confiamos na query: escolhemos a cena olhando a **miniatura** e uma **estimativa
-de nuvem calculada na própria AOI** (seção 6.5).
+**1. Não há metadado de nuvem.** O campo `eo:cloud_cover` (variável do STAC) vem vazio em todas as
+cenas da coleção WPM L4-DN. Ou seja: não dá para filtrar por nuvem na consulta. A escolha da cena é **visual**, pela
+miniatura (seção 3.5) e pela pré-visualização da AOI (seção 3.6) — nós iremos fazer a detecção de nuvem na Aula 02.
 
-**2. Os arquivos não são COG.** São TIFFs *striped* (bloco = 1 linha inteira),
-sem *overviews*. Na prática: ler um recorte exige baixar as **linhas inteiras**
-que o cruzam — a largura da AOI é quase de graça, mas a **altura custa caro**. A
-cena PAN tem ~56.000 × 57.700 px (3,2 gigapixels): **comece com uma AOI pequena**
-(5–10 km) e aumente depois.
 :::
 
-### 6.2 Preparando o ambiente da aquisição
+### 3.2 Preparando o ambiente da aquisição (Colab)
 
 A primeira célula só faz diferença no Colab (instala as bibliotecas na sessão).
 Localmente, com o `pixi`, ela não faz nada — o ambiente já tem tudo.
@@ -199,7 +187,7 @@ if NO_COLAB:
     !pip install -q pystac-client rasterio pandas matplotlib shapely pyproj requests pillow folium
 ```
 
-### 6.3 Configuração e imports
+### 3.3 Configuração e imports
 
 O bloco define alguns ajustes do GDAL para leitura remota **antes** de importar o
 `rasterio`, aponta o endereço do STAC do INPE e o mapa de bandas, e cria a pasta
@@ -247,7 +235,7 @@ client = Client.open(STAC_URL)
 client
 ```
 
-### 6.4 Definindo a área de interesse (AOI)
+### 3.4 Definindo a área de interesse (AOI)
 
 A AOI é um retângulo `[oeste, sul, leste, norte]` em graus (**EPSG:4326**). O
 exemplo cobre a área urbana e o horto florestal de **Rio Claro/SP**. Para a sua
@@ -268,8 +256,8 @@ print(f"tamanho aproximado: {largura_km:.1f} x {altura_km:.1f} km")
 ::: {.callout-tip collapse="true"}
 ## Opcional: usar o polígono de um município inteiro
 
-Se preferir a geometria de um município ao retângulo, instale o `geobr`
-(`pixi add geobr`) e troque a célula acima por:
+Se preferir a geometria de um município ao retângulo, o `geobr` já vem no ambiente
+do curso — troque a célula acima por:
 
 ```python
 import geobr
@@ -301,7 +289,7 @@ m.fit_bounds([[AOI_BBOX[1], AOI_BBOX[0]], [AOI_BBOX[3], AOI_BBOX[2]]])
 m
 ```
 
-### 6.5 Buscando e escolhendo a cena
+### 3.5 Buscando e escolhendo a cena
 
 A busca por `bbox` retorna toda cena cujo contorno cruza a AOI — inclusive as que
 só encostam numa quina e cobrem a sua área apenas com `nodata`. Por isso, depois
@@ -366,11 +354,9 @@ def mostrar_thumbnails(items, df, n=8, colunas=4):
 mostrar_thumbnails(items, df, n=8)
 ```
 
-A miniatura mostra a cena **inteira** (~110 km de lado); a nuvem pode estar longe
-da AOI ou bem em cima dela. As funções abaixo leem uma versão reduzida **só da
-AOI** e calculam, para cada cena candidata: a **cobertura** (% de pixels válidos)
-e uma **estimativa de nuvem** sobre a AOI. É uma heurística para *ranquear*
-cenas, não uma máscara oficial — a remoção de nuvem de verdade é a Aula 02.
+As funções abaixo leem **só a AOI** de um arquivo remoto, opcionalmente decimada.
+Elas são usadas aqui, na pré-visualização (seção 3.6) e na exportação (seção 3.7)
+— então rode esta célula mesmo que você já saiba qual cena quer.
 
 ```{python}
 #| eval: false
@@ -415,52 +401,58 @@ def ler_aoi(href, bbox, max_dim=None, masked=True):
         return dados, transform, src.crs
 ```
 
+Com elas em mãos, dá para responder de graça uma pergunta que vale centenas de
+megabytes: **a cena cobre mesmo a sua AOI?** A busca por `bbox` usa o *contorno*
+da cena, e é comum uma cena aparecer no resultado com **0% de cobertura real** —
+o retângulo dela cruza a AOI, mas ali só tem `nodata`.
+
 ```{python}
 #| eval: false
-#| code-fold: true
-#| code-summary: "Diagnóstico de nuvem/cobertura na AOI (diagnosticar_aoi, diagnosticar_lista)"
-SATURACAO = 1023  # o WPM e de 10 bits, guardado em int16
-
-
-def diagnosticar_aoi(item, bbox, max_dim=150, limiar_brilho=0.7 * SATURACAO):
+def cobertura_da_aoi(item, bbox, max_dim=150):
+    """% da AOI com dado valido nesta cena, a partir de uma leitura reduzida do azul."""
     azul, *_ = ler_aoi(item.assets["BAND1"].href, bbox, max_dim=max_dim)
-    nir, *_ = ler_aoi(item.assets["BAND4"].href, bbox, max_dim=max_dim)
-    azul = np.ma.filled(azul.astype("float32"), 0)
-    nir = np.ma.filled(nir.astype("float32"), 0)
-    validos = (azul > 0) & (nir > 0)
-    if not validos.any():
-        return {"cobertura_aoi_%": 0.0, "nuvens_est_%": np.nan, "brilho_p98": np.nan}
-    # nuvem: perto da saturacao no azul E espectralmente chapada (NIR nao dispara)
-    nuvem = validos & (azul > limiar_brilho) & (nir < 1.6 * azul)
-    return {
-        "cobertura_aoi_%": round(100 * validos.sum() / validos.size, 1),
-        "nuvens_est_%": round(100 * nuvem.sum() / validos.sum(), 1),
-        "brilho_p98": int(np.percentile(azul[validos], 98)),
-    }
+    validos = np.ma.filled(azul.astype("float32"), 0) > 0
+    return round(100 * validos.sum() / validos.size, 1)
 
 
-def diagnosticar_lista(items, df, n=6, **kwargs):
-    resultados = []
-    for _, row in df.head(n).iterrows():
-        idx = int(row["idx"])
-        try:
-            diag = diagnosticar_aoi(items[idx], AOI_BBOX, **kwargs)
-        except Exception as erro:
-            diag = {"cobertura_aoi_%": np.nan, "nuvens_est_%": np.nan,
-                    "brilho_p98": np.nan, "erro": f"{type(erro).__name__}: {erro}"}
-        print(f"[{idx}] {row['data']} {row['orbita_ponto']} -> {diag}")
-        resultados.append({"idx": idx, **diag})
-    return df.merge(pd.DataFrame(resultados), on="idx", how="left")
+linhas = []
+for _, row in df.head(6).iterrows():
+    idx = int(row["idx"])
+    try:
+        pct = cobertura_da_aoi(items[idx], AOI_BBOX)
+    except Exception as erro:
+        pct = np.nan
+        print(f"[{idx}] falhou: {type(erro).__name__}: {erro}")
+    linhas.append({"idx": idx, "cobertura_aoi_%": pct})
 
-
-df_diag = diagnosticar_lista(items, df, n=6)
-# candidatas: cobrem a AOI de verdade e tem pouca nuvem
-(df_diag[df_diag["cobertura_aoi_%"] > 95]
- .sort_values(["nuvens_est_%", "brilho_p98"])
- [["idx", "id", "data", "orbita_ponto", "cobertura_aoi_%", "nuvens_est_%", "brilho_p98"]])
+df_cob = df.merge(pd.DataFrame(linhas), on="idx", how="left")
+df_cob[["idx", "id", "data", "orbita_ponto", "cobertura_aoi_%"]]
 ```
 
-Escolha o número da coluna `idx` da melhor cena e coloque em `ESCOLHA`:
+::: {.callout-note}
+## Por que não estimar a nuvem por limiar de brilho aqui
+
+A versão anterior deste material calculava também uma "nuvem estimada" na AOI, por
+limiar de brilho no azul. Tirei: testei na cena que uso no curso — que tem nuvem
+de sobra para a Aula 02 — e a heurística dava **0,2%**. Um número que engana é
+pior que número nenhum, porque dá confiança onde não deveria.
+
+Nuvem, aqui, quem julga é você: na miniatura e na pré-visualização. E depois a
+Aula 02, com um modelo treinado exatamente para isso.
+:::
+
+Agora escolha o `idx` e coloque em `ESCOLHA`. Dois critérios: `cobertura_aoi_%`
+acima de 95, e **nuvem sobre uma parte da AOI**.
+
+O segundo vai contra o instinto, e é de propósito. Normalmente você quer a cena
+mais limpa possível; mas nas Aulas 02 e 03 a gente detecta nuvem e preenche o
+buraco com Sentinel-2 super-resolvido, e para isso **precisa de nuvem**. Não
+precisa ser muita: uma mancha pequena sobre a área urbana já dá o que fazer nas
+duas aulas seguintes.
+
+A cena de referência do curso é a `CBERS_4A_WPM_20260301_203_141_L4` (01/03/2026).
+Se você escolher outra, **anote o `id`**: as Aulas 01, 02 e 03 pedem esse
+identificador na célula de configuração.
 
 ```{python}
 #| eval: false
@@ -472,7 +464,7 @@ print("data:   ", item.properties.get("datetime"))
 print("orbita: ", item.properties.get("path"), "/", item.properties.get("row"))
 ```
 
-### 6.6 Pré-visualização em RGB
+### 3.6 Pré-visualização em RGB
 
 Antes de baixar tudo em resolução total, vale conferir a cena com uma composição
 colorida da AOI. O contraste é por **percentil** (2%–98%), ignorando o `nodata`.
@@ -504,10 +496,11 @@ def preview_rgb(item, bbox, max_dim=800, bandas=("BAND3", "BAND2", "BAND1"), tit
 rgb = preview_rgb(item, AOI_BBOX)
 ```
 
+{{< embed ../colab/00_aquisicao_cbers.ipynb#fig-preview-rgb >}}
 Se não gostou da cena, volte na célula do `ESCOLHA`, troque o `idx` e rode de
 novo. Satisfeito? Siga para a exportação.
 
-### 6.7 Exportando as bandas para `data/raw`
+### 3.7 Exportando as bandas para `data/raw`
 
 Agora lemos em **resolução total** e gravamos GeoTIFF preservando o `dtype`
 original (`int16`, DN), o `nodata = 0`, o CRS e o `transform` do recorte —
@@ -606,7 +599,7 @@ stack_rgbn = empilhar(
 )
 ```
 
-### 6.8 Conferindo o resultado
+### 3.8 Conferindo o resultado
 
 Abrindo os arquivos locais para garantir que o recorte, a georreferência e os
 valores estão certos:
@@ -633,6 +626,8 @@ for ax in axes:
 plt.tight_layout(); plt.show()
 ```
 
+{{< embed ../colab/00_aquisicao_cbers.ipynb#fig-exportacao >}}
+
 ::: {.callout-note}
 ## Pronto para a Aula 01
 
@@ -646,5 +641,5 @@ da cena. Se você baixar cenas de **órbitas diferentes** para a mesma AOI, elas
 podem cair em zonas UTM distintas — nesse caso, reprojete antes de comparar.
 :::
 
-Travou em algum ponto? A página de [erros comuns](99-erros-comuns.qmd) tem as
+Travou em algum ponto? A página de [erros comuns](99-erros-comuns.qmd){target="_blank"} apresenta as
 mensagens mais frequentes e o que fazer com cada uma.

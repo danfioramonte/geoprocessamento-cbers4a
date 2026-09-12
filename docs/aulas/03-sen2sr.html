@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Danilo Fioramonte">
 
 <title>Aula 03 — Substituindo pixels com nuvem usando SEN2SR – Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</title>
 <style>
@@ -58,10 +59,30 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 1em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,7 +126,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Procurar"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -193,13 +246,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../aulas/01-toa-boa.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aula 01 — De DN para TOA e BOA</span></a>
+ <span class="menu-text">Aula 01 — De DN para reflectância (TOA e BOA)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../aulas/02-omnicloudmask.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aula 02 — Detecção de nuvens com OmniCloudMask</span></a>
+ <span class="menu-text">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -238,12 +291,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#o-que-vamos-fazer" id="toc-o-que-vamos-fazer" class="nav-link active" data-scroll-target="#o-que-vamos-fazer">O que vamos fazer</a></li>
-  <li><a href="#escolha-a-sua-trilha" id="toc-escolha-a-sua-trilha" class="nav-link" data-scroll-target="#escolha-a-sua-trilha">Escolha a sua trilha</a></li>
-  <li><a href="#baixando-o-modelo" id="toc-baixando-o-modelo" class="nav-link" data-scroll-target="#baixando-o-modelo">Baixando o modelo</a></li>
-  <li><a href="#montando-o-cubo-sentinel-2" id="toc-montando-o-cubo-sentinel-2" class="nav-link" data-scroll-target="#montando-o-cubo-sentinel-2">Montando o cubo Sentinel-2</a></li>
+  <li><a href="#antes-de-começar" id="toc-antes-de-começar" class="nav-link" data-scroll-target="#antes-de-começar">Antes de começar</a></li>
+  <li><a href="#montando-o-mosaico-sentinel-2" id="toc-montando-o-mosaico-sentinel-2" class="nav-link" data-scroll-target="#montando-o-mosaico-sentinel-2">1. Montando o mosaico Sentinel-2</a>
+  <ul class="collapse">
+  <li><a href="#composição-por-data-mais-próxima" id="toc-composição-por-data-mais-próxima" class="nav-link" data-scroll-target="#composição-por-data-mais-próxima">1.1 Composição por data mais próxima</a></li>
+  <li><a href="#vendo-as-candidatas-antes-de-escolher" id="toc-vendo-as-candidatas-antes-de-escolher" class="nav-link" data-scroll-target="#vendo-as-candidatas-antes-de-escolher">1.2 Vendo as candidatas antes de escolher</a></li>
+  <li><a href="#escolhendo-as-cenas" id="toc-escolhendo-as-cenas" class="nav-link" data-scroll-target="#escolhendo-as-cenas">1.3 Escolhendo as cenas</a></li>
+  <li><a href="#a-máscara-de-nuvem" id="toc-a-máscara-de-nuvem" class="nav-link" data-scroll-target="#a-máscara-de-nuvem">1.4 A máscara de nuvem</a></li>
+  <li><a href="#a-escolha-final-pixel-a-pixel" id="toc-a-escolha-final-pixel-a-pixel" class="nav-link" data-scroll-target="#a-escolha-final-pixel-a-pixel">1.5 A escolha final, pixel a pixel</a></li>
+  </ul></li>
+  <li><a href="#super-resolução-com-o-sen2sr" id="toc-super-resolução-com-o-sen2sr" class="nav-link" data-scroll-target="#super-resolução-com-o-sen2sr">2. Super-resolução com o SEN2SR</a></li>
+  <li><a href="#reamostragem-para-2-m-e-coregistro-com-o-arosics" id="toc-reamostragem-para-2-m-e-coregistro-com-o-arosics" class="nav-link" data-scroll-target="#reamostragem-para-2-m-e-coregistro-com-o-arosics">3. Reamostragem para 2 m e coregistro com o AROSICS</a></li>
+  <li><a href="#harmonização-e-substituição" id="toc-harmonização-e-substituição" class="nav-link" data-scroll-target="#harmonização-e-substituição">4. Harmonização e substituição</a>
+  <ul class="collapse">
+  <li><a href="#em-que-escala-fica-o-produto-final" id="toc-em-que-escala-fica-o-produto-final" class="nav-link" data-scroll-target="#em-que-escala-fica-o-produto-final">4.1 Em que escala fica o produto final</a></li>
+  <li><a href="#como-casar-a-radiometria" id="toc-como-casar-a-radiometria" class="nav-link" data-scroll-target="#como-casar-a-radiometria">4.2 Como casar a radiometria</a></li>
+  <li><a href="#a-transição" id="toc-a-transição" class="nav-link" data-scroll-target="#a-transição">4.3 A transição</a></li>
+  </ul></li>
+  <li><a href="#a-emenda-ficou-boa" id="toc-a-emenda-ficou-boa" class="nav-link" data-scroll-target="#a-emenda-ficou-boa">5. A emenda ficou boa?</a></li>
+  <li><a href="#o-que-ficou-pronto" id="toc-o-que-ficou-pronto" class="nav-link" data-scroll-target="#o-que-ficou-pronto">O que ficou pronto</a></li>
   <li><a href="#erros-comuns-nesta-aula" id="toc-erros-comuns-nesta-aula" class="nav-link" data-scroll-target="#erros-comuns-nesta-aula">Erros comuns nesta aula</a></li>
+  <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a>
+  <ul class="collapse">
+  <li><a href="#documentação-e-software" id="toc-documentação-e-software" class="nav-link" data-scroll-target="#documentação-e-software">Documentação e software</a></li>
+  </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="..\colab\03_sen2sr-preview.html"><i class="bi bi-journal-code"></i>Aula 03 — Preenchendo as lacunas de nuvem com Sentinel-2 super-resolvido</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -258,7 +331,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Autor</div>
+    <div class="quarto-title-meta-contents">
+             <p>Danilo Fioramonte </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Data de Publicação</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">8 de setembro de 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -268,18 +353,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<!-- Botão que abre o notebook desta aula direto no Colab -->
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://colab.research.google.com/github/SEU-USUARIO/SEU-REPO/blob/main/colab/03_sen2sr.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img"></a></p>
-<figcaption>Abrir no Colab</figcaption>
-</figure>
-</div>
+<p><a href="https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/03_sen2sr.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ID-DO-VIDEO" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <section id="o-que-vamos-fazer" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-vamos-fazer">O que vamos fazer</h2>
-<p>Na aula anterior identificamos os pixels cobertos por nuvem na cena CBERS-4A. Agora precisamos preencher esses buracos. O problema é de escala: o CBERS-4A/WPM tem 2 m e o Sentinel-2 tem 10 m. Colar um pedaço de Sentinel-2 direto no CBERS produziria uma mancha visivelmente borrada.</p>
-<p>O SEN2SR resolve isso levando o Sentinel-2 de 10 m para 2,5 m antes da substituição. Não é mágica: o modelo não inventa informação que não existe, ele aprende como cenas de alta resolução costumam se parecer e usa isso para reconstruir os detalhes de forma plausível.</p>
+<p>Na aula anterior identificamos os pixels cobertos por nuvem na cena CBERS-4A. Agora precisamos preencher esses buracos. O problema é de escala: o CBERS-4A/WPM tem 2 m e o Sentinel-2 tem 10 m. Colar um pedaço de Sentinel-2 direto no CBERS produziria uma mancha visivelmente borrada, com a emenda gritando na imagem.</p>
+<p>São quatro etapas, e cada uma resolve um problema diferente:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>etapa</th>
+<th>problema que resolve</th>
+<th>ferramenta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1. mosaico Sentinel-2</td>
+<td>achar dado limpo perto da data do CBERS</td>
+<td>STAC do Planetary Computer</td>
+</tr>
+<tr class="even">
+<td>2. super-resolução</td>
+<td>10 m é grosso demais para 2 m</td>
+<td>SEN2SR (10 m → 2,5 m)</td>
+</tr>
+<tr class="odd">
+<td>3. coregistro</td>
+<td>as duas imagens não estão exatamente alinhadas</td>
+<td>AROSICS</td>
+</tr>
+<tr class="even">
+<td>4. harmonização e emenda</td>
+<td>sensores diferentes têm brilho e resposta diferentes</td>
+<td>casamento de momentos</td>
+</tr>
+</tbody>
+</table>
+<p>O SEN2SR <span class="citation" data-cites="aybar_radiometrically_2026">(<a href="#ref-aybar_radiometrically_2026" role="doc-biblioref">Aybar et al., 2026</a>)</span> resolve a escala levando o Sentinel-2 de 10 m para 2,5 m antes da substituição. Não é mágica: o modelo não inventa informação que não existe, ele aprende como cenas de alta resolução costumam se parecer e usa isso para reconstruir os detalhes de forma plausível.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -307,27 +423,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Neste curso usamos a Lite. A diferença de qualidade existe, mas é pequena diante da diferença de acessibilidade.</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Aviso</span>Tudo na mesma bounding box
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta é a aula que cobra a disciplina das anteriores. Todo o curso trabalha na mesma janela e, do passo 3 em diante, na mesma grade de 2 m do CBERS. É isso que faz o AROSICS ter o que casar. Se você mudou o bbox em alguma aula, volte e acerte antes de continuar.</p>
+</div>
+</div>
 </section>
-<section id="escolha-a-sua-trilha" class="level2">
-<h2 class="anchored" data-anchor-id="escolha-a-sua-trilha">Escolha a sua trilha</h2>
+<section id="antes-de-começar" class="level2">
+<h2 class="anchored" data-anchor-id="antes-de-começar">Antes de começar</h2>
+<p>Esta aula consome dois arquivos da <a href="../aulas/02-omnicloudmask.html">Aula 02</a>: a cena mascarada (<code>*_masked.tif</code>) e a máscara de classes na grade nativa (<code>*_cloudmask_native.tif</code>). Se você está começando por aqui, o notebook refaz tudo com <code>ac.preparar_aula_03()</code>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Google Colab</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Windows (pixi)</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Windows (pixi)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Google Colab</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>Se você não tem placa de vídeo NVIDIA, esta é a trilha mais confortável. Clique no botão do Colab no topo da página.</p>
-<p>Antes de rodar qualquer célula, ative a GPU gratuita:</p>
-<p><strong>Ambiente de execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU</strong></p>
-<div id="0e66344c" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Instalação (só no Colab, leva cerca de 2 minutos)</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="op">!</span>pip install <span class="op">-</span>q sen2sr mlstac</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="op">!</span>pip install <span class="op">-</span>q git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>ESDS<span class="op">-</span>Leipzig<span class="op">/</span>cubo.git</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">cd</span> C<span class="op">:</span>\geo\geoprocessamento-cbers4a</span>
+<span id="cb1-2"><a href="#cb1-2"></a>pixi run lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Abra <code>colab/03_sen2sr.ipynb</code>. O ambiente já tem <code>sen2sr</code>, <code>mlstac</code>, <code>arosics</code>, <code>planetary-computer</code> e o PyTorch. Se algo reclamar, <code>pixi run check</code> diz exatamente o que falta.</p>
+<p>O <code>pixi run</code> já usa o ambiente do projeto — não existe “ativar ambiente”.</p>
 </div>
-<p>Para acessar a sua cena CBERS, monte o Google Drive:</p>
-<div id="809a6c87" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
-<span id="cb2-2"><a href="#cb2-2"></a>drive.mount(<span class="st">'/content/drive'</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a>CAMINHO_CBERS <span class="op">=</span> <span class="st">'/content/drive/MyDrive/geoproc/cbers_recorte.tif'</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Clique no botão do Colab no topo da página. <strong>Ative a GPU antes de começar</strong>:</p>
+<p><strong>Ambiente de execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU</strong></p>
+<p>Aqui a instalação passa obrigatoriamente pelo conda: o <strong>AROSICS depende do GDAL do conda-forge</strong> e não instala de forma confiável só com <code>pip</code>.</p>
+<div id="b8600587" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># célula 1 — instala o conda na sessão; o ambiente REINICIA aqui</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="op">!</span>pip install <span class="op">-</span>q condacolab</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="im">import</span> condacolab</span>
+<span id="cb2-4"><a href="#cb2-4"></a>condacolab.install()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="5bf058ea" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># célula 2 — rode DEPOIS do reinício (leva alguns minutos)</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj arosics scikit<span class="op">-</span>image <span class="op">\</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>    pystac<span class="op">-</span>client planetary<span class="op">-</span>computer py6s sixs requests</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="op">!</span>pip install <span class="op">-</span>q omnicloudmask sen2sr mlstac</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -339,30 +475,216 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O Colab apaga tudo quando a sessão encerra. Salve os resultados no Drive antes de fechar, ou você vai precisar processar de novo.</p>
+<p>O Colab apaga tudo quando a sessão encerra. Salve os resultados no Drive antes de fechar, ou você vai precisar processar de novo. Para gravar direto lá:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
+<span id="cb4-2"><a href="#cb4-2"></a>drive.mount(<span class="st">'/content/drive'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>ac.definir_base(<span class="st">'/content/drive/MyDrive/geoproc/data'</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>Abra o terminal (PowerShell), vá até a pasta do projeto e abra o Jupyter Lab pelo pixi:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">cd</span> C:<span class="dt">\g</span>eo<span class="dt">\g</span>eoprocessamento-cbers4a</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">pixi</span> run lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>O <code>pixi run</code> já usa o ambiente do projeto — não existe “ativar ambiente”. Se algo der erro, rode <code>pixi run check</code> antes de seguir. Ele diz exatamente qual biblioteca está faltando.</p>
+</div>
+</div>
+</section>
+<section id="montando-o-mosaico-sentinel-2" class="level2">
+<h2 class="anchored" data-anchor-id="montando-o-mosaico-sentinel-2">1. Montando o mosaico Sentinel-2</h2>
+<p>O script original desta etapa consumia um export do Google Earth Engine — com conta, fila e espera. Aqui a gente monta o mosaico direto do <strong>STAC do Microsoft Planetary Computer</strong>: sem conta, sem autenticação, sem export.</p>
+<p><strong>A grade é definida pelo CBERS</strong>, não pelo Sentinel-2: mesmo CRS, mesma origem, resolução de 10 m, e uma margem de alguns pixels além da AOI.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Por que a margem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Duas razões. O coregistro <strong>desloca</strong> a imagem alvo — sem folga, a borda ficaria sem dado depois do deslocamento. E o AROSICS precisa de contexto <strong>além</strong> do buraco para achar pontos de amarração: se o mosaico terminasse exatamente na borda da AOI, os pontos das extremidades não teriam par.</p>
+<p>O padrão de 240 m equivale a 24 pixels de 10 m. É barato.</p>
+</div>
+</div>
+<section id="composição-por-data-mais-próxima" class="level3">
+<h3 class="anchored" data-anchor-id="composição-por-data-mais-próxima">1.1 Composição por data mais próxima</h3>
+<p>Para cada pixel, pegamos a cena Sentinel-2 <strong>mais próxima em data</strong> que esteja limpa <strong>ali</strong>, segundo a banda <code>SCL</code> do produto L2A. Isso é melhor que uma mediana temporal: preserva a textura real de uma data, em vez de misturar datas num borrão.</p>
+<p>O preço é que pixels vizinhos podem vir de datas diferentes. Por isso gravamos a banda <strong><code>delta_days</code></strong>, que registra de quantos dias de distância veio cada pixel. É procedência, não decoração — sem ela você não consegue responder de quando é o dado que preencheu cada buraco.</p>
+</section>
+<section id="vendo-as-candidatas-antes-de-escolher" class="level3">
+<h3 class="anchored" data-anchor-id="vendo-as-candidatas-antes-de-escolher">1.2 Vendo as candidatas antes de escolher</h3>
+<p>A coluna <code>nuvem_cena_%</code> que vem do STAC é da <strong>cena inteira</strong>, uns 110 km de lado. A sua AOI tem 10 km: uma cena com 40% de nuvem pode estar perfeitamente limpa em cima de você, e uma com 3% pode ter justamente aquela nuvem no seu pedaço. Julgar por esse número é chute.</p>
+<p>Então a gente lê uma versão bem reduzida de cada candidata <strong>só na AOI</strong>. Sai barato: os arquivos do Planetary Computer são COG, e o GDAL pega a visão reduzida já pronta em vez do dado inteiro. Para cada candidata aparece a cor natural na sua área, quanto dela a cena <strong>cobre</strong>, e a fração limpa <strong>medida ali</strong>.</p>
+<p>É o mesmo espírito da escolha de cena da Aula 00: o número ajuda, o olho decide.</p>
+<div id="54ed217b" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>MAX_PREVIA <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>fator_p <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(np.ceil(<span class="bu">max</span>(H_S2, W_S2) <span class="op">/</span> <span class="dv">280</span>)))</span>
+<span id="cb5-4"><a href="#cb5-4"></a>forma_p <span class="op">=</span> (<span class="bu">max</span>(<span class="dv">1</span>, H_S2 <span class="op">//</span> fator_p), <span class="bu">max</span>(<span class="dv">1</span>, W_S2 <span class="op">//</span> fator_p))</span>
+<span id="cb5-5"><a href="#cb5-5"></a>T_p <span class="op">=</span> T_S2 <span class="op">*</span> Affine.scale(fator_p, fator_p)      <span class="co"># mesma origem, pixel mais grosso</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="cf">for</span> i, item <span class="kw">in</span> <span class="bu">enumerate</span>(itens[:MAX_PREVIA]):</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    scl <span class="op">=</span> ler_para_grade(item.assets[<span class="st">"SCL"</span>].href, <span class="st">"uint8"</span>, Resampling.nearest, forma_p, T_p)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    off, _ <span class="op">=</span> offset_da_baseline(item)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    rgb <span class="op">=</span> [np.clip(ler_para_grade(item.assets[a].href, <span class="st">"float32"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>                                  Resampling.average, forma_p, T_p) <span class="op">+</span> off, <span class="dv">0</span>, <span class="dv">32000</span>)</span>
+<span id="cb5-12"><a href="#cb5-12"></a>           <span class="cf">for</span> a <span class="kw">in</span> (<span class="st">"B04"</span>, <span class="st">"B03"</span>, <span class="st">"B02"</span>)]</span>
+<span id="cb5-13"><a href="#cb5-13"></a>    dentro <span class="op">=</span> rgb[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>    limpo <span class="op">=</span> <span class="op">~</span>np.isin(scl, CLASSES_NUVEM) <span class="op">&amp;</span> dentro</span>
+<span id="cb5-15"><a href="#cb5-15"></a>    <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">] cobre </span><span class="sc">{</span>dentro<span class="sc">.</span>mean()<span class="sc">:.1%}</span><span class="ss"> da AOI | limpo </span><span class="sc">{</span>limpo<span class="sc">.</span>mean()<span class="sc">:.1%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Na área do curso, as candidatas saem assim:</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-previas-s2" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  91.2% | 23KKR
+[2] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  95.0% | 22KHA
+[5] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  44.6% | 23KKR
+[6] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  44.9% | 22KHA
+[7] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  87.4% | 23KKR
+[8] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  87.3% | 22KHA
+[9] 2026-03-14  Δ +13 d | cobre 100.0% da AOI | limpo (SCL) 100.0% | 23KKR
+[10] 2026-03-14  Δ +13 d | cobre 100.0% da AOI | limpo (SCL) 100.0% | 22KHA</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-previas-s2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-previas-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-sen2sr_files/figure-html/..-colab-03_sen2sr-fig-previas-s2-output-2.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-previas-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Prévia das candidatas Sentinel-2 na AOI: cobertura e fração limpa medidas ali.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="..\colab\03_sen2sr-preview.html#cell-fig-previas-s2">Fonte: Aula 03 — Preenchendo as lacunas de nuvem com Sentinel-2 super-resolvido</a></div>
+</section>
+<section id="escolhendo-as-cenas" class="level3">
+<h3 class="anchored" data-anchor-id="escolhendo-as-cenas">1.3 Escolhendo as cenas</h3>
+<p><code>ESCOLHA_S2 = None</code> deixa no automático — as <code>MAX_CENAS</code> mais próximas em data. Uma <strong>lista de <code>idx</code></strong> assume o controle, e a ordem é a sua <strong>ordem de preferência</strong>: a primeira preenche o que puder, a segunda preenche o que sobrou, e assim por diante.</p>
+<div id="343b7a9e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ESCOLHA_S2 <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>]      <span class="co"># ou None para automático</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a></span>
+<span id="cb7-3"><a href="#cb7-3"></a>selecionadas <span class="op">=</span> [itens[i] <span class="cf">for</span> i <span class="kw">in</span> ESCOLHA_S2] <span class="cf">if</span> ESCOLHA_S2 <span class="cf">else</span> itens[:MAX_CENAS]</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Quando a AOI cai na emenda de dois tiles MGRS
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aí a <strong>mesma data aparece duas vezes</strong> na tabela, com <code>tile</code> diferente — por exemplo <code>T23KKR</code> e <code>T22KHA</code> —, e <strong>cada uma cobre um pedaço</strong> da sua área. A coluna <code>cobre</code> da prévia mostra exatamente isso. Nesse caso coloque as duas na lista: elas não competem, se completam.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>ESCOLHA_S2 <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>]</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Escolhendo à mão você assume o julgamento, e é assim que deve ser: a máscara da seção seguinte tira só o que o SCL chama de nuvem, nada além disso. A prévia é a sua conferência.</p>
+</div>
+</div>
+</section>
+<section id="a-máscara-de-nuvem" class="level3">
+<h3 class="anchored" data-anchor-id="a-máscara-de-nuvem">1.4 A máscara de nuvem</h3>
+<p>Uma só, e simples: o <strong>SCL</strong> do próprio produto L2A, mascarando <strong>apenas o que ele chama de nuvem</strong> — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).</p>
+<p>Nada além disso. Você escolheu as cenas olhando a prévia; se elas estão limpas, não há o que remover, e qualquer camada a mais só tem como errar para o lado de tirar pixel bom.</p>
+<div id="1af0e70d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>MASCARA_SCL <span class="op">=</span> <span class="va">True</span>            <span class="co"># False = usa a cena inteira, sem máscara nenhuma</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>CLASSES_NUVEM <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)    <span class="co"># nuvem prob. média, nuvem prob. alta, cirros</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>DILATA_NUVEM_PX <span class="op">=</span> <span class="dv">0</span>           <span class="co"># buffer em torno da nuvem, em px de 10 m</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a>nuvem <span class="op">=</span> np.isin(scl, CLASSES_NUVEM)</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="cf">if</span> DILATA_NUVEM_PX:</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    nuvem <span class="op">=</span> binary_dilation(nuvem, iterations<span class="op">=</span>DILATA_NUVEM_PX)</span>
+<span id="cb9-8"><a href="#cb9-8"></a>limpo <span class="op">=</span> dentro <span class="op">&amp;</span> <span class="op">~</span>nuvem</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Se a sua cena tiver nuvem, e o preço de mascarar a sombra
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Acrescente a classe <strong>3 (sombra de nuvem)</strong> em <code>CLASSES_NUVEM</code>. Mas saiba o que vem junto: o SCL chama <strong>água escura de sombra</strong> com muita frequência, e o resultado é um buraco em cima de represa e rio, que aparece branco no mosaico.</p>
+<p>Não existe escolha certa aqui — existe a sua cena. Se ela está limpa, deixe a 3 de fora; se tem nuvem sobre área seca, coloque; se tem nuvem <strong>e</strong> água, coloque e depois confira a represa.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Dica</span>“pixi não é reconhecido” ou “Python não foi encontrado”
+<span class="screen-reader-only">Dica</span>Onde olhar quando aparecer branco no mosaico
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Se o terminal reclamar do <code>pixi</code>, feche e reabra o terminal (o PATH só atualiza depois de reabrir) e confirme com <code>pixi --version</code>. Não instale o Python do python.org nem da Microsoft Store: o pixi já traz o seu próprio, e ter outro Python instalado é a causa mais comum de erros confusos.</p>
+<p>O terceiro painel da figura mostra <strong>quantas candidatas tinham dado limpo em cada pixel</strong>. Onde for <strong>0</strong>, o mosaico ficou vazio, e há só duas explicações: nenhuma cena cobre ali (emenda de tiles — veja a coluna <code>cobre</code>), ou o SCL marcou nuvem em todas.</p>
+<p>Compare com a prévia. Se a imagem está visivelmente limpa naquele ponto, é o SCL errando: ajuste <code>CLASSES_NUVEM</code> ou use <code>MASCARA_SCL = False</code>. O notebook imprime a contagem e essa mesma sugestão.</p>
 </div>
 </div>
-<div id="22acf0bb" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>CAMINHO_CBERS <span class="op">=</span> <span class="vs">r'C:</span><span class="er">\</span><span class="vs">geo</span><span class="dv">\d</span><span class="vs">ados</span><span class="er">\</span><span class="vs">cbers_recorte</span><span class="dv">.</span><span class="vs">tif'</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="a-escolha-final-pixel-a-pixel" class="level3">
+<h3 class="anchored" data-anchor-id="a-escolha-final-pixel-a-pixel">1.5 A escolha final, pixel a pixel</h3>
+<p>Entre as candidatas com dado limpo, vence <strong>a primeira da ordem</strong> — a mais próxima em data no automático, ou a que você pôs primeiro em <code>ESCOLHA_S2</code>. Só isso.</p>
+<div id="5638e396" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>escolha <span class="op">=</span> np.full((H_S2, W_S2), <span class="op">-</span><span class="dv">1</span>, dtype<span class="op">=</span><span class="st">"int16"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="cf">for</span> i, c <span class="kw">in</span> <span class="bu">enumerate</span>(candidatas):</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    falta <span class="op">=</span> (escolha <span class="op">&lt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> c[<span class="st">"limpo"</span>]</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    escolha[falta] <span class="op">=</span> i</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>O relatório por cena, e o mosaico que sai dele:</p>
+<div class="quarto-embed-nb-cell">
+<div id="tbl-cenas-s2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-cenas-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-cenas-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code>cena                                          delta   cobre   limpo
+S2B_MSIL2A_20260304T132229_R038_T23KKR_20260     +3 100.0%  91.2%
+S2B_MSIL2A_20260304T132229_R038_T22KHA_20260     +3 100.0%  95.0%
+S2B_MSIL2A_20260314T132229_R038_T23KKR_20260    +13 100.0% 100.0%
+S2B_MSIL2A_20260314T132229_R038_T22KHA_20260    +13 100.0% 100.0%
+S2B_MSIL2A_20260304T132229_R038_T23KKR_20260 -&gt; 1,081,050 px usados
+S2B_MSIL2A_20260304T132229_R038_T22KHA_20260 -&gt; 45,777 px usados
+S2B_MSIL2A_20260314T132229_R038_T23KKR_20260 -&gt; 58,973 px usados
+
+cobertura final do mosaico: 100.00% (3 cenas contribuíram)</code></pre>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-mosaico-s2" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display">
+<div id="fig-mosaico-s2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mosaico-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-sen2sr_files/figure-html/..-colab-03_sen2sr-fig-mosaico-s2-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mosaico-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Mosaico Sentinel-2 de 10 m, procedência temporal e candidatas limpas por pixel.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -374,55 +696,462 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use caminhos sem acentos e sem espaços. Uma pasta como <code>C:\Users\João Paulo\Área de Trabalho\</code> causa erros de leitura no GDAL que são difíceis de diagnosticar. Trabalhe em <code>C:\geo\</code>.</p>
-<p>Evite também colocar os dados dentro do OneDrive: ele tenta sincronizar cada GeoTIFF que você gera e trava o processamento.</p>
+<p>Ler <code>MAX_CENAS</code> cenas inteiras de uma vez custa memória: são <code>n × 4 × altura × largura</code> em <code>float32</code>. Para a AOI do curso, com 8 candidatas, dá uns 150 MB — tranquilo. Numa AOI bem maior, baixe <code>MAX_CENAS</code>.</p>
 </div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>O deslocamento da baseline 04.00
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Desde 25/01/2022 os produtos Sentinel-2 L2A trazem um offset de <strong>−1000</strong> na reflectância: o valor físico é <code>(DN − 1000) / 10000</code>, e <strong>não</strong> <code>DN / 10000</code>.</p>
+<p>Esquecer isso desloca a reflectância inteira em 0,1. O detalhe cruel é que a harmonização empírica da etapa 4 <strong>absorve boa parte desse deslocamento</strong> — então nada quebra, nada avisa, e o erro reaparece depois como um viés que você não consegue explicar. O notebook lê a <code>s2:processing_baseline</code> de cada item e aplica o offset quando é o caso.</p>
+</div>
+</div>
+<p>A saída é um GeoTIFF de <strong>6 bandas</strong> em <code>int16</code>, exatamente no formato que as etapas seguintes esperam:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>banda</th>
+<th>conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1–4</td>
+<td>vermelho, verde, azul, NIR — reflectância × 10.000</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>delta_days</code> — distância em dias até a data do CBERS</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>valid</code> — 1 onde o mosaico tem dado</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="super-resolução-com-o-sen2sr" class="level2">
+<h2 class="anchored" data-anchor-id="super-resolução-com-o-sen2sr">2. Super-resolução com o SEN2SR</h2>
+<p>O modelo leva o Sentinel-2 de 10 m para 2,5 m. Vale repetir: a textura da área preenchida é <strong>reconstruída</strong>, não observada. É plausível, é suficiente para a emenda não gritar, e é honesto declarar isso no método.</p>
+<p>O código baixa os pesos com o <code>mlstac</code> e roda a inferência em blocos. Três detalhes de implementação que não são cosméticos:</p>
+<ul>
+<li><strong>o janelamento é nosso, não do <code>predict_large</code>.</strong> A função pronta entrega blocos de borda truncados ao modelo, e o módulo <code>hard_constraint</code> do SEN2SR quebra, porque a máscara FFT dele é de tamanho fixo. Aqui todo bloco tem exatamente 128×128;</li>
+<li><strong>preenchimento por vizinho mais próximo antes da inferência.</strong> O campo receptivo da rede propagaria zeros para dentro dos pixels bons se deixássemos buraco na entrada. O conteúdo desses pixels é descartado no fim;</li>
+<li><strong>acolchoamento por reflexão e mistura com rampa.</strong> As bordas dos blocos recebem peso crescente, então a costura entre blocos vizinhos some. A rampa começa em 0,001 e não em zero, porque na borda externa da cena não há bloco vizinho somando peso — e zero puro daria divisão por zero.</li>
+</ul>
+<div id="63825342" class="cell">
+<details class="code-fold">
+<summary>Inferência em blocos, com acumuladores em memmap</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>TILE, FATOR, OVERLAP <span class="op">=</span> <span class="dv">128</span>, <span class="dv">4</span>, <span class="dv">32</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>stride, tile_hr, margem_hr <span class="op">=</span> TILE <span class="op">-</span> OVERLAP, TILE <span class="op">*</span> FATOR, OVERLAP <span class="op">*</span> FATOR <span class="op">//</span> <span class="dv">2</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="co"># acumuladores em disco: o pico de RAM não depende do tamanho da cena, e a</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="co"># saída tem 16x mais pixels que a entrada</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a>acc <span class="op">=</span> np.lib.<span class="bu">format</span>.open_memmap(tmp <span class="op">/</span> <span class="st">"acc.npy"</span>, mode<span class="op">=</span><span class="st">"w+"</span>, dtype<span class="op">=</span><span class="st">"float32"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>                                shape<span class="op">=</span>(<span class="dv">4</span>, Hp <span class="op">*</span> FATOR, Wp <span class="op">*</span> FATOR))</span>
+<span id="cb12-8"><a href="#cb12-8"></a>wsum <span class="op">=</span> np.lib.<span class="bu">format</span>.open_memmap(tmp <span class="op">/</span> <span class="st">"w.npy"</span>, mode<span class="op">=</span><span class="st">"w+"</span>, dtype<span class="op">=</span><span class="st">"float32"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9"></a>                                 shape<span class="op">=</span>(Hp <span class="op">*</span> FATOR, Wp <span class="op">*</span> FATOR))</span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a>rampa <span class="op">=</span> np.linspace(<span class="fl">1e-3</span>, <span class="fl">1.0</span>, margem_hr, dtype<span class="op">=</span><span class="st">"float32"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12"></a>perfil_peso <span class="op">=</span> np.ones(tile_hr, dtype<span class="op">=</span><span class="st">"float32"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13"></a>perfil_peso[:margem_hr] <span class="op">=</span> rampa</span>
+<span id="cb12-14"><a href="#cb12-14"></a>perfil_peso[<span class="op">-</span>margem_hr:] <span class="op">=</span> rampa[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb12-15"><a href="#cb12-15"></a>peso <span class="op">=</span> perfil_peso[:, <span class="va">None</span>] <span class="op">*</span> perfil_peso[<span class="va">None</span>, :]</span>
+<span id="cb12-16"><a href="#cb12-16"></a></span>
+<span id="cb12-17"><a href="#cb12-17"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb12-18"><a href="#cb12-18"></a>    <span class="cf">for</span> y0 <span class="kw">in</span> ys:</span>
+<span id="cb12-19"><a href="#cb12-19"></a>        <span class="cf">for</span> x0 <span class="kw">in</span> xs:</span>
+<span id="cb12-20"><a href="#cb12-20"></a>            <span class="cf">if</span> <span class="kw">not</span> valid_p[y0:y0 <span class="op">+</span> TILE, x0:x0 <span class="op">+</span> TILE].<span class="bu">any</span>():</span>
+<span id="cb12-21"><a href="#cb12-21"></a>                <span class="cf">continue</span>                       <span class="co"># bloco todo vazio: pula</span></span>
+<span id="cb12-22"><a href="#cb12-22"></a>            bloco <span class="op">=</span> np.ascontiguousarray(arr_p[:, y0:y0 <span class="op">+</span> TILE, x0:x0 <span class="op">+</span> TILE])</span>
+<span id="cb12-23"><a href="#cb12-23"></a>            pred <span class="op">=</span> modelo(torch.from_numpy(bloco[<span class="va">None</span>]).<span class="bu">float</span>().to(device))</span>
+<span id="cb12-24"><a href="#cb12-24"></a>            pred <span class="op">=</span> pred.detach().cpu().numpy()[<span class="dv">0</span>]</span>
+<span id="cb12-25"><a href="#cb12-25"></a>            Y0, X0 <span class="op">=</span> y0 <span class="op">*</span> FATOR, x0 <span class="op">*</span> FATOR</span>
+<span id="cb12-26"><a href="#cb12-26"></a>            acc[:, Y0:Y0 <span class="op">+</span> tile_hr, X0:X0 <span class="op">+</span> tile_hr] <span class="op">+=</span> pred <span class="op">*</span> peso</span>
+<span id="cb12-27"><a href="#cb12-27"></a>            wsum[Y0:Y0 <span class="op">+</span> tile_hr, X0:X0 <span class="op">+</span> tile_hr] <span class="op">+=</span> peso</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-sen2sr-zoom" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display">
+<div id="fig-sen2sr-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sen2sr-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-sen2sr_files/figure-html/..-colab-03_sen2sr-fig-sen2sr-zoom-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sen2sr-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: O mesmo trecho em 10 m e depois da super-resolução, em 2,5 m.
+</figcaption>
+</figure>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="baixando-o-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="baixando-o-modelo">Baixando o modelo</h2>
-<p>O código abaixo é idêntico nas duas trilhas.</p>
-<div id="2f431458" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> mlstac</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="im">import</span> torch</span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># Baixa apenas o modelo Lite</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>mlstac.download(</span>
-<span id="cb5-6"><a href="#cb5-6"></a>    <span class="bu">file</span><span class="op">=</span><span class="st">"https://huggingface.co/tacofoundation/sen2sr/resolve/main/SEN2SRLite/main/mlm.json"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7"></a>    output_dir<span class="op">=</span><span class="st">"model/SEN2SRLite"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8"></a>)</span>
-<span id="cb5-9"><a href="#cb5-9"></a></span>
-<span id="cb5-10"><a href="#cb5-10"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="bu">print</span>(<span class="ss">f"Rodando em: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12"></a></span>
-<span id="cb5-13"><a href="#cb5-13"></a>model <span class="op">=</span> mlstac.load(<span class="st">"model/SEN2SRLite"</span>).compiled_model(device<span class="op">=</span>device)</span>
-<span id="cb5-14"><a href="#cb5-14"></a>model <span class="op">=</span> model.to(device)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="reamostragem-para-2-m-e-coregistro-com-o-arosics" class="level2">
+<h2 class="anchored" data-anchor-id="reamostragem-para-2-m-e-coregistro-com-o-arosics">3. Reamostragem para 2 m e coregistro com o AROSICS</h2>
+<p>Duas imagens de satélites diferentes nunca caem exatamente uma sobre a outra: ortorretificação, modelo de elevação e efeito de paralaxe do relevo produzem deslocamentos de um a alguns pixels. Em 2 m isso é visível — e numa emenda é o que faz uma estrada aparecer cortada.</p>
+<p>O <strong>AROSICS</strong> <span class="citation" data-cites="scheffler_arosics_2017">(<a href="#ref-scheffler_arosics_2017" role="doc-biblioref">Scheffler et al., 2017</a>)</span> resolve por correlação de fase: acha pontos de amarração numa malha regular, mede o deslocamento local em cada um, filtra os não confiáveis e deforma a imagem alvo.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Por que a harmonização vem DEPOIS do coregistro
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A correlação de fase é insensível a diferença radiométrica <strong>linear</strong>. Ou seja: não importa que as duas imagens tenham brilho diferente, o casamento funciona igual. Harmonizar antes não ajudaria em nada — e, pior, harmonizar usando pixels desalinhados ajustaria os coeficientes contra o alvo errado.</p>
+</div>
+</div>
+<p>Dois cuidados que valem código:</p>
+<p><strong>Máscaras de dado ruim.</strong> O AROSICS só acha ponto onde as duas imagens têm dado válido. Passamos explicitamente o que ignorar: no CBERS, os buracos de nuvem e o nodata; no Sentinel-2, o que ficou fora do mosaico. Tentar correlacionar dentro do buraco seria correlacionar ruído.</p>
+<p><strong>A banda de validade viaja junto.</strong> Ela entra como banda extra da imagem alvo, para sofrer exatamente a mesma deformação da imagem. Na volta, o limiar de 0,99 devolve o caráter binário, erodindo cerca de um pixel na borda — conservador de propósito.</p>
+<div id="f07a5fb1" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> arosics <span class="im">import</span> COREG_LOCAL</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a>CR <span class="op">=</span> COREG_LOCAL(<span class="bu">str</span>(ref_tmp), <span class="bu">str</span>(tgt_tmp),</span>
+<span id="cb13-4"><a href="#cb13-4"></a>                 grid_res<span class="op">=</span>GRID_RES, window_size<span class="op">=</span>(JANELA_COREG, JANELA_COREG),</span>
+<span id="cb13-5"><a href="#cb13-5"></a>                 min_reliability<span class="op">=</span>MIN_RELIAB, tieP_filter_level<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb13-6"><a href="#cb13-6"></a>                 r_b4match<span class="op">=</span><span class="dv">4</span>, s_b4match<span class="op">=</span><span class="dv">4</span>,           <span class="co"># NIR: mais textura, menos atmosfera</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a>                 max_shift<span class="op">=</span>MAX_SHIFT, nodata<span class="op">=</span>(NODATA_TMP, NODATA_TMP),</span>
+<span id="cb13-8"><a href="#cb13-8"></a>                 mask_baddata_ref<span class="op">=</span><span class="bu">str</span>(mask_ref_p), mask_baddata_tgt<span class="op">=</span><span class="bu">str</span>(mask_tgt_p),</span>
+<span id="cb13-9"><a href="#cb13-9"></a>                 path_out<span class="op">=</span><span class="bu">str</span>(sr_coreg), fmt_out<span class="op">=</span><span class="st">"GTiff"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10"></a>                 projectDir<span class="op">=</span><span class="bu">str</span>(trab), CPUs<span class="op">=</span>CPUS, q<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-11"><a href="#cb13-11"></a>CR.correct_shifts()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="quarto-embed-nb-cell">
+<div id="tbl-coregistro" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="24">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-coregistro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;2
+</figcaption>
+<div aria-describedby="tbl-coregistro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code>Calculating footprint polygon and actual data corner coordinates for reference image...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bounding box of calculated footprint for reference image:
+    (232788.0, 7513110.0, 243076.0, 7523622.0)
+Calculating footprint polygon and actual data corner coordinates for image to be shifted...
+Bounding box of calculated footprint for image to be shifted:
+    (232788.0, 7513110.0, 243076.0, 7523622.0)
+Matching window position (X,Y): 237963.4417975617/7518391.642822992
+Initializing tie points grid...
+With respect to the provided bad data mask(s) 79 points of initially 690 have been excluded.
+Calculating tie point grid (611 points) using 4 CPU cores...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found 409 matches.
+Performing validity checks...
+148 tie points flagged by level 1 filtering (reliability).
+124 tie points flagged by level 2 filtering (SSIM).
+6 tie points flagged by level 3 filtering (RANSAC)
+191 valid tie points remain after filtering.
+Correcting geometric shifts...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Writing GeoArray of size (5256, 5144, 5) to C:\geo\geoprocessamento-cbers4a\colab\data\interim\coreg_tmp_20260301\s2sr_2m_coreg.tif.
+
+pontos confiáveis   : 191 de 611
+deslocamento mediano: 12.721 m (6.361 px)
+deslocamento p90    : 15.419 m</code></pre>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>O notebook imprime quantos pontos confiáveis saíram, o deslocamento mediano e o p90, e grava os pontos de amarração num GeoPackage — dá para abrir no QGIS e ver onde o casamento foi bem e onde não foi. <strong>Menos de 20 pontos confiáveis é sinal de alerta</strong>: cena com pouca textura, ou lacuna grande demais em relação à AOI.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Dica</span>Plano B: correlação de fase global
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Se o AROSICS não estiver disponível ou falhar, o notebook cai automaticamente para um deslocamento <strong>global</strong> estimado por <code>phase_cross_correlation</code> do scikit-image. Não corrige deformação local, mas resolve o caso comum de um deslocamento constante — e é muito melhor que seguir sem coregistro nenhum. O <code>.params.json</code> registra qual dos dois foi usado.</p>
+</div>
+</div>
 </div>
 </section>
-<section id="montando-o-cubo-sentinel-2" class="level2">
-<h2 class="anchored" data-anchor-id="montando-o-cubo-sentinel-2">Montando o cubo Sentinel-2</h2>
-<p>Aqui está a vantagem de usar o <code>cubo</code>: você não precisa ter nenhuma imagem Sentinel-2 no computador. A biblioteca busca a cena no catálogo e devolve só o recorte que você pediu.</p>
-<div id="f9d252bd" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> cubo</span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a>da <span class="op">=</span> cubo.create(</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    lat<span class="op">=-</span><span class="fl">19.3</span>,           <span class="co"># ajuste para a sua área</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a>    lon<span class="op">=-</span><span class="fl">43.6</span>,</span>
-<span id="cb6-6"><a href="#cb6-6"></a>    collection<span class="op">=</span><span class="st">"sentinel-2-l2a"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7"></a>    bands<span class="op">=</span>[<span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span>, <span class="st">"B05"</span>, <span class="st">"B06"</span>, <span class="st">"B07"</span>, <span class="st">"B08"</span>, <span class="st">"B8A"</span>, <span class="st">"B11"</span>, <span class="st">"B12"</span>],</span>
-<span id="cb6-8"><a href="#cb6-8"></a>    start_date<span class="op">=</span><span class="st">"2023-05-01"</span>,</span>
-<span id="cb6-9"><a href="#cb6-9"></a>    end_date<span class="op">=</span><span class="st">"2023-06-30"</span>,</span>
-<span id="cb6-10"><a href="#cb6-10"></a>    edge_size<span class="op">=</span><span class="dv">128</span>,</span>
-<span id="cb6-11"><a href="#cb6-11"></a>    resolution<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb6-12"><a href="#cb6-12"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="harmonização-e-substituição" class="level2">
+<h2 class="anchored" data-anchor-id="harmonização-e-substituição">4. Harmonização e substituição</h2>
+<p>Faltam duas decisões, e as duas mudam o resultado visível.</p>
+<section id="em-que-escala-fica-o-produto-final" class="level3">
+<h3 class="anchored" data-anchor-id="em-que-escala-fica-o-produto-final">4.1 Em que escala fica o produto final</h3>
+<p>O Sentinel-2 é convertido para a escala do CBERS, e <strong>não</strong> o contrário. Assim o mosaico continua comparável com as outras cenas CBERS da sua série temporal, sem precisar reprocessar nenhuma delas.</p>
+</section>
+<section id="como-casar-a-radiometria" class="level3">
+<h3 class="anchored" data-anchor-id="como-casar-a-radiometria">4.2 Como casar a radiometria</h3>
+<p>Um par de coeficientes por banda, ajustado sobre os pixels em que as duas imagens são válidas ao mesmo tempo. São quatro métodos, e a escolha aparece na imagem:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>método</th>
+<th>o que faz</th>
+<th>quando usar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>momentos</code> (padrão)</td>
+<td>casa média <strong>e</strong> desvio-padrão</td>
+<td>preserva a variância do S2, então a <strong>textura</strong> da área preenchida combina com a do entorno</td>
+</tr>
+<tr class="even">
+<td><code>linear</code></td>
+<td>regressão por mínimos quadrados</td>
+<td>dá coeficientes bonitos de reportar, mas <strong>encolhe a variância</strong>: o preenchimento sai mais liso que a vizinhança</td>
+</tr>
+<tr class="odd">
+<td><code>histograma</code></td>
+<td>casa a distribuição inteira por quantis</td>
+<td>acomoda relação não linear entre os sensores; não produz coeficiente reportável</td>
+</tr>
+<tr class="even">
+<td><code>minmax</code></td>
+<td>casa os extremos</td>
+<td>sensível a outlier; usa percentis 0,5 e 99,5 em vez do mínimo e máximo absolutos</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<!--
-A PARTIR DAQUI: normalização, inferência, reamostragem 2,5 m → 2 m,
-histogram matching contra o CBERS e aplicação da máscara da Aula 02.
--->
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Ajustar na cena inteira ou só em volta do buraco
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Com <code>ANEL_LACUNA &gt; 0</code>, o ajuste é calculado só numa faixa de N pixels em torno das lacunas, e não na cena toda. Serve para quando a área que estava sob nuvem é sistematicamente diferente do resto — mais úmida, mais vegetada — e a relação entre os sensores ali não é a média da cena.</p>
+<p>Sintoma de que você precisa disso: viés grande e <strong>do mesmo sinal em todas as bandas</strong> no relatório da seção 5. Tente <code>ANEL_LACUNA = 200</code>.</p>
+</div>
+</div>
+<div class="quarto-embed-nb-cell">
+<div id="tbl-harmonizacao" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="27">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-harmonizacao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;3
+</figcaption>
+<div aria-describedby="tbl-harmonizacao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code>HARMONIZAÇÃO — Sentinel-2 para a escala do CBERS, método 'momentos'
+
+banda              a            b     média S2   média CBERS          n
+red          8327.78       211.22       0.0764         847.6    463,560
+green        8229.74       191.34       0.0682         752.3    463,817
+blue         8178.09       143.41       0.0472         529.1    463,673
+nir          9222.86       249.81       0.2438        2498.4    464,186
+
+O coeficiente 'a' perto de 10.000 é esperado: o S2-SR está em reflectância 0-1 e o
+CBERS em reflectância x10.000. O que importa é o desvio em torno disso.</code></pre>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>O coeficiente <code>a</code> vai sair perto de <strong>10.000</strong>, e isso é esperado: o S2 super-resolvido está em reflectância 0–1 e o CBERS em reflectância × 10.000. O que interessa é o desvio em torno disso.</p>
+</section>
+<section id="a-transição" class="level3">
+<h3 class="anchored" data-anchor-id="a-transição">4.3 A transição</h3>
+<p>Como a lacuna é um <strong>buraco</strong> no CBERS, não há com o que misturar dentro dela. A transição acontece do lado de fora, invadindo alguns pixels de CBERS válido ao redor.</p>
+<p>Ou seja: uma faixa estreita de dado nativo é parcialmente substituída. É o preço de uma emenda sem degrau — e a banda de procedência registra exatamente onde isso aconteceu.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>código</th>
+<th>procedência</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>sem dado</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>CBERS nativo</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>CBERS de outra data (reservado)</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Sentinel-2 super-resolvido</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>zona de transição CBERS ↔︎ S2</td>
+</tr>
+</tbody>
+</table>
+<div id="6fde19b9" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># peso do S2: 1 dentro da lacuna, decaindo até 0 ao longo de M px para fora dela</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>dist <span class="op">=</span> distance_transform_edt(<span class="op">~</span>buraco)</span>
+<span id="cb19-3"><a href="#cb19-3"></a>w <span class="op">=</span> np.clip(<span class="fl">1.0</span> <span class="op">-</span> dist <span class="op">/</span> <span class="bu">max</span>(M, <span class="dv">1</span>), <span class="fl">0.0</span>, <span class="fl">1.0</span>).astype(<span class="st">"float32"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4"></a>w[<span class="op">~</span>s2_ok] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a>w[buraco] <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb19-6"><a href="#cb19-6"></a></span>
+<span id="cb19-7"><a href="#cb19-7"></a>saida <span class="op">=</span> np.nan_to_num(cb, nan<span class="op">=</span><span class="fl">0.0</span>) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> w) <span class="op">+</span> np.nan_to_num(sh, nan<span class="op">=</span><span class="fl">0.0</span>) <span class="op">*</span> w</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>O piso de reflectância no produto final
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A harmonização da seção 4.2 é uma reta <span class="math inline">\(a\,x + b\)</span>, e o <span class="math inline">\(b\)</span> sai <strong>negativo</strong> em algumas bandas. Isso quer dizer que ela consegue produzir valor abaixo de zero <em>mesmo partindo de um Sentinel-2 que já não tinha nenhum negativo</em> — o mosaico S2 é montado com piso em 0 lá na seção 1.5. Somado à cauda escura que vem da fusão da Aula 01, é isso que faz o mosaico final abrir no QGIS com mínimo negativo.</p>
+<p>O produto é gravado com o mesmo <code>PISO_REFLECTANCIA</code> da Aula 01, e o notebook reporta quantos pixels de cada banda foram ceifados — o número vai para o <code>.params.json</code>, em vez de sumir. Como o nodata é <code>-9999</code>, o pixel ceifado vale 0 e <strong>continua sendo dado válido</strong>.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="a-emenda-ficou-boa" class="level2">
+<h2 class="anchored" data-anchor-id="a-emenda-ficou-boa">5. A emenda ficou boa?</h2>
+<p>Duas medidas, num anel de 3 px em volta de cada lacuna — onde as duas imagens existem e podem ser comparadas diretamente:</p>
+<ul>
+<li><strong>viés</strong>: a diferença média entre o S2 harmonizado e o CBERS. Perto de zero significa que não há degrau de brilho na emenda;</li>
+<li><strong>razão de desvios</strong>: o desvio-padrão do S2 harmonizado dividido pelo do CBERS. Perto de 1 significa que a área preenchida tem variabilidade parecida com a do entorno.</li>
+</ul>
+<div class="quarto-embed-nb-cell">
+<div id="tbl-emenda" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="29">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-emenda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;4
+</figcaption>
+<div aria-describedby="tbl-emenda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code>banda              viés     razão de desvios
+red              +38.23                1.075
+green            +25.53                1.044
+blue              -8.38                1.093
+nir             +302.50                1.061
+
+Escrito: data\processed\mosaico_20260301_gapfilled.tif
+Escrito: data\processed\mosaico_20260301_proveniencia.tif
+Params : mosaico_20260301_gapfilled.params.json</code></pre>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Como ler:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>o que você vê</th>
+<th>o que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>viés ≈ 0 e razão ≈ 1</td>
+<td>emenda boa</td>
+</tr>
+<tr class="even">
+<td>razão bem abaixo de 1</td>
+<td>preenchimento mais liso que o entorno — esperado com <code>linear</code>, sintoma com <code>momentos</code></td>
+</tr>
+<tr class="odd">
+<td>viés grande, mesmo sinal em todas as bandas</td>
+<td>o ajuste global não descreve a área das lacunas; use <code>ANEL_LACUNA</code></td>
+</tr>
+<tr class="even">
+<td>viés grande com sinais diferentes por banda</td>
+<td>provável troca de bandas entre as duas fontes; confira os rótulos dos arquivos</td>
+</tr>
+</tbody>
+</table>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-mosaico-final" class="cell" data-execution_count="30">
+<div class="cell-output cell-output-display">
+<div id="fig-mosaico-final" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mosaico-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-sen2sr_files/figure-html/..-colab-03_sen2sr-fig-mosaico-final-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mosaico-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4: CBERS com as lacunas, mosaico preenchido e a procedência de cada pixel.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-lacuna-zoom" class="cell" data-execution_count="31">
+<div class="cell-output cell-output-display">
+<div id="fig-lacuna-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-lacuna-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-sen2sr_files/figure-html/..-colab-03_sen2sr-fig-lacuna-zoom-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lacuna-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: Zoom na maior lacuna preenchida, antes e depois.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="o-que-ficou-pronto" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-ficou-pronto">O que ficou pronto</h2>
+<pre><code>data/interim/S2_&lt;DATA&gt;_10m.tif                 mosaico S2 (RGBN + delta_days + validade)
+data/interim/S2_&lt;DATA&gt;_SR2p5m.tif              super-resolvido pelo SEN2SR
+data/interim/S2_&lt;DATA&gt;_2m_coreg.tif            reamostrado e coregistrado na grade do CBERS
+data/processed/mosaico_&lt;DATA&gt;_gapfilled.tif    mosaico final     &lt;- o produto do curso
+data/processed/mosaico_&lt;DATA&gt;_proveniencia.tif de onde veio cada pixel</code></pre>
+<p>Abra os dois últimos juntos no QGIS. A banda de procedência é o que permite responder, para qualquer análise feita em cima deste mosaico, <strong>quais pixels são observação e quais são reconstrução</strong> — e essa distinção precisa aparecer em qualquer resultado publicado.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Limitações que valem declarar no método
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>a saída do SEN2SR é 2,5 m e foi reamostrada para 2 m;</li>
+<li>a textura da área preenchida é <strong>reconstruída</strong> pelo modelo, não observada;</li>
+<li>os pixels de Sentinel-2 vêm de outra data — <code>delta_days</code> diz de quantos dias;</li>
+<li>a zona de transição substitui parcialmente pixels de CBERS válidos, por construção;</li>
+<li>a harmonização é empírica (global ou por anel), não uma correção física entre sensores.</li>
+</ul>
+</div>
+</div>
 </section>
 <section id="erros-comuns-nesta-aula" class="level2">
 <h2 class="anchored" data-anchor-id="erros-comuns-nesta-aula">Erros comuns nesta aula</h2>
@@ -440,24 +1169,92 @@ histogram matching contra o CBERS e aplicação da máscara da Aula 02.
 <tbody>
 <tr class="odd">
 <td><code>CUDA out of memory</code></td>
-<td>Reduza o <code>edge_size</code>. Processe em blocos menores.</td>
+<td>Reduza a AOI ou processe em blocos menores. Em último caso force CPU: é mais lento, mas funciona.</td>
 </tr>
 <tr class="even">
 <td>Download do modelo travado</td>
 <td>Rode a célula de novo. O <code>mlstac</code> retoma de onde parou.</td>
 </tr>
 <tr class="odd">
-<td><code>ModuleNotFoundError: cubo</code></td>
-<td>O <code>cubo</code> é instalado a partir do GitHub, não do PyPI.</td>
+<td><code>ModuleNotFoundError: arosics</code> (no Colab)</td>
+<td>O AROSICS vem do conda-forge, não do PyPI. Rode as duas células de instalação, com o reinício entre elas.</td>
 </tr>
 <tr class="even">
+<td><code>ImportError</code> citando <code>mamba</code> ou <code>causal_conv1d</code></td>
+<td>Você pediu <code>MODELO = "full"</code>. Use <code>"lite"</code>.</td>
+</tr>
+<tr class="odd">
 <td>Resultado com faixas coloridas</td>
-<td>A normalização de entrada está errada. Confira a escala de reflectância.</td>
+<td>A normalização de entrada está errada. O modelo espera reflectância 0–1: confira o divisor de escala e o offset da baseline 04.00.</td>
+</tr>
+<tr class="even">
+<td><code>sobreposição válida insuficiente para coregistrar</code></td>
+<td>A lacuna cobre quase toda a AOI, ou o mosaico S2 ficou vazio. Aumente <code>JANELA_DIAS</code>/<code>NUVEM_MAX</code>.</td>
+</tr>
+<tr class="odd">
+<td>Poucos pontos confiáveis no AROSICS</td>
+<td>Cena com pouca textura. Aumente <code>JANELA_COREG</code>, diminua <code>GRID_RES</code>, ou aceite o plano B global.</td>
+</tr>
+<tr class="even">
+<td><code>a máscara de nuvem não está na grade do CBERS</code></td>
+<td>A Aula 02 foi rodada sobre outro arquivo. Refaça sobre o mesmo pansharpening.</td>
+</tr>
+<tr class="odd">
+<td><code>AVISO: sobrou buraco no mosaico S2</code></td>
+<td>Não havia Sentinel-2 limpo suficiente na janela. Aumente <code>JANELA_DIAS</code>, <code>NUVEM_MAX</code> ou <code>MAX_CENAS</code>.</td>
+</tr>
+<tr class="even">
+<td>Mancha azulada/esbranquiçada no mosaico S2</td>
+<td>Névoa que o SCL não marcou numa das cenas. Olhe a prévia da seção 1.2, identifique a candidata contaminada e tire o <code>idx</code> dela de <code>ESCOLHA_S2</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>nenhuma cena Sentinel-2 utilizável</code></td>
+<td>Nenhuma candidata sobrou depois da máscara. Reveja <code>ESCOLHA_S2</code>, amplie <code>JANELA_DIAS</code> ou desligue <code>MASCARA_SCL</code>.</td>
+</tr>
+<tr class="even">
+<td>A etapa do mosaico ficou lenta demais</td>
+<td>São leituras de rede. Baixe <code>MAX_CENAS</code> e <code>MAX_PREVIA</code>, ou escolha as cenas à mão em <code>ESCOLHA_S2</code>.</td>
+</tr>
+<tr class="odd">
+<td>Buracos brancos no mosaico onde a imagem está visivelmente limpa</td>
+<td>Falso positivo do SCL. Se você acrescentou a classe 3 em <code>CLASSES_NUVEM</code>, tire — ela pega água escura. Se <code>DILATA_NUVEM_PX</code> estiver acima de 0, volte para 0: ela transforma pontinho isolado em mancha. Em último caso, <code>MASCARA_SCL = False</code>.</td>
+</tr>
+<tr class="even">
+<td>Metade do mosaico ficou vazia com escolha manual</td>
+<td>A cena que você escolheu cobre só parte da AOI (emenda de tiles MGRS). Veja a coluna <code>cobre</code> na prévia e acrescente o outro tile da mesma data.</td>
+</tr>
+<tr class="odd">
+<td><code>IndexError</code> na célula de escolha</td>
+<td>Algum <code>idx</code> de <code>ESCOLHA_S2</code> não existe na tabela. Os índices vêm da tabela ordenada por proximidade de data, e mudam se você alterar <code>JANELA_DIAS</code>.</td>
+</tr>
+<tr class="even">
+<td>Emenda visível mesmo com viés ≈ 0</td>
+<td>Provavelmente é coregistro, não radiometria. Olhe o deslocamento mediano da seção 3.</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="referências" class="level2">
+<h2 class="anchored" data-anchor-id="referências">Referências</h2>
+<div id="refs" class="references csl-bib-body" data-entry-spacing="1" role="list">
+<div id="ref-aybar_radiometrically_2026" class="csl-entry" role="listitem">
+AYBAR, Cesar <em>et al.</em> <a href="https://doi.org/10.1016/j.rse.2025.115222">A radiometrically and spatially consistent super-resolution framework for <span>Sentinel</span>-2</a>. <strong>Remote Sensing of Environment</strong>, v. 334, p. 115222, mar. 2026.
+</div>
+<div id="ref-scheffler_arosics_2017" class="csl-entry" role="listitem">
+SCHEFFLER, Daniel <em>et al.</em> <a href="https://doi.org/10.3390/rs9070676"><span>AROSICS</span>: <span>An</span> <span>Automated</span> and <span>Robust</span> <span>Open</span>-<span>Source</span> <span>Image</span> <span>Co</span>-<span>Registration</span> <span>Software</span> for <span>Multi</span>-<span>Sensor</span> <span>Satellite</span> <span>Data</span></a>. <strong>Remote Sensing</strong>, v. 9, n. 7, p. 676, 2017.
+</div>
+</div>
+<section id="documentação-e-software" class="level3">
+<h3 class="anchored" data-anchor-id="documentação-e-software">Documentação e software</h3>
+<ul>
+<li><a href="https://huggingface.co/tacofoundation/sen2sr">SEN2SR / tacofoundation no Hugging Face</a></li>
+<li><a href="https://planetarycomputer.microsoft.com/dataset/sentinel-2-l2a">Sentinel-2 L2A no Planetary Computer</a></li>
+<li>ESA. <em>Sentinel-2 processing baseline 04.00</em> — o deslocamento de −1000 na reflectância, e a definição das classes do SCL. <a href="https://sentiwiki.copernicus.eu/web/s2-processing">SentiWiki</a></li>
+<li><a href="https://danschef.git-pages.gfz-potsdam.de/arosics/doc/">AROSICS na documentação do GFZ</a></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
