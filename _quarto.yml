@@ -1,6 +1,21 @@
 project:
   type: website
   output-dir: docs          # publica pelo GitHub Pages a partir da pasta docs/
+  resources:
+    # POR QUE O .nojekyll E OBRIGATORIO AQUI
+    # O GitHub Pages roda o Jekyll por padrao, e o Jekyll DESCARTA todo arquivo
+    # cujo nome comeca com ponto. As figuras que vem do shortcode {{< embed >}}
+    # recebem nome derivado do caminho relativo do notebook, e esse caminho
+    # comeca com "../" -- viram, por exemplo:
+    #
+    #   docs/aulas/01-toa-boa_files/figure-html/
+    #       ..-colab-01_toa_boa-fig-fusao-output-1.png
+    #
+    # Localmente abre; publicado da 404 e a figura aparece com o icone de
+    # imagem quebrada. O arquivo .nojekyll desliga o Jekyll e faz o Pages
+    # servir a pasta exatamente como ela esta. Fica listado como "resource"
+    # para o Quarto recopia-lo em docs/ a cada render (ele limpa a saida).
+    - .nojekyll
   render:
     - "*.qmd"
     - "aulas/*.qmd"
