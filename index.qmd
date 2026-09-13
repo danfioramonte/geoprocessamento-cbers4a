@@ -29,8 +29,52 @@ zero absoluto.
 Travou em algum ponto? Veja a página de [erros comuns](aulas/99-erros-comuns.qmd).
 
 ## Como citar
-Em elaboração
+
+Este material tem DOI próprio e pode ser citado como obra. Se ele foi útil na
+sua pesquisa, aula ou relatório técnico, use a referência abaixo (ABNT NBR
+6023):
+
+> FIORAMONTE, Danilo; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
+> imagens CBERS-4A/WPM e Sentinel-2**: da correção atmosférica à substituição de
+> pixels. Versão 1.0.0. Rio Claro: Grupo de estudo MAPEAR, UNESP, 2026. Material
+> didático. DOI: 10.5281/zenodo.XXXXXXX. Disponível em:
+> <https://danfioramonte.github.io/geoprocessamento-cbers4a/>. Acesso em: 13 set.
+> 2026.
+
+::: {.callout-tip collapse="true"}
+## Em BibTeX
+
+``` bibtex
+@misc{fioramonte_geoprocessamento_2026,
+  author    = {Fioramonte, Danilo and Magalhães, Danilo Marques de},
+  title     = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:
+               da correção atmosférica à substituição de pixels},
+  year      = {2026},
+  version   = {1.0.0},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.XXXXXXX},
+  url       = {https://danfioramonte.github.io/geoprocessamento-cbers4a/},
+  note      = {Material didático}
+}
+```
+:::
+
+O DOI acima é o **DOI de conceito**: ele aponta sempre para a versão mais
+recente do material. Cada versão publicada também recebe um DOI próprio, listado
+na página do Zenodo, para quando for preciso citar exatamente o que você usou.
+
+::: {.callout-important}
+## Cite também os métodos que você usar
+
+Este material organiza e explica ferramentas de terceiros. Ao empregar os
+métodos das aulas, cite os trabalhos originais junto com esta obra: SEN2SR
+[@aybar_radiometrically_2026] para a super-resolução, OmniCloudMask
+[@wright_training_2025] para a detecção de nuvens, o 6S
+[@vermote_second_1997] para a correção atmosférica, o AROSICS
+[@scheffler_arosics_2017] para o coregistro e o Gram-Schmidt
+[@laben_process_2000; @aiazzi_improving_2007] para a fusão com a pancromática.
+:::
 
 ## Referências
 ::: {#refs}
-<!-- Preencher depois de gerar o DOI no Zenodo -->
+:::

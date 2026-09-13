@@ -1,0 +1,38 @@
+# Arquivo lido pelo GitHub para montar o botão "Cite this repository"
+# (canto direito da página do repositório) e pelo Zenodo ao arquivar a release.
+# Depois de gerar o DOI, troque os dois XXXXXXX abaixo e faça commit.
+cff-version: 1.2.0
+message: "Se você usar este material, por favor cite-o conforme abaixo."
+title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2: da correção atmosférica à substituição de pixels"
+abstract: >-
+  Material didático aberto sobre o processamento de imagens CBERS-4A/WPM:
+  calibração radiométrica de DN para reflectância TOA e BOA com o 6S, fusão
+  Gram-Schmidt com a banda pancromática, detecção de nuvem e sombra com
+  OmniCloudMask e substituição dos pixels contaminados por Sentinel-2
+  super-resolvido com o SEN2SR. Inclui site, vídeos e notebooks executáveis
+  localmente (pixi) ou no Google Colab.
+type: software
+authors:
+  - family-names: Fioramonte
+    given-names: Danilo Roberto
+    affiliation: "Universidade Estadual Paulista (UNESP), Instituto de Geociências e Ciências Exatas, Rio Claro, SP, Brasil"
+    # orcid: "https://orcid.org/0000-0003-3243-7090"
+  - family-names: Magalhães
+    given-names: Danilo Marques de
+    affiliation: "Universidade Estadual Paulista (UNESP), Instituto de Geociências e Ciências Exatas, Rio Claro, SP, Brasil"
+    # orcid: "https://orcid.org/0000-0001-9306-4326"
+version: "1.0.0"
+date-released: "2026-09-13"
+license: MIT
+repository-code: "https://github.com/danfioramonte/geoprocessamento-cbers4a"
+url: "https://danfioramonte.github.io/geoprocessamento-cbers4a/"
+doi: "10.5281/zenodo.XXXXXXX"
+keywords:
+  - sensoriamento remoto
+  - CBERS-4A
+  - Sentinel-2
+  - correção atmosférica
+  - detecção de nuvens
+  - super-resolução
+  - Python
+  - geoprocessamento

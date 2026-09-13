@@ -1,8 +1,15 @@
 # ---- Dados: nunca versionar imagem de satelite ----
-data/raw/*
-data/interim/*
-data/processed/*
-!data/**/.gitkeep
+# ATENCAO: padroes com barra no meio sao ancorados na RAIZ do repositorio.
+# Como os dados ficam em colab/data/, as regras precisam do "**/" na frente,
+# senao nao pegam nada (era o caso antes: os XML, os .params.json e o
+# tiepoints.gpkg acabaram versionados).
+# Tudo dentro de data/ e SAIDA de codigo: e baixado ou gerado pelas aulas.
+**/data/raw/*
+**/data/interim/*
+**/data/processed/*
+!**/.gitkeep
+
+# rede de seguranca por extensao, caso algo seja salvo fora de data/
 *.tif
 *.tiff
 *.img
@@ -11,6 +18,15 @@ data/processed/*
 *.nc
 *.aux.xml
 *.ovr
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.npy
+*.npz
+*.safetensor
+*.safetensors
 
 # ---- Modelos baixados pelo mlstac ----
 model/
@@ -20,6 +36,12 @@ model/
 # e precisa ser enviada ao GitHub.
 /.quarto/
 /_site/
+# cache de execucao do Quarto. Este site usa "execute: enabled: false"
+# (as figuras vem dos notebooks ja executados, via {{< embed >}}), entao o
+# _freeze nunca e lido: e so sobra de renders antigos.
+_freeze/
+# sobra do mesmo tipo, gerada dentro da pasta de fontes (aulas/)
+**/*_files/execute-results/
 
 # ---- Python ----
 __pycache__/
@@ -30,6 +52,10 @@ env_local/
 
 # ---- pixi ----
 .pixi/
+
+# ---- Editores ----
+.vscode/
+.idea/
 
 # ---- Sistema ----
 .DS_Store
