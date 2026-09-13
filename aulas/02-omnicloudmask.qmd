@@ -1,8 +1,8 @@
 ---
 title: "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
 subtitle: "Modelo de aprendizado profundo para detecção de nuvens"
-author: "Danilo Fioramonte"
-date: "2026-09-08"
+author: "Danilo Roberto Fioramonte"
+date: "2026-09-13"
 ---
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/02_nuvens_omnicloudmask.ipynb){target="_blank"}

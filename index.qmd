@@ -1,8 +1,8 @@
 ---
 title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2"
 subtitle: "CBERS-4A e Sentinel-2: da correção atmosférica à substituição de pixels"
-author: "Danilo Fioramonte"
-date: "2026-09-03"
+author: "Danilo Roberto Fioramonte"
+date: "2026-09-13"
 ---
 
 O presente material foi elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (*Digital Number*) para reflectância de topo de atmosfera (*top-of-atmosphere*) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca *OmniCloudMask*) [@wright_training_2025]; e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2 metros de resolução espacial utilizando o modelo SEN2SR) [@aybar_radiometrically_2026].
@@ -34,19 +34,18 @@ Este material tem DOI próprio e pode ser citado como obra. Se ele foi útil na
 sua pesquisa, aula ou relatório técnico, use a referência abaixo (ABNT NBR
 6023):
 
-> FIORAMONTE, Danilo; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
+> FIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
 > imagens CBERS-4A/WPM e Sentinel-2**: da correção atmosférica à substituição de
 > pixels. Versão 1.0.0. Rio Claro: Grupo de estudo MAPEAR, UNESP, 2026. Material
 > didático. DOI: 10.5281/zenodo.XXXXXXX. Disponível em:
-> <https://danfioramonte.github.io/geoprocessamento-cbers4a/>. Acesso em: 13 set.
-> 2026.
+> <https://danfioramonte.github.io/geoprocessamento-cbers4a/>. Acesso em: <data>.
 
 ::: {.callout-tip collapse="true"}
 ## Em BibTeX
 
 ``` bibtex
 @misc{fioramonte_geoprocessamento_2026,
-  author    = {Fioramonte, Danilo and Magalhães, Danilo Marques de},
+  author    = {Fioramonte, Danilo Roberto and Magalhães, Danilo Marques de},
   title     = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:
                da correção atmosférica à substituição de pixels},
   year      = {2026},

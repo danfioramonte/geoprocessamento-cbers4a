@@ -1,8 +1,8 @@
 ---
 title: "Aula 01 — De DN para reflectância (TOA e BOA)"
 subtitle: "Calibração radiométrica, correção atmosférica com o 6S e fusão com a pancromática"
-author: "Danilo Fioramonte"
-date: "2026-09-08"
+author: "Danilo Roberto Fioramonte"
+date: "2026-09-13"
 ---
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/01_toa_boa.ipynb){target="_blank"}

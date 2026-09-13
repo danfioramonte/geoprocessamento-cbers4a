@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Danilo Fioramonte">
+<meta name="author" content="Danilo Roberto Fioramonte">
 
 <title>Aula 01 — De DN para reflectância (TOA e BOA) – Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</title>
 <style>
@@ -330,14 +330,14 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Autor</div>
     <div class="quarto-title-meta-contents">
-             <p>Danilo Fioramonte </p>
+             <p>Danilo Roberto Fioramonte </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Data de Publicação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">8 de setembro de 2026</p>
+      <p class="date">13 de setembro de 2026</p>
     </div>
   </div>
   
@@ -441,13 +441,13 @@ window.Quarto = {
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Clique no botão do Colab acima. Diferente das outras aulas, aqui a instalação tem <strong>duas células e um reinício da sessão</strong> no meio: o 6S não é uma biblioteca Python, é um programa em Fortran, e no Colab ele só chega pelo conda.</p>
-<div id="076e3a16" class="cell">
+<div id="6385cd89" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># célula 1 — instala o conda na sessão; o ambiente REINICIA aqui</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="op">!</span>pip install <span class="op">-</span>q condacolab</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="im">import</span> condacolab</span>
 <span id="cb2-4"><a href="#cb2-4"></a>condacolab.install()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="69b702ae" class="cell">
+<div id="7462dec5" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># célula 2 — rode DEPOIS do reinício</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj py6s sixs pystac<span class="op">-</span>client requests</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -468,7 +468,7 @@ Aviso
 </div>
 </div>
 <p>O notebook também traz uma célula que baixa <code>aulas_cbers.py</code> e a pasta <code>config/</code> do repositório. <code>aulas_cbers.py</code> guarda, de forma condensada, as etapas das aulas anteriores — é o que permite começar o curso por qualquer aula. Se você está fazendo somente essa aula, ele baixa a cena que elaboramos na aula anterior para você.</p>
-<div id="2866a468" class="cell">
+<div id="0bd28725" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> aulas_cbers <span class="im">as</span> ac</span>
 <span id="cb4-2"><a href="#cb4-2"></a>ac.configurar_gdal()</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
@@ -521,7 +521,7 @@ Aviso
 </div>
 </div>
 </div>
-<div id="5c555260" class="cell">
+<div id="d4dc2103" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>meta <span class="op">=</span> ac.ler_xml(CENA_ID)      <span class="co"># coeficientes + geometria solar, do XML</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>esun <span class="op">=</span> ac.ler_esun()            <span class="co"># config/esun_wpm.json</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a></span>
@@ -553,7 +553,7 @@ Aviso
 <p>A razão é física: em reflectância TOA o azul <strong>nunca</strong> é zero sobre a terra, porque a radiância de trajetória do espalhamento Rayleigh garante sinal até dentro de sombra profunda. Um zero isolado, portanto, não é alvo escuro — é artefato da borda da faixa imageada. Se ficar como válido, entra na fusão deformando a estatística por banda e depois contamina a harmonização da Aula 03.</p>
 </div>
 </div>
-<div id="1cbd3903" class="cell">
+<div id="a0c3d6bd" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>zeros <span class="op">=</span> np.zeros(forma, dtype<span class="op">=</span><span class="bu">bool</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="cf">for</span> n <span class="kw">in</span> dn:</span>
 <span id="cb6-3"><a href="#cb6-3"></a>    zeros <span class="op">|=</span> (dn[n] <span class="op">==</span> <span class="dv">0</span>)</span>
@@ -669,7 +669,7 @@ Aviso
 <p>Dos três, o <strong>AOD</strong> é o que mais mexe no resultado e o mais difícil de obter. Dá para estimá-lo a partir da própria imagem, com um método antigo e conhecido: o <strong>critério do alvo escuro</strong>.</p>
 <p>Numa cena com água ou sombra densa, o pixel mais escuro tem reflectância de superfície no azul perto de <strong>zero, mas não negativa</strong> — em torno de 0,005. Se o AOD informado for alto demais, o 6S subtrai mais radiância de trajetória do que existe e o percentil 1 do azul <strong>afunda abaixo de zero</strong>. Se for baixo demais, sobra brilho atmosférico e o percentil 1 fica alto.</p>
 <p>Então: roda-se o 6S só na banda azul, com vários AOD, e escolhe-se o que deixa o alvo escuro no lugar certo. O notebook faz isso automaticamente com <code>AJUSTAR_AOD = True</code> (custa uns 30 s):</p>
-<div id="a9351818" class="cell">
+<div id="c636df99" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">for</span> aod <span class="kw">in</span> [<span class="fl">0.03</span>, <span class="fl">0.05</span>, <span class="fl">0.08</span>, <span class="fl">0.12</span>, <span class="fl">0.16</span>, <span class="fl">0.22</span>]:</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    xa, xb, xc <span class="op">=</span> ac.coeficientes_6s(meta, <span class="bu">dict</span>(atm, aot550<span class="op">=</span>aod), <span class="dv">1</span>)   <span class="co"># 1 = azul</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>    y <span class="op">=</span> xa <span class="op">*</span> L_azul <span class="op">-</span> xb</span>
@@ -738,7 +738,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <p>A ordem das bandas costuma ser a única informação do pipeline que vive apenas na cabeça de quem roda os scripts. Uma troca silenciosa de R por B não quebra nada: as métricas continuam saindo, só que erradas. Com os nomes gravados no GeoTIFF, as aulas seguintes <strong>leem</strong> a ordem do metadado em vez de assumir — e avisam quando não conseguem.</p>
 </div>
 </div>
-<div id="3eefd608" class="cell">
+<div id="f86e9513" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(rgbcomp, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
 <span id="cb10-2"><a href="#cb10-2"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(ac.ORDEM_SAIDA, start<span class="op">=</span><span class="dv">1</span>):        <span class="co"># [3, 2, 1, 4] = R, G, B, NIR</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a>        arr <span class="op">=</span> refl[ac.BANDAS_NATIVAS[n]]</span>
@@ -751,7 +751,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <section id="alinhando-a-multiespectral-com-a-pancromática" class="level2">
 <h2 class="anchored" data-anchor-id="alinhando-a-multiespectral-com-a-pancromática">5. Alinhando a multiespectral com a pancromática</h2>
 <p>O Gram-Schmidt precisa de razão inteira e origens coincidentes. Sem isso a fusão introduz um deslocamento subpixel que se propaga por tudo — inclusive pelo coregistro da Aula 03.</p>
-<div id="89474f8e" class="cell">
+<div id="3f7dcc0c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>ms, pan, t_ms, t_pan, crs, nod_ms, FATOR <span class="op">=</span> ac.alinhar_ms_pan(rgbcomp, arquivos[<span class="st">"BAND0"</span>])</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="co"># recorta as duas à extensão comum encaixada na grade de 8 m e reamostra a PAN</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="co"># para a grade derivada dessa, com fator exato de 4</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
@@ -832,7 +832,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <p>A implementação original do código é em NumPy e substitui o <code>CreatePansharpenedRasterDataset</code> do ArcGIS Pro, que exige licença e só roda no interpretador do próprio ArcGIS. A intensidade aqui é estimada por regressão, não pelos pesos fixos da ESRI. O resultado acaba sendo <strong>mais fiel à pancromática real</strong>, resultando em menos pixels negativos.</p>
 </div>
 </div>
-<div id="d7f7fcda" class="cell">
+<div id="ebc93bbe" class="cell">
 <details class="code-fold">
 <summary>Função gram_schmidt()</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> gram_schmidt(ms_up, pan, pesos, valido):</span>

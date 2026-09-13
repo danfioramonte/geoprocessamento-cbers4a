@@ -1,8 +1,8 @@
 ---
 title: "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
 subtitle: "Super-resolução do Sentinel-2 para preencher lacunas do CBERS-4A"
-author: "Danilo Fioramonte"
-date: "2026-09-08"
+author: "Danilo Roberto Fioramonte"
+date: "2026-09-13"
 ---
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/03_sen2sr.ipynb){target="_blank"}
@@ -21,7 +21,7 @@ São quatro etapas, e cada uma resolve um problema diferente:
 | etapa | problema que resolve | ferramenta |
 |---|---|---|
 | 1. mosaico Sentinel-2 | achar dado limpo perto da data do CBERS | STAC do Planetary Computer |
-| 2. super-resolução | 10 m é grosso demais para 2 m | SEN2SR (10 m → 2,5 m) |
+| 2. super-resolução | 10 m é grosseiro demais para 2 m | SEN2SR (10 m → 2,5 m) |
 | 3. coregistro | as duas imagens não estão exatamente alinhadas | AROSICS |
 | 4. harmonização e emenda | sensores diferentes têm brilho e resposta diferentes | casamento de momentos |
 
@@ -154,7 +154,7 @@ MAX_PREVIA = 8
 
 fator_p = max(1, int(np.ceil(max(H_S2, W_S2) / 280)))
 forma_p = (max(1, H_S2 // fator_p), max(1, W_S2 // fator_p))
-T_p = T_S2 * Affine.scale(fator_p, fator_p)      # mesma origem, pixel mais grosso
+T_p = T_S2 * Affine.scale(fator_p, fator_p)      # mesma origem, pixel mais grosseiro
 
 for i, item in enumerate(itens[:MAX_PREVIA]):
     scl = ler_para_grade(item.assets["SCL"].href, "uint8", Resampling.nearest, forma_p, T_p)
@@ -203,10 +203,10 @@ tira só o que o SCL chama de nuvem, nada além disso. A prévia é a sua confer
 
 ### 1.4 A máscara de nuvem
 
-O satélite Sentinel-2 conta com uma máscara própria, chamada de **SCL**. Nessa máscara, estamos interessados em marcar **apenas o que ele chama de **nuvem** — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).
+O satélite Sentinel-2 conta com uma máscara própria, chamada de **SCL**. Nessa máscara, estamos interessados em marcar apenas o que ele chama de **nuvem** — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).
 
-Nada além disso. Você escolheu as cenas olhando a prévia; se elas estão limpas, não há o que
-remover, e qualquer camada a mais só tem como errar para o lado de tirar pixel bom.
+Escolhemos as cenas olhando a prévia; se elas estão limpas, não há o que
+remover, e qualquer camada a mais pode remover pixels bons.
 
 ```{python}
 #| eval: false
@@ -223,11 +223,9 @@ limpo = dentro & ~nuvem
 ::: {.callout-important}
 ## Importante
 
-Acrescente a classe **3 (sombra de nuvem)** em `CLASSES_NUVEM`. Mas saiba o que vem junto: o SCL
-chama **água escura de sombra** com muita frequência, e o resultado é um buraco em cima de
-represa e rio, que aparece branco no mosaico.
+Caso você perceba falso negativos em sombra de nuvens na sua imagem escolhida, acrescente a classe **3 (sombra de nuvem)** em `CLASSES_NUVEM`. Mas saiba o que vem junto: o SCL chama **água escura de sombra** com muita frequência, e o resultado pode ser um buraco em cima de represa e rio, que aparece branco no mosaico.
 
-Se sua cena está limpa, deixe a 3 de fora; se tem nuvem sobre área seca, coloque; se tem nuvem **e** água, coloque e depois confira a represa.
+Se sua cena está praticamente limpa, deixe a classe 3 de fora; se houve falso negativo, coloque e avalie visualmente se a máscara não está removendo pixels não contaminados.
 :::
 
 ::: {.callout-tip}
@@ -238,14 +236,13 @@ for **0**, o mosaico ficou vazio, e há só duas explicações: nenhuma cena cob
 tiles — veja a coluna `cobre`), ou o SCL marcou nuvem em todas.
 
 Compare com a prévia. Se a imagem está visivelmente limpa naquele ponto, é o SCL errando:
-ajuste `CLASSES_NUVEM` ou use `MASCARA_SCL = False`. O notebook imprime a contagem e essa mesma
-sugestão.
+ajuste `CLASSES_NUVEM` ou use `MASCARA_SCL = False`. 
 :::
 
 ### 1.5 A escolha final
 
-Entre as candidatas com dado limpo, vence **a primeira da ordem** — a mais próxima em data no
-automático, ou a que você pôs primeiro em `ESCOLHA_S2`.
+Entre as candidatas com dado limpo, vence **a primeira da ordem** (a mais próxima em data se definido
+automático, ou, nesse caso, a que colocamos primeiro em `ESCOLHA_S2`).
 
 ```{python}
 #| eval: false
@@ -278,9 +275,8 @@ esperam:
 
 ## 2. Super-resolução com o SEN2SR
 
-O modelo leva o Sentinel-2 de 10 m para 2,5 m. Vale repetir: a textura da área preenchida é
-**reconstruída**, não observada. É plausível, é suficiente para a emenda não gritar, e é honesto
-declarar isso no método.
+O modelo leva o Sentinel-2 de 10 m para 2,5 m. A textura da área preenchida é
+**reconstruída**.
 
 O código baixa os pesos com o `mlstac` e roda a inferência em blocos.
 
@@ -345,7 +341,7 @@ o que ficou fora do mosaico. Tentar correlacionar dentro do buraco seria correla
 
 **A banda de validade viaja junto.** Ela entra como banda extra da imagem alvo, para sofrer
 exatamente a mesma deformação da imagem. Na volta, o limiar de 0,99 devolve o caráter binário,
-erodindo cerca de um pixel na borda — conservador de propósito.
+erodindo cerca de um pixel na borda.
 
 ```{python}
 #| eval: false
@@ -395,9 +391,9 @@ mesmo tempo. São quatro métodos, e a escolha aparece na imagem:
 | método | o que faz | quando usar |
 |---|---|---|
 | `momentos` (padrão) | casa média **e** desvio-padrão | preserva a variância do S2, então a **textura** da área preenchida combina com a do entorno |
-| `linear` | regressão por mínimos quadrados | dá coeficientes bonitos de reportar, mas **encolhe a variância**: o preenchimento sai mais liso que a vizinhança |
-| `histograma` | casa a distribuição inteira por quantis | acomoda relação não linear entre os sensores; não produz coeficiente reportável |
-| `minmax` | casa os extremos | sensível a outlier; usa percentis 0,5 e 99,5 em vez do mínimo e máximo absolutos |
+| `linear` | regressão por mínimos quadrados | **encolhe a variância**: o preenchimento sai mais liso que a vizinhança |
+| `histograma` | casa a distribuição inteira por quantis | acomoda relação não linear entre os sensores mas não produz coeficiente reportável |
+| `minmax` | casa os extremos | usa percentis 0,5 e 99,5 em vez do mínimo e máximo absolutos |
 
 ::: {.callout-note}
 ## Ajustar na cena inteira ou só em volta do buraco
@@ -423,7 +419,6 @@ uma faixa estreita de dado válido é parcialmente substituída para que o resul
 |---|---|
 | 0 | sem dado |
 | 1 | CBERS nativo |
-| 2 | CBERS de outra data (reservado) |
 | 3 | Sentinel-2 super-resolvido |
 | 5 | zona de transição CBERS ↔ S2 |
 
@@ -487,7 +482,7 @@ data/processed/mosaico_<DATA>_gapfilled.tif    mosaico final     <- o produto do
 data/processed/mosaico_<DATA>_proveniencia.tif de onde veio cada pixel
 ```
 
-Abra os dois últimos juntos no QGIS. A banda de procedência é o que permite responder, para
+Abra os dois últimos juntos no seu GIS. A banda de procedência é o que permite responder, para
 qualquer análise feita em cima deste mosaico, **quais pixels são observação e quais são
 reconstrução**.
 
@@ -502,8 +497,9 @@ reconstrução**.
 :::
 
 ## Considerações Finais
+A qualidade da reconstrução realizada pelo SEN2SR é bastante satisfatória, tendo em vista o tamanho esforço de adequar uma imagem de resolução espacial de 10 metros para 2 metros. Entretanto, é visível que a reconstrução não é perfeita se comparada a uma imagem obtida nativamente em 2 metros. Dessa forma, busque priorizar a substituição de pixels com nuvem por imagens de mesma resolução espacial. Para representações visuais, a reconstrução pode não satisfazer, mas para análises quantitativas e  classificações de uso e cobertura da terra, a sua utilização é válida, já que possibilita a identificação de informações que não seriam possíveis de ser visualizadas com a presença de nuvens.
 
-Espero que essa sequência de aulas tenha contribuído para difundir o uso das imagens de alta resolução CBERS-4A/WPM, a partir da apresentação de uma solução prática para conciliar a presença de nuvens e o alto período de revisita do satélite. O SEN2SR é um modelo de super-resolução extremamente recente e considerado estado-da-arte para a reconstrução de imagens, tendo em vista que mantém características espectrais e reconstrói texturas com menos alucinações que outros modelos. A metodologia apresentada aqui buscou ser de fácil implementação e pode ser adaptada para outras regiões do Brasil. Essa iniciativa teve como objetivo ampliar a utilização de imagens obtidas por esse satélite nacional pela comunidade acadêmica e profissional.
+Espero que essa sequência de aulas tenha contribuído para difundir o uso das imagens de alta resolução CBERS-4A/WPM, a partir da apresentação de uma solução prática para conciliar a presença de nuvens e o alto período de revisita do satélite. O SEN2SR é um modelo de super-resolução extremamente recente e considerado estado-da-arte para a reconstrução de imagens, tendo em vista que mantém características espectrais e reconstrói texturas com menos alucinações que outros modelos. A metodologia apresentada aqui buscou ser de fácil implementação e pode ser adaptada para outras regiões do Brasil. Essa iniciativa teve como objetivo ampliar a utilização de imagens obtidas por satélite nacionais pela comunidade acadêmica e profissional.
 
 ## Erros comuns nesta aula
 
