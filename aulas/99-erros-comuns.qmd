@@ -1,16 +1,8 @@
 ---
 title: "Erros comuns"
-subtitle: "Antes de abrir uma issue, procure o seu erro aqui"
 engine: markdown
 ---
 
-Esta página cresce conforme os problemas aparecem. Se o seu não estiver aqui,
-[abra uma issue](https://github.com/danfioramonte/geoprocessamento-cbers4a/issues)
-informando o sistema operacional, a saída completa de `pixi run check` e a
-mensagem de erro inteira.
-
-Não use os comentários do YouTube para pedir ajuda: não há como formatar código
-lá, e a resposta se perde para quem vier depois.
 
 ## Instalação
 
@@ -130,25 +122,3 @@ pip install cubo
 ### O download do modelo do SEN2SR trava no meio
 
 Rode a célula de novo. O `mlstac` retoma de onde parou.
-
-## Quarto
-
-### `Unable to locate an installed version of Python 3`
-
-O Quarto foi chamado fora do ambiente do projeto. Chame-o **através do pixi**,
-que coloca o Python certo no caminho:
-
-```bash
-pixi run preview      # ou:  pixi run render
-```
-
-Se quiser conferir manualmente qual Python o Quarto enxerga:
-
-```bash
-pixi run python -c "import sys; print(sys.executable)"
-pixi run quarto check jupyter
-```
-
-O caminho impresso deve apontar para dentro da pasta `.pixi` do projeto. Se
-aparecer `WindowsApps` no meio, é o atalho falso do Windows — veja o item
-"Python não foi encontrado" acima.

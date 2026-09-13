@@ -260,9 +260,9 @@ div.csl-indent {
   <ul>
   <li><a href="#o-que-vamos-aprender" id="toc-o-que-vamos-aprender" class="nav-link active" data-scroll-target="#o-que-vamos-aprender">O que vamos aprender</a></li>
   <li><a href="#antes-de-começar" id="toc-antes-de-começar" class="nav-link" data-scroll-target="#antes-de-começar">Antes de começar</a></li>
-  <li><a href="#por-que-detectar-em-10-m-e-não-nos-2-m-nativos" id="toc-por-que-detectar-em-10-m-e-não-nos-2-m-nativos" class="nav-link" data-scroll-target="#por-que-detectar-em-10-m-e-não-nos-2-m-nativos">1. Por que detectar em 10 m, e não nos 2 m nativos</a></li>
+  <li><a href="#por-que-detectar-em-10-m-e-não-nos-2-m" id="toc-por-que-detectar-em-10-m-e-não-nos-2-m" class="nav-link" data-scroll-target="#por-que-detectar-em-10-m-e-não-nos-2-m">1. Por que detectar em 10 m e não nos 2 m?</a></li>
   <li><a href="#rodando-o-omnicloudmask" id="toc-rodando-o-omnicloudmask" class="nav-link" data-scroll-target="#rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</a></li>
-  <li><a href="#olhando-antes-de-acreditar" id="toc-olhando-antes-de-acreditar" class="nav-link" data-scroll-target="#olhando-antes-de-acreditar">3. Olhando antes de acreditar</a></li>
+  <li><a href="#verificando-antes-de-continuar" id="toc-verificando-antes-de-continuar" class="nav-link" data-scroll-target="#verificando-antes-de-continuar">3. Verificando antes de continuar</a></li>
   <li><a href="#as-três-máscaras" id="toc-as-três-máscaras" class="nav-link" data-scroll-target="#as-três-máscaras">4. As três máscaras</a></li>
   <li><a href="#aplicando-a-máscara-na-imagem" id="toc-aplicando-a-máscara-na-imagem" class="nav-link" data-scroll-target="#aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</a></li>
   <li><a href="#vale-a-pena-preencher" id="toc-vale-a-pena-preencher" class="nav-link" data-scroll-target="#vale-a-pena-preencher">6. Vale a pena preencher?</a></li>
@@ -281,7 +281,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../aulas/00-ambiente.html">Aulas</a></li><li class="breadcrumb-item"><a href="../aulas/02-omnicloudmask.html">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</h1>
-<p class="subtitle lead">Uma rede treinada para achar nuvem, aplicada a um sensor que ela nunca viu</p>
+<p class="subtitle lead">Modelo de aprendizado profundo para detecção de nuvens</p>
 </div>
 
 
@@ -314,8 +314,9 @@ div.csl-indent {
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ID-DO-VIDEO" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <section id="o-que-vamos-aprender" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-vamos-aprender">O que vamos aprender</h2>
+<p>Nessa aula iremos utilizar o <strong>OmniCloudMask</strong> para detectar nuvens e sombras na cena de 2 m que geramos na aula anterior. O resultado é uma <strong>máscara georreferenciada</strong> que indica quais pixels estão cobertos por nuvem ou sombra.</p>
 <p>A cena de 2 m que saiu da Aula 01 tem nuvem em parte da área. Aqui a gente descobre <strong>exatamente onde</strong>, e grava isso como uma máscara georreferenciada — que é o que a Aula 03 vai usar para saber quais pixels precisam ser substituídos.</p>
-<p>O <strong>OmniCloudMask</strong> (OCM) <span class="citation" data-cites="wright_training_2025">(<a href="#ref-wright_training_2025" role="doc-biblioref">Wright et al., 2025</a>)</span> é uma rede convolucional treinada em cenas de vários sensores para separar quatro classes:</p>
+<p>O <strong>OmniCloudMask</strong> (OCM) <span class="citation" data-cites="wright_training_2025">(<a href="#ref-wright_training_2025" role="doc-biblioref">Wright et al., 2025</a>)</span> é uma rede neural convolucional treinada em cenas de vários sensores para separar quatro classes:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -352,7 +353,8 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
-<p>Ele usa só três bandas — <strong>vermelho, verde e infravermelho próximo</strong> — e é <strong>agnóstico ao sensor</strong>: não foi treinado com CBERS-4A e mesmo assim funciona, porque aprendeu a assinatura espectral e a textura da nuvem, não as particularidades de um satélite.</p>
+<p>Ele usa só três bandas — <strong>vermelho, verde e infravermelho próximo</strong> — e é <strong>agnóstico ao sensor</strong>: não foi treinado com CBERS-4A e mesmo assim funciona, porque aprendeu a assinatura espectral e a textura da nuvem, não as particularidades de um satélite. Isso só é possível porque o OCM foi treinado com um dataset enorme, com alta diversidade de sensores, resoluções espectrais e com imagens de todo o mundo. (Para mais detalhes, consultar <span class="citation" data-cites="wright_training_2025">Wright et al. (<a href="#ref-wright_training_2025" role="doc-biblioref">2025</a>)</span>.)</p>
+<p><strong>Detalhe importante:</strong> apesar de ser extremamente robusto, ainda há erros. Algumas sombras de nuvens podem passar despercebidas e algumas nuvens finas podem ser confundidas com alvos claros.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -363,8 +365,8 @@ div.csl-indent {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Um pixel sombreado não está coberto — a superfície aparece na imagem. Mas está com a radiância errada: recebeu só a luz difusa do céu, sem a componente direta do Sol. Se ele entrar numa classificação de uso e cobertura, vira erro silencioso, do tipo que não aparece na inspeção visual e aparece na matriz de confusão.</p>
-<p>Por isso a classe 3 sai junto, e por isso ela é tratada como lacuna na Aula 03.</p>
+<p>Um pixel sombreado não está coberto, a superfície aparece na imagem, mas está com a radiância errada: recebeu só a luz difusa do céu, sem a componente direta do Sol. Se ele entrar numa classificação de uso e cobertura, irá gerar falsos positivos. É o tipo de erro que pode passar despercebido na inspeção visual mas que aparece na matriz de confusão e nas métricas de avaliação.</p>
+<p>Por isso a <code>cloud_shadow</code> também é obtida e é tratada como lacuna na Aula 03.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -377,7 +379,7 @@ div.csl-indent {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O OCM não é um detector de <strong>haze</strong> nem de fumaça. Uma cena com neblina generalizada, ou com pluma de queimada, pode sair quase toda como <code>clear</code> — porque não existe borda de nuvem, existe uma degradação suave do contraste. Confira a olho na pré-visualização antes de confiar.</p>
+<p>O OCM não é um detector de neblina e nem de fumaça. Uma cena com neblina generalizada, ou com fumaça de queimada, pode sair quase toda como <code>clear</code> (a borda de nuvem não existe, mas sim uma degradação suave do contraste). Pode ser que o modelo identifique, mas não é garantido. Verifique com atenção o resultado obtido na sua cena.</p>
 </div>
 </div>
 </section>
@@ -390,18 +392,18 @@ div.csl-indent {
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">cd</span> C<span class="op">:</span>\geo\geoprocessamento-cbers4a</span>
 <span id="cb1-2"><a href="#cb1-2"></a>pixi run lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Abra <code>colab/02_nuvens_omnicloudmask.ipynb</code>. Nada a instalar: o <code>omnicloudmask</code> e o PyTorch já vêm no ambiente.</p>
+<p>Abra <code>colab/02_nuvens_omnicloudmask.ipynb</code> e pode iniciar as células.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Clique no botão do Colab no topo. Se você <strong>já</strong> tem o <code>pansharpening_*.tif</code> na sessão, basta:</p>
-<div id="8a1d103d" class="cell">
+<div id="5d7efca7" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="op">!</span>pip install <span class="op">-</span>q omnicloudmask</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Se você está começando por esta aula, o atalho que refaz a Aula 01 precisa do 6S, e aí valem as duas células com reinício de sessão descritas na <a href="../aulas/01-toa-boa.html">Aula 01</a>.</p>
 </div>
 </div>
 </div>
-<div id="adb63f7d" class="cell">
+<div id="85f2ea6e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO</span>
 <span id="cb3-2"><a href="#cb3-2"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                 <span class="co"># tem que casar com o que você gerou na Aula 01</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>DETECT_RES <span class="op">=</span> <span class="fl">10.0</span>             <span class="co"># resolução (m) em que a detecção acontece</span></span>
@@ -409,71 +411,50 @@ div.csl-indent {
 <span id="cb3-5"><a href="#cb3-5"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># janelamento interno do OCM</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="por-que-detectar-em-10-m-e-não-nos-2-m-nativos" class="level2">
-<h2 class="anchored" data-anchor-id="por-que-detectar-em-10-m-e-não-nos-2-m-nativos">1. Por que detectar em 10 m, e não nos 2 m nativos</h2>
-<p>Parece contraintuitivo jogar fora resolução. Três motivos:</p>
+<section id="por-que-detectar-em-10-m-e-não-nos-2-m" class="level2">
+<h2 class="anchored" data-anchor-id="por-que-detectar-em-10-m-e-não-nos-2-m">1. Por que detectar em 10 m e não nos 2 m?</h2>
+<p>Três motivos:</p>
 <ol type="1">
 <li><strong>O OCM foi validado na faixa de 10 a 50 m.</strong> Fora dela o desempenho cai — a rede aprendeu a nuvem numa determinada escala de textura, e em 2 m ela vê estrutura demais;</li>
-<li><strong>Nuvem é um objeto grande.</strong> A borda de uma nuvem não é nítida em escala nenhuma: existe uma faixa de transição de dezenas de metros. Detectar em 2 m não dá uma borda mais correta, dá uma borda mais ruidosa;</li>
+<li><strong>Nuvem é um objeto grande.</strong> A borda de uma nuvem não é nítida em escala nenhuma: existe uma faixa de transição de dezenas de metros. Detectar em 2 m não dá uma borda mais correta.</li>
 <li><strong>Custo.</strong> São 16 vezes menos pixels para a rede processar.</li>
 </ol>
-<p>A máscara sai em 10 m e depois volta para a grade nativa de 2 m por <strong>vizinho mais próximo</strong> — o único reamostrador aceitável para dado categórico. Interpolação bilinear numa máscara de classes produziria “nuvem 1,4”, que não quer dizer nada.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Como saber quais pixels da grade reduzida são válidos
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Detalhe pequeno com consequência real. A redução para 10 m é feita por <strong>média</strong> — e a média do GDAL <strong>ignora os pixels de nodata</strong>. Isso é bom: um bloco de 10 m que cai meio em cima da borda sai com a média só do que existe, sem contaminação, e a borda não se perde.</p>
-<p>O que a média não diz é <strong>onde não sobrou nada</strong>. Para isso lemos a <strong>máscara</strong> do arquivo — que o GDAL deriva do nodata, 255 onde há dado e 0 onde não há — reduzida do mesmo jeito: ela zera só nos blocos inteiramente sem dado.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>mascara <span class="op">=</span> src.read_masks(<span class="dv">1</span>, out_shape<span class="op">=</span>(h, w), resampling<span class="op">=</span>Resampling.average)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>valido <span class="op">=</span> (mascara <span class="op">&gt;=</span> <span class="dv">255</span>) <span class="op">&amp;</span> np.<span class="bu">all</span>(det <span class="op">&gt;</span> <span class="op">-</span><span class="dv">5000</span>, axis<span class="op">=</span><span class="dv">0</span>)   <span class="co"># o 2º teste é cinto e suspensório</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>O que <strong>não</strong> funciona é procurar o valor <code>-9999</code> na grade reduzida (ele não sobrevive à média), nem usar <code>Resampling.min</code> para farejá-lo: <code>min</code> e companhia só valem em reprojeção, não em leitura.</p>
-</div>
-</div>
-</div>
-<div id="6ae05b37" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb5-2"><a href="#cb5-2"></a>    escala <span class="op">=</span> src.res[<span class="dv">0</span>] <span class="op">/</span> DETECT_RES</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    h, w <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(src.height <span class="op">*</span> escala)), <span class="bu">int</span>(<span class="bu">round</span>(src.width <span class="op">*</span> escala))</span>
-<span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a>    <span class="co"># bandas na ordem exigida pelo OCM: Red, Green, NIR</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a>    det <span class="op">=</span> src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape<span class="op">=</span>(<span class="dv">3</span>, h, w),</span>
-<span id="cb5-7"><a href="#cb5-7"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
-<span id="cb5-8"><a href="#cb5-8"></a>    mascara <span class="op">=</span> src.read_masks(<span class="dv">1</span>, out_shape<span class="op">=</span>(h, w), resampling<span class="op">=</span>Resampling.average)</span>
-<span id="cb5-9"><a href="#cb5-9"></a>    t_det <span class="op">=</span> src.transform <span class="op">*</span> Affine.scale(src.width <span class="op">/</span> w, src.height <span class="op">/</span> h)</span>
-<span id="cb5-10"><a href="#cb5-10"></a></span>
-<span id="cb5-11"><a href="#cb5-11"></a>valido <span class="op">=</span> (mascara <span class="op">&gt;=</span> <span class="dv">255</span>) <span class="op">&amp;</span> np.<span class="bu">all</span>(det <span class="op">&gt;</span> <span class="op">-</span><span class="dv">5000</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb5-12"><a href="#cb5-12"></a>det[:, <span class="op">~</span>valido] <span class="op">=</span> <span class="fl">0.0</span>     <span class="co"># o OCM ignora estes pixels (no_data_value=0)</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A máscara sai em 10 m e depois volta para a grade nativa de 2 m por <strong>vizinho mais próximo</strong> — o único reamostrador aceitável para dado categórico.</p>
+<div id="9b75a28d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    escala <span class="op">=</span> src.res[<span class="dv">0</span>] <span class="op">/</span> DETECT_RES</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    h, w <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(src.height <span class="op">*</span> escala)), <span class="bu">int</span>(<span class="bu">round</span>(src.width <span class="op">*</span> escala))</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="co"># bandas na ordem exigida pelo OCM: Red, Green, NIR</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    det <span class="op">=</span> src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape<span class="op">=</span>(<span class="dv">3</span>, h, w),</span>
+<span id="cb4-7"><a href="#cb4-7"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    mascara <span class="op">=</span> src.read_masks(<span class="dv">1</span>, out_shape<span class="op">=</span>(h, w), resampling<span class="op">=</span>Resampling.average)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    t_det <span class="op">=</span> src.transform <span class="op">*</span> Affine.scale(src.width <span class="op">/</span> w, src.height <span class="op">/</span> h)</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a>valido <span class="op">=</span> (mascara <span class="op">&gt;=</span> <span class="dv">255</span>) <span class="op">&amp;</span> np.<span class="bu">all</span>(det <span class="op">&gt;</span> <span class="op">-</span><span class="dv">5000</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-12"><a href="#cb4-12"></a>det[:, <span class="op">~</span>valido] <span class="op">=</span> <span class="fl">0.0</span>     <span class="co"># o OCM ignora estes pixels (no_data_value=0)</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="rodando-o-omnicloudmask" class="level2">
 <h2 class="anchored" data-anchor-id="rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</h2>
-<p>Na primeira execução ele baixa os pesos (algumas centenas de MB) do Hugging Face. Se a sua rede bloquear o HF, troque <code>model_download_source</code> para <code>"google_drive"</code>.</p>
-<p>O OCM trabalha em blocos de <code>PATCH</code> pixels com <code>OVERLAP</code> de sobreposição e faz a média nas emendas. Sobreposição generosa evita costura visível entre blocos — o padrão de 300 px sobre blocos de 1000 é conservador de propósito.</p>
-<div id="57b37eb1" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> omnicloudmask <span class="im">import</span> predict_from_array</span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a>mask <span class="op">=</span> predict_from_array(</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    det,</span>
-<span id="cb6-5"><a href="#cb6-5"></a>    patch_size<span class="op">=</span>PATCH,</span>
-<span id="cb6-6"><a href="#cb6-6"></a>    patch_overlap<span class="op">=</span>OVERLAP,</span>
-<span id="cb6-7"><a href="#cb6-7"></a>    no_data_value<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb6-8"><a href="#cb6-8"></a>    apply_no_data_mask<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb6-9"><a href="#cb6-9"></a>    model_download_source<span class="op">=</span><span class="st">"hugging_face"</span>,</span>
-<span id="cb6-10"><a href="#cb6-10"></a>)</span>
-<span id="cb6-11"><a href="#cb6-11"></a>mask <span class="op">=</span> np.squeeze(np.asarray(mask)).astype(<span class="st">"uint8"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Na primeira execução ele baixa os pesos do modelo via Hugging Face (HF).</p>
+<p>O OCM trabalha em blocos de <code>PATCH</code> pixels com <code>OVERLAP</code> de sobreposição e faz a média nas emendas.</p>
+<div id="b5720de2" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> omnicloudmask <span class="im">import</span> predict_from_array</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>mask <span class="op">=</span> predict_from_array(</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    det,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    patch_size<span class="op">=</span>PATCH,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    patch_overlap<span class="op">=</span>OVERLAP,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    no_data_value<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    apply_no_data_mask<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    model_download_source<span class="op">=</span><span class="st">"hugging_face"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a>mask <span class="op">=</span> np.squeeze(np.asarray(mask)).astype(<span class="st">"uint8"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Com GPU leva segundos; em CPU, alguns minutos. <strong>Não precisa de GPU</strong> — e é por isso que esta aula roda bem no Colab gratuito e no seu notebook sem placa.</p>
 <p>A composição da cena do curso:</p>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
@@ -483,21 +464,21 @@ Tabela&nbsp;1
 <pre><code>dispositivo: CPU
 
 --- composição da cena (pixels válidos, grade de detecção) ---
-  0 clear        :    943,629  ( 87.3 %)
-  1 thick_cloud  :     80,454  (  7.4 %)
+  0 clear        :  1,597,022  ( 88.7 %)
+  1 thick_cloud  :    123,299  (  6.9 %)
   2 thin_cloud   :          0  (  0.0 %)
-  3 cloud_shadow :     57,385  (  5.3 %)
-  -&gt; nuvem + sombra:    137,839  ( 12.7 %)
-  -&gt; utilizável    :    943,629  ( 87.3 %)</code></pre>
+  3 cloud_shadow :     79,316  (  4.4 %)
+  -&gt; nuvem + sombra:    202,615  ( 11.3 %)
+  -&gt; utilizável    :  1,597,022  ( 88.7 %)</code></pre>
 </div>
 </div>
 </figure>
 </div>
 <a class="quarto-notebook-link" id="nblink-1" href="..\colab\02_nuvens_omnicloudmask-preview.html#cell-tbl-ocm-classes">Fonte: Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</a></div>
 </section>
-<section id="olhando-antes-de-acreditar" class="level2">
-<h2 class="anchored" data-anchor-id="olhando-antes-de-acreditar">3. Olhando antes de acreditar</h2>
-<p>Nenhuma máscara de nuvem é perfeita, e a hora de descobrir os erros é agora — não depois de preencher a cena inteira com Sentinel-2. O notebook mostra a falsa cor e a máscara lado a lado, mais um zoom na maior mancha de nuvem.</p>
+<section id="verificando-antes-de-continuar" class="level2">
+<h2 class="anchored" data-anchor-id="verificando-antes-de-continuar">3. Verificando antes de continuar</h2>
+<p>Nenhuma máscara de nuvem é perfeita, e a hora de descobrir os erros é agora. O notebook mostra a falsa cor e a máscara lado a lado, mais um zoom na maior mancha de nuvem.</p>
 <p>O que conferir:</p>
 <ul>
 <li><strong>sombra deslocada</strong>: a sombra fica do lado oposto ao Sol em relação à nuvem. Se a classe 3 aparece do lado errado, alguma banda está trocada na entrada;</li>
@@ -506,7 +487,7 @@ Tabela&nbsp;1
 <li><strong>água</strong>: corpo d’água escuro às vezes vira sombra. Se a sua AOI tem represa, olhe com atenção.</li>
 </ul>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-ocm-mascara" class="cell" data-execution_count="5">
+<div id="cell-fig-ocm-mascara" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-mascara" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -522,7 +503,7 @@ Figura&nbsp;1: Falsa cor e a máscara do OmniCloudMask, lado a lado.
 </div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-ocm-zoom" class="cell" data-execution_count="6">
+<div id="cell-fig-ocm-zoom" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -535,19 +516,6 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 </figure>
 </div>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Dica</span>Nuvem pequena também serve
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Não é preciso uma cena metade encoberta para a aula funcionar. Uma mancha de poucos hectares sobre a área urbana já produz uma lacuna real, com borda real, e é o suficiente para a Aula 03 mostrar o preenchimento — inclusive porque fica mais fácil enxergar a emenda no zoom.</p>
 </div>
 </div>
 </section>
@@ -585,18 +553,17 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 </tr>
 </tbody>
 </table>
-<p>Todos em <code>uint8</code> com nodata 255, compressão <code>deflate</code> <strong>sem</strong> <code>predictor</code> — em dado categórico o preditor horizontal atrapalha em vez de ajudar.</p>
-<div id="ad2dc2f0" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), <span class="dv">255</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
-<span id="cb8-3"><a href="#cb8-3"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
-<span id="cb8-4"><a href="#cb8-4"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
-<span id="cb8-5"><a href="#cb8-5"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># categórico: só vizinho mais próximo</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="4171edec" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), <span class="dv">255</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb7-4"><a href="#cb7-4"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb7-5"><a href="#cb7-5"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># categórico: só vizinho mais próximo</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="aplicando-a-máscara-na-imagem" class="level2">
 <h2 class="anchored" data-anchor-id="aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</h2>
-<p>Agora gravamos uma cópia da cena em que nuvem e sombra viram <strong>nodata</strong>, e não zero.</p>
+<p>Agora gravamos uma cópia da cena em que nuvem e sombra viram <strong>nodata</strong>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -607,40 +574,35 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Zero é um valor de reflectância legítimo. Um pixel zerado entra em qualquer estatística puxando a média para baixo sem avisar. Como nodata, ele é ignorado pelo rasterio, pelo QGIS e — o que mais importa na Aula 03 — pelo AROSICS, que não vai tentar achar ponto de amarração dentro do buraco.</p>
+<p>Um pixel zerado entra em qualquer estatística puxando a média para baixo sem avisar. Como nodata, ele é ignorado pelo rasterio, pelo seu software de GIS e pelo AROSICS, que não vai tentar achar ponto de amarração dentro da área removida.</p>
 </div>
 </div>
-<p>Duas escolhas de escrita que numa cena de 2 m fazem diferença de minutos e de gigabytes:</p>
-<ul>
-<li><strong>escrita em faixas de linhas</strong>: cada banda tem centenas de MB; ler e escrever em blocos mantém o pico de memória baixo;</li>
-<li><strong><code>interleave="band"</code></strong>: com <code>pixel</code>, cada bloco do arquivo guarda as quatro bandas juntas — escrevendo banda a banda, o GDAL recomprime os mesmos blocos quatro vezes, e a versão antiga de cada bloco vira <strong>espaço morto</strong> dentro do arquivo. O resultado é um GeoTIFF maior que o dado cru. Com <code>band</code>, cada banda tem seus próprios blocos e a escrita fica sequencial.</li>
-</ul>
-<div id="cf7f095a" class="cell">
+<div id="c150cb4d" class="cell">
 <details class="code-fold">
 <summary>Escrita da imagem mascarada, em faixas</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb9-2"><a href="#cb9-2"></a>    perfil <span class="op">=</span> src.profile.copy()</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    nd <span class="op">=</span> src.nodata <span class="cf">if</span> src.nodata <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">9999</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>    <span class="cf">for</span> k <span class="kw">in</span> (<span class="st">"blockxsize"</span>, <span class="st">"blockysize"</span>, <span class="st">"tiled"</span>, <span class="st">"interleave"</span>):</span>
-<span id="cb9-5"><a href="#cb9-5"></a>        perfil.pop(k, <span class="va">None</span>)</span>
-<span id="cb9-6"><a href="#cb9-6"></a>    perfil.update(nodata<span class="op">=</span>nd, compress<span class="op">=</span><span class="st">"deflate"</span>, predictor<span class="op">=</span><span class="dv">2</span>, tiled<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb9-7"><a href="#cb9-7"></a>                  blockxsize<span class="op">=</span><span class="dv">512</span>, blockysize<span class="op">=</span><span class="dv">512</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>,</span>
-<span id="cb9-8"><a href="#cb9-8"></a>                  interleave<span class="op">=</span><span class="st">"band"</span>)</span>
-<span id="cb9-9"><a href="#cb9-9"></a>    nublado <span class="op">=</span> np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb9-10"><a href="#cb9-10"></a></span>
-<span id="cb9-11"><a href="#cb9-11"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb9-12"><a href="#cb9-12"></a>        <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb9-13"><a href="#cb9-13"></a>            <span class="cf">for</span> r0 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, src.height, <span class="dv">2048</span>):</span>
-<span id="cb9-14"><a href="#cb9-14"></a>                nr <span class="op">=</span> <span class="bu">min</span>(<span class="dv">2048</span>, src.height <span class="op">-</span> r0)</span>
-<span id="cb9-15"><a href="#cb9-15"></a>                jan <span class="op">=</span> Window(<span class="dv">0</span>, r0, src.width, nr)</span>
-<span id="cb9-16"><a href="#cb9-16"></a>                dados <span class="op">=</span> src.read(b, window<span class="op">=</span>jan)</span>
-<span id="cb9-17"><a href="#cb9-17"></a>                dados[nublado[r0:r0 <span class="op">+</span> nr, :]] <span class="op">=</span> nd</span>
-<span id="cb9-18"><a href="#cb9-18"></a>                dst.write(dados, b, window<span class="op">=</span>jan)</span>
-<span id="cb9-19"><a href="#cb9-19"></a>            dst.set_band_description(b, src.descriptions[b <span class="op">-</span> <span class="dv">1</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    perfil <span class="op">=</span> src.profile.copy()</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    nd <span class="op">=</span> src.nodata <span class="cf">if</span> src.nodata <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">9999</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="cf">for</span> k <span class="kw">in</span> (<span class="st">"blockxsize"</span>, <span class="st">"blockysize"</span>, <span class="st">"tiled"</span>, <span class="st">"interleave"</span>):</span>
+<span id="cb8-5"><a href="#cb8-5"></a>        perfil.pop(k, <span class="va">None</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    perfil.update(nodata<span class="op">=</span>nd, compress<span class="op">=</span><span class="st">"deflate"</span>, predictor<span class="op">=</span><span class="dv">2</span>, tiled<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>                  blockxsize<span class="op">=</span><span class="dv">512</span>, blockysize<span class="op">=</span><span class="dv">512</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>                  interleave<span class="op">=</span><span class="st">"band"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9"></a>    nublado <span class="op">=</span> np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb8-10"><a href="#cb8-10"></a></span>
+<span id="cb8-11"><a href="#cb8-11"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb8-12"><a href="#cb8-12"></a>        <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb8-13"><a href="#cb8-13"></a>            <span class="cf">for</span> r0 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, src.height, <span class="dv">2048</span>):</span>
+<span id="cb8-14"><a href="#cb8-14"></a>                nr <span class="op">=</span> <span class="bu">min</span>(<span class="dv">2048</span>, src.height <span class="op">-</span> r0)</span>
+<span id="cb8-15"><a href="#cb8-15"></a>                jan <span class="op">=</span> Window(<span class="dv">0</span>, r0, src.width, nr)</span>
+<span id="cb8-16"><a href="#cb8-16"></a>                dados <span class="op">=</span> src.read(b, window<span class="op">=</span>jan)</span>
+<span id="cb8-17"><a href="#cb8-17"></a>                dados[nublado[r0:r0 <span class="op">+</span> nr, :]] <span class="op">=</span> nd</span>
+<span id="cb8-18"><a href="#cb8-18"></a>                dst.write(dados, b, window<span class="op">=</span>jan)</span>
+<span id="cb8-19"><a href="#cb8-19"></a>            dst.set_band_description(b, src.descriptions[b <span class="op">-</span> <span class="dv">1</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="9">
+<div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-antes-depois" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -658,7 +620,7 @@ Figura&nbsp;3: A cena antes e depois de nuvem e sombra virarem nodata.
 </section>
 <section id="vale-a-pena-preencher" class="level2">
 <h2 class="anchored" data-anchor-id="vale-a-pena-preencher">6. Vale a pena preencher?</h2>
-<p>A pergunta prática antes da Aula 03. Se a nuvem cobre 1% da AOI, muitas vezes compensa descartar esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área — e aí a substituição com Sentinel-2 super-resolvido paga o trabalho.</p>
+<p>Se a nuvem cobre 1% da AOI, muitas vezes compensa descartar esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área — e aí a substituição com Sentinel-2 super-resolvido paga o trabalho.</p>
 <p>Não existe limiar universal. O que existe é a informação — fração contaminada, área em hectares, composição por classe — e a sua decisão <strong>registrada</strong>. O notebook grava tudo isso no <code>.params.json</code> ao lado da máscara.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -670,16 +632,16 @@ Figura&nbsp;3: A cena antes e depois de nuvem e sombra virarem nodata.
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Entre descartar e preencher com outro sensor existe o meio-termo de <strong>compor com outra data do próprio CBERS</strong>, se você tiver uma cena próxima e limpa naquele pedaço. Fica na mesma radiometria e na mesma resolução, sem super-resolução nenhuma. A Aula 03 reserva o código <code>2</code> da banda de procedência exatamente para esse caso.</p>
+<p>Entre descartar e preencher com outro sensor existe o meio-termo de <strong>compor com outra data do próprio CBERS</strong>, se você tiver uma cena próxima e limpa naquele pedaço. Fica na mesma radiometria e na mesma resolução, sem super-resolução nenhuma.</p>
 </div>
 </div>
 </section>
 <section id="o-que-ficou-pronto" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-ficou-pronto">O que ficou pronto</h2>
 <pre><code>data/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_10m.tif      máscara na grade de detecção
-data/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_native.tif   máscara em 2 m   &lt;- Aula 03
+data/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_native.tif   máscara em 2 m   &lt;- p/ Aula 03
 data/interim/pansharpening_&lt;DATA&gt;_boa_clearmask_native.tif   binária, 1 = utilizável
-data/interim/pansharpening_&lt;DATA&gt;_boa_masked.tif             cena com lacunas &lt;- Aula 03</code></pre>
+data/interim/pansharpening_&lt;DATA&gt;_boa_masked.tif             cena com lacunas &lt;- p/ Aula 03</code></pre>
 <p>Na <a href="../aulas/03-sen2sr.html">Aula 03</a> essas lacunas são preenchidas com Sentinel-2 levado de 10 m para 2,5 m pelo SEN2SR, coregistrado com o CBERS pelo AROSICS e harmonizado radiometricamente antes da emenda.</p>
 </section>
 <section id="erros-comuns-nesta-aula" class="level2">

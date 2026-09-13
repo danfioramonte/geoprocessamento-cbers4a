@@ -239,7 +239,7 @@ client
 
 A AOI é um retângulo `[oeste, sul, leste, norte]` em graus (**EPSG:4326**). O
 exemplo cobre a área urbana e o horto florestal de **Rio Claro/SP**. Para a sua
-região, pegue as coordenadas no [bbox finder](https://bboxfinder.com/) e troque
+região, pegue as coordenadas no [bbox finder](https://rodostoteknoloji.com/online-tools/bbox-tool-en.html) e troque
 os valores. **Comece pequeno** (~4 km) para experimentar.
 
 ```{python}

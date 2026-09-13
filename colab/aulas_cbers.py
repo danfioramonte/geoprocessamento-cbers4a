@@ -55,7 +55,7 @@ import numpy as np
 # bbox do tutorial, em EPSG:4326 e na ordem [oeste, sul, leste, norte].
 # Mude aqui (e SÓ aqui) para rodar em outra área — mas mude em todas as aulas
 # ao mesmo tempo, senão o coregistro da Aula 03 não tem o que casar.
-AOI_BBOX = [-47.596712, -22.467523, -47.495068, -22.374216]
+AOI_BBOX = [-47.625969, -22.467835, -47.498227, -22.344048]
 AOI_NOME = "rio_claro"
 
 # Cena de referência do curso: Rio Claro com nuvem em parte da AOI. É essa

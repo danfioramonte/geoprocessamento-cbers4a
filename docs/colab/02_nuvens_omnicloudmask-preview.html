@@ -57,7 +57,27 @@
       @media screen {
       pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
       }
-    </style>
+      /* CSS for citations */
+      div.csl-bib-body { }
+      div.csl-entry {
+        clear: both;
+        margin-bottom: 1em;
+      }
+      .hanging-indent div.csl-entry {
+        margin-left:2em;
+        text-indent:-2em;
+      }
+      div.csl-left-margin {
+        min-width:2em;
+        float:left;
+      }
+      div.csl-right-inline {
+        margin-left:2em;
+        padding-left:1em;
+      }
+      div.csl-indent {
+        margin-left: 2em;
+      }    </style>
 
     <style>
       body.hypothesis-enabled #quarto-embed-header {
@@ -330,7 +350,7 @@
   <li><a href="#configuração" id="toc-configuração" class="nav-link" data-scroll-target="#configuração">0. Configuração</a></li>
   <li><a href="#por-que-detectar-em-10-m-e-não-nos-2-m-nativos" id="toc-por-que-detectar-em-10-m-e-não-nos-2-m-nativos" class="nav-link" data-scroll-target="#por-que-detectar-em-10-m-e-não-nos-2-m-nativos">1. Por que detectar em 10 m, e não nos 2 m nativos</a></li>
   <li><a href="#rodando-o-omnicloudmask" id="toc-rodando-o-omnicloudmask" class="nav-link" data-scroll-target="#rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</a></li>
-  <li><a href="#olhando-antes-de-acreditar" id="toc-olhando-antes-de-acreditar" class="nav-link" data-scroll-target="#olhando-antes-de-acreditar">3. Olhando antes de acreditar</a></li>
+  <li><a href="#verificando-antes-de-continuar" id="toc-verificando-antes-de-continuar" class="nav-link" data-scroll-target="#verificando-antes-de-continuar">3. Verificando antes de continuar</a></li>
   <li><a href="#gravando-as-máscaras" id="toc-gravando-as-máscaras" class="nav-link" data-scroll-target="#gravando-as-máscaras">4. Gravando as máscaras</a></li>
   <li><a href="#aplicando-a-máscara-na-imagem" id="toc-aplicando-a-máscara-na-imagem" class="nav-link" data-scroll-target="#aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</a></li>
   <li><a href="#vale-a-pena-preencher" id="toc-vale-a-pena-preencher" class="nav-link" data-scroll-target="#vale-a-pena-preencher">6. Vale a pena preencher?</a></li>
@@ -359,8 +379,9 @@
 
 
 </header>     <div id="f3dce2af" class="cell markdown">
-<p>A cena de 2 m que saiu da Aula 01 tem nuvem em parte da área. Aqui a gente descobre <strong>exatamente onde</strong>, e grava isso como uma máscara georreferenciada que a Aula 03 vai usar para saber quais pixels precisam ser substituídos.</p>
-<p>O <strong>OmniCloudMask</strong> (OCM) é uma rede convolucional treinada em cenas de vários sensores para separar quatro classes:</p>
+<p>Nessa aula iremos utilizar o <strong>OmniCloudMask</strong> para detectar nuvens e sombras na cena de 2 m que geramos na aula anterior. O resultado é uma <strong>máscara georreferenciada</strong> que indica quais pixels estão cobertos por nuvem ou sombra.</p>
+<p>A cena de 2 m que saiu da Aula 01 tem nuvem em parte da área. Aqui a gente descobre <strong>exatamente onde</strong>, e grava isso como uma máscara georreferenciada — que é o que a Aula 03 vai usar para saber quais pixels precisam ser substituídos.</p>
+<p>O <strong>OmniCloudMask</strong> (OCM) <span class="citation" data-cites="wright_training_2025">(<a href="#ref-wright_training_2025" role="doc-biblioref">Wright et al., 2025</a>)</span> é uma rede neural convolucional treinada em cenas de vários sensores para separar quatro classes:</p>
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 33%">
@@ -397,9 +418,9 @@
 </tr>
 </tbody>
 </table>
-<p>Ele usa só três bandas — <strong>vermelho, verde e infravermelho próximo</strong> — e é <strong>agnóstico ao sensor</strong>: não foi treinado com CBERS-4A, e mesmo assim funciona, porque aprendeu a assinatura espectral e a textura da nuvem, não as particularidades de um satélite.</p>
+<p>Ele usa só três bandas — <strong>vermelho, verde e infravermelho próximo</strong> — e é <strong>agnóstico ao sensor</strong>: não foi treinado com CBERS-4A e mesmo assim funciona, porque aprendeu a assinatura espectral e a textura da nuvem, não as particularidades de um satélite. Isso só é possível porque o OCM foi treinado com um dataset enorme, com alta diversidade de sensores, resoluções espectrais e com imagens de todo o mundo. (Para mais detalhes, consultar <span class="citation" data-cites="wright_training_2025">Wright et al. (<a href="#ref-wright_training_2025" role="doc-biblioref">2025</a>)</span>.)</p>
 <blockquote class="blockquote">
-<p>A sombra é tão importante quanto a nuvem. Um pixel sombreado não está coberto, mas está com a radiância errada — se entrar numa classificação de uso e cobertura, vira erro silencioso.</p>
+<p><strong>Detalhe importante:</strong> apesar de ser extremamente robusto, ainda há erros. Algumas sombras de nuvens podem passar despercebidas e algumas nuvens finas podem ser confundidas com alvos claros.</p>
 </blockquote>
 </div>
 <div id="ff57ce01" class="cell markdown">
@@ -409,7 +430,7 @@
 <p><strong>No Colab</strong>, a primeira célula instala o conda na sessão e <strong>reinicia o ambiente</strong>. Ela só é necessária se você <strong>não</strong> fez as aulas anteriores nesta mesma sessão — o atalho que refaz a Aula 01 precisa do 6S para a correção BOA. Se você já tem o <code>pansharpening_*.tif</code>, pode pular direto para a segunda célula.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="514657ac" class="cell">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="514657ac" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># --- Colab, parte 1 de 2: instala o conda na sessão (REINICIA o ambiente) ---</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> sys</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -420,42 +441,45 @@
 <span id="cb1-8"><a href="#cb1-8"></a>    <span class="op">!</span>pip install <span class="op">-</span>q condacolab</span>
 <span id="cb1-9"><a href="#cb1-9"></a>    <span class="im">import</span> condacolab</span>
 <span id="cb1-10"><a href="#cb1-10"></a>    condacolab.install()   <span class="co"># o ambiente reinicia aqui — é esperado</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ambiente: local (pixi/Jupyter)</code></pre>
+</div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="f4c34b52" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># --- Colab, parte 2 de 2: rode DEPOIS do reinício ---</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> sys</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a>NO_COLAB <span class="op">=</span> <span class="st">"google.colab"</span> <span class="kw">in</span> sys.modules</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="cf">if</span> NO_COLAB:</span>
-<span id="cb2-6"><a href="#cb2-6"></a>    <span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj py6s sixs pystac<span class="op">-</span>client requests</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    <span class="op">!</span>pip install <span class="op">-</span>q omnicloudmask</span>
-<span id="cb2-8"><a href="#cb2-8"></a>    <span class="bu">print</span>(<span class="st">"pronto"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="2aacf960" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># --- Módulo de apoio e configuração ---</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="f4c34b52" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># --- Colab, parte 2 de 2: rode DEPOIS do reinício ---</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="im">import</span> sys</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
-<span id="cb3-4"><a href="#cb3-4"></a>REPO <span class="op">=</span> <span class="st">"https://github.com/danfioramonte/geoprocessamento-cbers4a"</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a></span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="cf">if</span> <span class="kw">not</span> Path(<span class="st">"aulas_cbers.py"</span>).exists():</span>
-<span id="cb3-7"><a href="#cb3-7"></a>    <span class="op">!</span>git clone <span class="op">-</span>q <span class="op">--</span>depth <span class="dv">1</span> {REPO} <span class="op">/</span>tmp<span class="op">/</span>geo_repo</span>
-<span id="cb3-8"><a href="#cb3-8"></a>    <span class="op">!</span>cp <span class="op">/</span>tmp<span class="op">/</span>geo_repo<span class="op">/</span>colab<span class="op">/</span>aulas_cbers.py .</span>
-<span id="cb3-9"><a href="#cb3-9"></a>    <span class="op">!</span>cp <span class="op">-</span>r <span class="op">/</span>tmp<span class="op">/</span>geo_repo<span class="op">/</span>colab<span class="op">/</span>config .</span>
-<span id="cb3-10"><a href="#cb3-10"></a></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="im">import</span> aulas_cbers <span class="im">as</span> ac</span>
-<span id="cb3-12"><a href="#cb3-12"></a>ac.configurar_gdal()</span>
-<span id="cb3-13"><a href="#cb3-13"></a></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="im">import</span> json</span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
-<span id="cb3-16"><a href="#cb3-16"></a></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-18"><a href="#cb3-18"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-19"><a href="#cb3-19"></a><span class="im">import</span> rasterio</span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> BoundaryNorm, ListedColormap</span>
-<span id="cb3-21"><a href="#cb3-21"></a><span class="im">from</span> rasterio <span class="im">import</span> Affine</span>
-<span id="cb3-22"><a href="#cb3-22"></a><span class="im">from</span> rasterio.enums <span class="im">import</span> Resampling</span>
-<span id="cb3-23"><a href="#cb3-23"></a><span class="im">from</span> rasterio.warp <span class="im">import</span> reproject</span>
-<span id="cb3-24"><a href="#cb3-24"></a><span class="im">from</span> rasterio.windows <span class="im">import</span> Window</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4"></a>NO_COLAB <span class="op">=</span> <span class="st">"google.colab"</span> <span class="kw">in</span> sys.modules</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="cf">if</span> NO_COLAB:</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    <span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj py6s sixs pystac<span class="op">-</span>client requests</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="op">!</span>pip install <span class="op">-</span>q omnicloudmask</span>
+<span id="cb3-8"><a href="#cb3-8"></a>    <span class="bu">print</span>(<span class="st">"pronto"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="2aacf960" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># --- Módulo de apoio e configuração ---</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>REPO <span class="op">=</span> <span class="st">"https://github.com/danfioramonte/geoprocessamento-cbers4a"</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="cf">if</span> <span class="kw">not</span> Path(<span class="st">"aulas_cbers.py"</span>).exists():</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    <span class="op">!</span>git clone <span class="op">-</span>q <span class="op">--</span>depth <span class="dv">1</span> {REPO} <span class="op">/</span>tmp<span class="op">/</span>geo_repo</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="op">!</span>cp <span class="op">/</span>tmp<span class="op">/</span>geo_repo<span class="op">/</span>colab<span class="op">/</span>aulas_cbers.py .</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="op">!</span>cp <span class="op">-</span>r <span class="op">/</span>tmp<span class="op">/</span>geo_repo<span class="op">/</span>colab<span class="op">/</span>config .</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="im">import</span> aulas_cbers <span class="im">as</span> ac</span>
+<span id="cb4-12"><a href="#cb4-12"></a>ac.configurar_gdal()</span>
+<span id="cb4-13"><a href="#cb4-13"></a></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="im">import</span> json</span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="im">import</span> rasterio</span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> BoundaryNorm, ListedColormap</span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="im">from</span> rasterio <span class="im">import</span> Affine</span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="im">from</span> rasterio.enums <span class="im">import</span> Resampling</span>
+<span id="cb4-23"><a href="#cb4-23"></a><span class="im">from</span> rasterio.warp <span class="im">import</span> reproject</span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="im">from</span> rasterio.windows <span class="im">import</span> Window</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <div id="36871373" class="cell markdown">
 <section id="configuração" class="level2">
@@ -463,33 +487,33 @@
 <p><code>DETECT_RES</code> é a decisão mais importante desta aula, e a próxima seção explica por quê.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="11c45dce" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO</span>
-<span id="cb4-2"><a href="#cb4-2"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                 <span class="co"># tem que casar com o que você gerou na Aula 01</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>DETECT_RES <span class="op">=</span> <span class="fl">10.0</span>             <span class="co"># resolução (m) em que a detecção acontece</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>BANDA_RED, BANDA_GREEN, BANDA_NIR <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>     <span class="co"># ordem RGBN do produto da Aula 01</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># janelamento interno do OCM</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a>NODATA <span class="op">=</span> ac.NODATA</span>
-<span id="cb4-7"><a href="#cb4-7"></a>CLASSES <span class="op">=</span> ac.CLASSES_OCM</span>
-<span id="cb4-8"><a href="#cb4-8"></a>NODATA_MASCARA <span class="op">=</span> <span class="dv">255</span>          <span class="co"># 255 = fora do dado, nas máscaras de saída</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a>P <span class="op">=</span> ac.pastas()</span>
-<span id="cb4-11"><a href="#cb4-11"></a>DATA <span class="op">=</span> ac.data_da_cena(CENA_ID)</span>
-<span id="cb4-12"><a href="#cb4-12"></a></span>
-<span id="cb4-13"><a href="#cb4-13"></a>entrada <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"pansharpening_</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>NIVEL<span class="sc">}</span><span class="ss">.tif"</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="cf">if</span> <span class="kw">not</span> entrada.exists():</span>
-<span id="cb4-15"><a href="#cb4-15"></a>    <span class="co"># atalho para quem começou o curso por esta aula: refaz Aula 00 + Aula 01</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a>    r <span class="op">=</span> ac.preparar_aula_02(CENA_ID, NIVEL)</span>
-<span id="cb4-17"><a href="#cb4-17"></a>    NIVEL, entrada <span class="op">=</span> r[<span class="st">"nivel"</span>], Path(r[<span class="st">"pansharpening"</span>])</span>
-<span id="cb4-18"><a href="#cb4-18"></a></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb4-20"><a href="#cb4-20"></a>    <span class="bu">print</span>(<span class="ss">f"entrada : </span><span class="sc">{</span>entrada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-21"><a href="#cb4-21"></a>    <span class="bu">print</span>(<span class="ss">f"          </span><span class="sc">{</span>src<span class="sc">.</span>width<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>src<span class="sc">.</span>height<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>src<span class="sc">.</span>res[<span class="dv">0</span>]<span class="sc">:g}</span><span class="ss"> m | </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-22"><a href="#cb4-22"></a>    <span class="bu">print</span>(<span class="ss">f"bandas  : </span><span class="sc">{</span>src<span class="sc">.</span>descriptions<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-23"><a href="#cb4-23"></a>    <span class="bu">print</span>(<span class="ss">f"nodata  : </span><span class="sc">{</span>src<span class="sc">.</span>nodata<span class="sc">}</span><span class="ss"> | CRS: </span><span class="sc">{</span>src<span class="sc">.</span>crs<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="11c45dce" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO</span>
+<span id="cb5-2"><a href="#cb5-2"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                 <span class="co"># tem que casar com o que você gerou na Aula 01</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>DETECT_RES <span class="op">=</span> <span class="fl">10.0</span>             <span class="co"># resolução (m) em que a detecção acontece</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>BANDA_RED, BANDA_GREEN, BANDA_NIR <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>     <span class="co"># ordem RGBN do produto da Aula 01</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># janelamento interno do OCM</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>NODATA <span class="op">=</span> ac.NODATA</span>
+<span id="cb5-7"><a href="#cb5-7"></a>CLASSES <span class="op">=</span> ac.CLASSES_OCM</span>
+<span id="cb5-8"><a href="#cb5-8"></a>NODATA_MASCARA <span class="op">=</span> <span class="dv">255</span>          <span class="co"># 255 = fora do dado, nas máscaras de saída</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a>P <span class="op">=</span> ac.pastas()</span>
+<span id="cb5-11"><a href="#cb5-11"></a>DATA <span class="op">=</span> ac.data_da_cena(CENA_ID)</span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a>entrada <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"pansharpening_</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>NIVEL<span class="sc">}</span><span class="ss">.tif"</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="cf">if</span> <span class="kw">not</span> entrada.exists():</span>
+<span id="cb5-15"><a href="#cb5-15"></a>    <span class="co"># atalho para quem começou o curso por esta aula: refaz Aula 00 + Aula 01</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a>    r <span class="op">=</span> ac.preparar_aula_02(CENA_ID, NIVEL)</span>
+<span id="cb5-17"><a href="#cb5-17"></a>    NIVEL, entrada <span class="op">=</span> r[<span class="st">"nivel"</span>], Path(r[<span class="st">"pansharpening"</span>])</span>
+<span id="cb5-18"><a href="#cb5-18"></a></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb5-20"><a href="#cb5-20"></a>    <span class="bu">print</span>(<span class="ss">f"entrada : </span><span class="sc">{</span>entrada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21"></a>    <span class="bu">print</span>(<span class="ss">f"          </span><span class="sc">{</span>src<span class="sc">.</span>width<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>src<span class="sc">.</span>height<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>src<span class="sc">.</span>res[<span class="dv">0</span>]<span class="sc">:g}</span><span class="ss"> m | </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22"></a>    <span class="bu">print</span>(<span class="ss">f"bandas  : </span><span class="sc">{</span>src<span class="sc">.</span>descriptions<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23"></a>    <span class="bu">print</span>(<span class="ss">f"nodata  : </span><span class="sc">{</span>src<span class="sc">.</span>nodata<span class="sc">}</span><span class="ss"> | CRS: </span><span class="sc">{</span>src<span class="sc">.</span>crs<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>entrada : pansharpening_20260301_boa.tif
-          5144 x 5256 px @ 2 m | int16
+          6456 x 6968 px @ 2 m | int16
 bandas  : ('red', 'green', 'blue', 'nir')
 nodata  : -9999.0 | CRS: EPSG:32723</code></pre>
 </div>
@@ -497,88 +521,87 @@ nodata  : -9999.0 | CRS: EPSG:32723</code></pre>
 <div id="525cfc3e" class="cell markdown">
 <section id="por-que-detectar-em-10-m-e-não-nos-2-m-nativos" class="level2">
 <h2 class="anchored" data-anchor-id="por-que-detectar-em-10-m-e-não-nos-2-m-nativos">1. Por que detectar em 10 m, e não nos 2 m nativos</h2>
-<p>Parece contraintuitivo jogar fora resolução. Três motivos:</p>
+<p>Três motivos:</p>
 <ol type="1">
 <li><strong>O OCM foi validado na faixa de 10 a 50 m.</strong> Fora dela o desempenho cai — a rede aprendeu a nuvem numa determinada escala de textura, e em 2 m ela vê estrutura demais.</li>
 <li><strong>Nuvem é um objeto grande.</strong> A borda de uma nuvem não é nítida em escala nenhuma: existe uma faixa de transição de dezenas de metros. Detectar em 2 m não dá uma borda mais correta, dá uma borda mais ruidosa.</li>
 <li><strong>Custo.</strong> São 16 vezes menos pixels para a rede processar.</li>
 </ol>
-<p>A máscara sai em 10 m e depois volta para a grade nativa de 2 m por <strong>vizinho mais próximo</strong> — o único reamostrador aceitável para dado categórico. Interpolação bilinear numa máscara de classes produziria “nuvem 1,4”, que não quer dizer nada.</p>
+<p>A máscara sai em 10 m e depois volta para a grade nativa de 2 m por <strong>vizinho mais próximo</strong> — o único reamostrador aceitável para dado categórico.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cfd00285" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    nativo <span class="op">=</span> {<span class="st">"transform"</span>: src.transform, <span class="st">"crs"</span>: src.crs,</span>
-<span id="cb6-3"><a href="#cb6-3"></a>              <span class="st">"height"</span>: src.height, <span class="st">"width"</span>: src.width, <span class="st">"res"</span>: src.res[<span class="dv">0</span>]}</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    escala <span class="op">=</span> src.res[<span class="dv">0</span>] <span class="op">/</span> DETECT_RES</span>
-<span id="cb6-5"><a href="#cb6-5"></a>    h <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(<span class="bu">round</span>(src.height <span class="op">*</span> escala)))</span>
-<span id="cb6-6"><a href="#cb6-6"></a>    w <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(<span class="bu">round</span>(src.width <span class="op">*</span> escala)))</span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a>    <span class="co"># bandas na ordem exigida pelo OCM: Red, Green, NIR</span></span>
-<span id="cb6-9"><a href="#cb6-9"></a>    det <span class="op">=</span> src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape<span class="op">=</span>(<span class="dv">3</span>, h, w),</span>
-<span id="cb6-10"><a href="#cb6-10"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
-<span id="cb6-11"><a href="#cb6-11"></a></span>
-<span id="cb6-12"><a href="#cb6-12"></a>    <span class="co"># Validade. Duas coisas acontecem aqui, e vale saber a diferença:</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a>    <span class="co">#  - a média do GDAL IGNORA os pixels de nodata, então um bloco de 10 m que</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a>    <span class="co">#    cai meio em cima da borda sai com a média só do que existe, sem</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a>    <span class="co">#    contaminação. Bom: não perdemos a borda.</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a>    <span class="co">#  - o que a média não diz é ONDE não sobrou nada. Para isso lemos a MÁSCARA</span></span>
-<span id="cb6-17"><a href="#cb6-17"></a>    <span class="co">#    do arquivo (255 onde há dado, 0 onde não há), reduzida do mesmo jeito:</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a>    <span class="co">#    ela zera só nos blocos inteiramente sem dado.</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a>    <span class="co"># O teste extra em det é cinto e suspensório, caso alguma versão do GDAL</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a>    <span class="co"># espalhe o -9999 pela média em vez de ignorá-lo.</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a>    mascara <span class="op">=</span> src.read_masks(<span class="dv">1</span>, out_shape<span class="op">=</span>(h, w), resampling<span class="op">=</span>Resampling.average)</span>
-<span id="cb6-22"><a href="#cb6-22"></a>    t_det <span class="op">=</span> src.transform <span class="op">*</span> Affine.scale(src.width <span class="op">/</span> w, src.height <span class="op">/</span> h)</span>
-<span id="cb6-23"><a href="#cb6-23"></a></span>
-<span id="cb6-24"><a href="#cb6-24"></a>valido <span class="op">=</span> (mascara <span class="op">&gt;=</span> <span class="dv">255</span>) <span class="op">&amp;</span> np.<span class="bu">all</span>(det <span class="op">&gt;</span> <span class="op">-</span><span class="dv">5000</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb6-25"><a href="#cb6-25"></a>det[:, <span class="op">~</span>valido] <span class="op">=</span> <span class="fl">0.0</span>     <span class="co"># o OCM ignora estes pixels (no_data_value=0)</span></span>
-<span id="cb6-26"><a href="#cb6-26"></a></span>
-<span id="cb6-27"><a href="#cb6-27"></a><span class="bu">print</span>(<span class="ss">f"grade de detecção : </span><span class="sc">{</span>w<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>DETECT_RES<span class="sc">:g}</span><span class="ss"> m"</span>)</span>
-<span id="cb6-28"><a href="#cb6-28"></a><span class="bu">print</span>(<span class="ss">f"pixels válidos    : </span><span class="sc">{</span>valido<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:,}</span><span class="ss"> (</span><span class="sc">{</span>valido<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cfd00285" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    nativo <span class="op">=</span> {<span class="st">"transform"</span>: src.transform, <span class="st">"crs"</span>: src.crs,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>              <span class="st">"height"</span>: src.height, <span class="st">"width"</span>: src.width, <span class="st">"res"</span>: src.res[<span class="dv">0</span>]}</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    escala <span class="op">=</span> src.res[<span class="dv">0</span>] <span class="op">/</span> DETECT_RES</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    h <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(<span class="bu">round</span>(src.height <span class="op">*</span> escala)))</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    w <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(<span class="bu">round</span>(src.width <span class="op">*</span> escala)))</span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="co"># bandas na ordem exigida pelo OCM: Red, Green, NIR</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    det <span class="op">=</span> src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape<span class="op">=</span>(<span class="dv">3</span>, h, w),</span>
+<span id="cb7-10"><a href="#cb7-10"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11"></a></span>
+<span id="cb7-12"><a href="#cb7-12"></a>    <span class="co"># Validade. Duas coisas acontecem aqui, e vale saber a diferença:</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="co">#  - a média do GDAL IGNORA os pixels de nodata, então um bloco de 10 m que</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="co">#    cai meio em cima da borda sai com a média só do que existe, sem</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a>    <span class="co">#    contaminação. Bom: não perdemos a borda.</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a>    <span class="co">#  - o que a média não diz é ONDE não sobrou nada. Para isso lemos a MÁSCARA</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>    <span class="co">#    do arquivo (255 onde há dado, 0 onde não há), reduzida do mesmo jeito:</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>    <span class="co">#    ela zera só nos blocos inteiramente sem dado.</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>    <span class="co"># O teste extra em det é cinto e suspensório, caso alguma versão do GDAL</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>    <span class="co"># espalhe o -9999 pela média em vez de ignorá-lo.</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>    mascara <span class="op">=</span> src.read_masks(<span class="dv">1</span>, out_shape<span class="op">=</span>(h, w), resampling<span class="op">=</span>Resampling.average)</span>
+<span id="cb7-22"><a href="#cb7-22"></a>    t_det <span class="op">=</span> src.transform <span class="op">*</span> Affine.scale(src.width <span class="op">/</span> w, src.height <span class="op">/</span> h)</span>
+<span id="cb7-23"><a href="#cb7-23"></a></span>
+<span id="cb7-24"><a href="#cb7-24"></a>valido <span class="op">=</span> (mascara <span class="op">&gt;=</span> <span class="dv">255</span>) <span class="op">&amp;</span> np.<span class="bu">all</span>(det <span class="op">&gt;</span> <span class="op">-</span><span class="dv">5000</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-25"><a href="#cb7-25"></a>det[:, <span class="op">~</span>valido] <span class="op">=</span> <span class="fl">0.0</span>     <span class="co"># o OCM ignora estes pixels (no_data_value=0)</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a></span>
+<span id="cb7-27"><a href="#cb7-27"></a><span class="bu">print</span>(<span class="ss">f"grade de detecção : </span><span class="sc">{</span>w<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>DETECT_RES<span class="sc">:g}</span><span class="ss"> m"</span>)</span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="bu">print</span>(<span class="ss">f"pixels válidos    : </span><span class="sc">{</span>valido<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:,}</span><span class="ss"> (</span><span class="sc">{</span>valido<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>grade de detecção : 1029 x 1051 px @ 10 m
-pixels válidos    : 1,081,468 (100.00%)</code></pre>
+<pre><code>grade de detecção : 1291 x 1394 px @ 10 m
+pixels válidos    : 1,799,637 (100.00%)</code></pre>
 </div>
 </div></div>
 <div id="934e13c7" class="cell markdown">
 <section id="rodando-o-omnicloudmask" class="level2">
 <h2 class="anchored" data-anchor-id="rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</h2>
-<p>Na primeira execução ele baixa os pesos (algumas centenas de MB) do Hugging Face. Se a sua rede bloquear o HF, troque <code>model_download_source</code> para <code>"google_drive"</code>.</p>
-<p>O OCM trabalha em blocos de <code>PATCH</code> pixels com <code>OVERLAP</code> de sobreposição, e faz a média nas emendas. Sobreposição generosa evita costura visível entre blocos — o padrão de 300 px sobre blocos de 1000 é conservador de propósito.</p>
-<p>Com GPU leva segundos; em CPU, alguns minutos. Não precisa de GPU para funcionar.</p>
+<p>Na primeira execução ele baixa os pesos do modelo via Hugging Face (HF).</p>
+<p>O OCM trabalha em blocos de <code>PATCH</code> pixels com <code>OVERLAP</code> de sobreposição e faz a média nas emendas.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
 </figcaption>
 <div aria-describedby="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> torch</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="im">from</span> omnicloudmask <span class="im">import</span> predict_from_array</span>
-<span id="cb8-3"><a href="#cb8-3"></a></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="bu">print</span>(<span class="st">"dispositivo:"</span>, <span class="st">"GPU (cuda)"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"CPU"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5"></a></span>
-<span id="cb8-6"><a href="#cb8-6"></a>mask <span class="op">=</span> predict_from_array(</span>
-<span id="cb8-7"><a href="#cb8-7"></a>    det,</span>
-<span id="cb8-8"><a href="#cb8-8"></a>    patch_size<span class="op">=</span>PATCH,</span>
-<span id="cb8-9"><a href="#cb8-9"></a>    patch_overlap<span class="op">=</span>OVERLAP,</span>
-<span id="cb8-10"><a href="#cb8-10"></a>    no_data_value<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb8-11"><a href="#cb8-11"></a>    apply_no_data_mask<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb8-12"><a href="#cb8-12"></a>    model_download_source<span class="op">=</span><span class="st">"hugging_face"</span>,</span>
-<span id="cb8-13"><a href="#cb8-13"></a>)</span>
-<span id="cb8-14"><a href="#cb8-14"></a>mask <span class="op">=</span> np.squeeze(np.asarray(mask)).astype(<span class="st">"uint8"</span>)</span>
-<span id="cb8-15"><a href="#cb8-15"></a>mask <span class="op">=</span> np.where(valido, mask, NODATA_MASCARA).astype(<span class="st">"uint8"</span>)</span>
-<span id="cb8-16"><a href="#cb8-16"></a></span>
-<span id="cb8-17"><a href="#cb8-17"></a>total <span class="op">=</span> <span class="bu">int</span>(valido.<span class="bu">sum</span>())</span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">--- composição da cena (pixels válidos, grade de detecção) ---"</span>)</span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="cf">for</span> c, nome <span class="kw">in</span> CLASSES.items():</span>
-<span id="cb8-20"><a href="#cb8-20"></a>    n <span class="op">=</span> <span class="bu">int</span>(np.count_nonzero((mask <span class="op">==</span> c) <span class="op">&amp;</span> valido))</span>
-<span id="cb8-21"><a href="#cb8-21"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nome<span class="sc">:&lt;13}</span><span class="ss">: </span><span class="sc">{</span>n<span class="sc">:&gt;10,}</span><span class="ss">  (</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> n <span class="op">/</span> <span class="bu">max</span>(total, <span class="dv">1</span>)<span class="sc">:5.1f}</span><span class="ss"> %)"</span>)</span>
-<span id="cb8-22"><a href="#cb8-22"></a>contaminado <span class="op">=</span> <span class="bu">int</span>(np.count_nonzero(np.isin(mask, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]) <span class="op">&amp;</span> valido))</span>
-<span id="cb8-23"><a href="#cb8-23"></a><span class="bu">print</span>(<span class="ss">f"  -&gt; nuvem + sombra: </span><span class="sc">{</span>contaminado<span class="sc">:&gt;10,}</span><span class="ss">  (</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> contaminado <span class="op">/</span> <span class="bu">max</span>(total, <span class="dv">1</span>)<span class="sc">:5.1f}</span><span class="ss"> %)"</span>)</span>
-<span id="cb8-24"><a href="#cb8-24"></a><span class="bu">print</span>(<span class="ss">f"  -&gt; utilizável    : </span><span class="sc">{</span>total <span class="op">-</span> contaminado<span class="sc">:&gt;10,}</span><span class="ss">  "</span></span>
-<span id="cb8-25"><a href="#cb8-25"></a>      <span class="ss">f"(</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (total <span class="op">-</span> contaminado) <span class="op">/</span> <span class="bu">max</span>(total, <span class="dv">1</span>)<span class="sc">:5.1f}</span><span class="ss"> %)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> torch</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="im">from</span> omnicloudmask <span class="im">import</span> predict_from_array</span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="bu">print</span>(<span class="st">"dispositivo:"</span>, <span class="st">"GPU (cuda)"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"CPU"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a>mask <span class="op">=</span> predict_from_array(</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    det,</span>
+<span id="cb9-8"><a href="#cb9-8"></a>    patch_size<span class="op">=</span>PATCH,</span>
+<span id="cb9-9"><a href="#cb9-9"></a>    patch_overlap<span class="op">=</span>OVERLAP,</span>
+<span id="cb9-10"><a href="#cb9-10"></a>    no_data_value<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb9-11"><a href="#cb9-11"></a>    apply_no_data_mask<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-12"><a href="#cb9-12"></a>    model_download_source<span class="op">=</span><span class="st">"hugging_face"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13"></a>)</span>
+<span id="cb9-14"><a href="#cb9-14"></a>mask <span class="op">=</span> np.squeeze(np.asarray(mask)).astype(<span class="st">"uint8"</span>)</span>
+<span id="cb9-15"><a href="#cb9-15"></a>mask <span class="op">=</span> np.where(valido, mask, NODATA_MASCARA).astype(<span class="st">"uint8"</span>)</span>
+<span id="cb9-16"><a href="#cb9-16"></a></span>
+<span id="cb9-17"><a href="#cb9-17"></a>total <span class="op">=</span> <span class="bu">int</span>(valido.<span class="bu">sum</span>())</span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">--- composição da cena (pixels válidos, grade de detecção) ---"</span>)</span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="cf">for</span> c, nome <span class="kw">in</span> CLASSES.items():</span>
+<span id="cb9-20"><a href="#cb9-20"></a>    n <span class="op">=</span> <span class="bu">int</span>(np.count_nonzero((mask <span class="op">==</span> c) <span class="op">&amp;</span> valido))</span>
+<span id="cb9-21"><a href="#cb9-21"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nome<span class="sc">:&lt;13}</span><span class="ss">: </span><span class="sc">{</span>n<span class="sc">:&gt;10,}</span><span class="ss">  (</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> n <span class="op">/</span> <span class="bu">max</span>(total, <span class="dv">1</span>)<span class="sc">:5.1f}</span><span class="ss"> %)"</span>)</span>
+<span id="cb9-22"><a href="#cb9-22"></a>contaminado <span class="op">=</span> <span class="bu">int</span>(np.count_nonzero(np.isin(mask, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]) <span class="op">&amp;</span> valido))</span>
+<span id="cb9-23"><a href="#cb9-23"></a><span class="bu">print</span>(<span class="ss">f"  -&gt; nuvem + sombra: </span><span class="sc">{</span>contaminado<span class="sc">:&gt;10,}</span><span class="ss">  (</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> contaminado <span class="op">/</span> <span class="bu">max</span>(total, <span class="dv">1</span>)<span class="sc">:5.1f}</span><span class="ss"> %)"</span>)</span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="bu">print</span>(<span class="ss">f"  -&gt; utilizável    : </span><span class="sc">{</span>total <span class="op">-</span> contaminado<span class="sc">:&gt;10,}</span><span class="ss">  "</span></span>
+<span id="cb9-25"><a href="#cb9-25"></a>      <span class="ss">f"(</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (total <span class="op">-</span> contaminado) <span class="op">/</span> <span class="bu">max</span>(total, <span class="dv">1</span>)<span class="sc">:5.1f}</span><span class="ss"> %)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\geo\geoprocessamento-cbers4a\.pixi\envs\default\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
   from .autonotebook import tqdm as notebook_tqdm</code></pre>
@@ -587,54 +610,55 @@ Tabela&nbsp;1
 <pre><code>dispositivo: CPU
 
 --- composição da cena (pixels válidos, grade de detecção) ---
-  0 clear        :    943,629  ( 87.3 %)
-  1 thick_cloud  :     80,454  (  7.4 %)
+  0 clear        :  1,597,022  ( 88.7 %)
+  1 thick_cloud  :    123,299  (  6.9 %)
   2 thin_cloud   :          0  (  0.0 %)
-  3 cloud_shadow :     57,385  (  5.3 %)
-  -&gt; nuvem + sombra:    137,839  ( 12.7 %)
-  -&gt; utilizável    :    943,629  ( 87.3 %)</code></pre>
+  3 cloud_shadow :     79,316  (  4.4 %)
+  -&gt; nuvem + sombra:    202,615  ( 11.3 %)
+  -&gt; utilizável    :  1,597,022  ( 88.7 %)</code></pre>
 </div>
 </div>
 </figure>
 </div></div>
 <div id="c2f91f91" class="cell markdown">
-<section id="olhando-antes-de-acreditar" class="level2">
-<h2 class="anchored" data-anchor-id="olhando-antes-de-acreditar">3. Olhando antes de acreditar</h2>
-<p>Nenhuma máscara de nuvem é perfeita, e a hora de descobrir os erros é agora — não depois de preencher a cena inteira com Sentinel-2.</p>
-<p>O que conferir na figura:</p>
+<section id="verificando-antes-de-continuar" class="level2">
+<h2 class="anchored" data-anchor-id="verificando-antes-de-continuar">3. Verificando antes de continuar</h2>
+<p>Nenhuma máscara de nuvem é perfeita, e a hora de descobrir os erros é agora. O notebook mostra a falsa cor e a máscara lado a lado, mais um zoom na maior mancha de nuvem.</p>
+<p>O que conferir:</p>
 <ul>
-<li><strong>sombra deslocada</strong>: a sombra fica do lado oposto ao Sol em relação à nuvem. Se a classe 3 aparece do lado errado, algo está trocado nas bandas;</li>
-<li><strong>nuvem fina confundida com solo claro</strong>: telhado metálico, areia e pátio de concreto às vezes entram como classe 2;</li>
-<li><strong>borda</strong>: uma faixa de classe 2 em volta da nuvem espessa é esperada e desejável — é a transição real, e é melhor que ela entre na máscara do que fique de fora.</li>
+<li><strong>sombra deslocada</strong>: a sombra fica do lado oposto ao Sol em relação à nuvem. Se a classe 3 aparece do lado errado, alguma banda está trocada na entrada;</li>
+<li><strong>nuvem fina confundida com alvo claro</strong>: telhado metálico, areia e pátio de concreto às vezes entram como classe 2. Numa área urbana isso acontece mais;</li>
+<li><strong>borda</strong>: uma faixa de classe 2 em volta da nuvem espessa é <strong>esperada e desejável</strong> — é a transição real, e é melhor que ela entre na máscara do que fique de fora;</li>
+<li><strong>água</strong>: corpo d’água escuro às vezes vira sombra. Se a sua AOI tem represa, olhe com atenção.</li>
 </ul>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-fig-ocm-mascara" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">def</span> stretch(b, m):</span>
-<span id="cb11-2"><a href="#cb11-2"></a>    v <span class="op">=</span> b[m]</span>
-<span id="cb11-3"><a href="#cb11-3"></a>    <span class="cf">if</span> v.size <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb11-4"><a href="#cb11-4"></a>        <span class="cf">return</span> np.zeros_like(b)</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    lo, hi <span class="op">=</span> np.percentile(v, [<span class="dv">2</span>, <span class="dv">98</span>])</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    <span class="cf">return</span> np.clip((b <span class="op">-</span> lo) <span class="op">/</span> (hi <span class="op">-</span> lo <span class="op">+</span> <span class="fl">1e-6</span>), <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb11-7"><a href="#cb11-7"></a></span>
-<span id="cb11-8"><a href="#cb11-8"></a></span>
-<span id="cb11-9"><a href="#cb11-9"></a>cores <span class="op">=</span> ListedColormap([<span class="st">"#2c7fb8"</span>, <span class="st">"#f0f0f0"</span>, <span class="st">"#fdae6b"</span>, <span class="st">"#54278f"</span>])</span>
-<span id="cb11-10"><a href="#cb11-10"></a>norma <span class="op">=</span> BoundaryNorm([<span class="op">-</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>], cores.N)</span>
-<span id="cb11-11"><a href="#cb11-11"></a></span>
-<span id="cb11-12"><a href="#cb11-12"></a>r, g, nir <span class="op">=</span> det[<span class="dv">0</span>], det[<span class="dv">1</span>], det[<span class="dv">2</span>]</span>
-<span id="cb11-13"><a href="#cb11-13"></a>falsa_cor <span class="op">=</span> np.dstack([stretch(nir, valido), stretch(r, valido), stretch(g, valido)])</span>
-<span id="cb11-14"><a href="#cb11-14"></a>falsa_cor[<span class="op">~</span>valido] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb11-15"><a href="#cb11-15"></a></span>
-<span id="cb11-16"><a href="#cb11-16"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">7.5</span>))</span>
-<span id="cb11-17"><a href="#cb11-17"></a>ax[<span class="dv">0</span>].imshow(falsa_cor)</span>
-<span id="cb11-18"><a href="#cb11-18"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Falsa cor NIR/R/G — nuvem em branco, vegetação em vermelho"</span>)</span>
-<span id="cb11-19"><a href="#cb11-19"></a>im <span class="op">=</span> ax[<span class="dv">1</span>].imshow(np.where(valido, mask, np.nan), cmap<span class="op">=</span>cores, norm<span class="op">=</span>norma)</span>
-<span id="cb11-20"><a href="#cb11-20"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Máscara OmniCloudMask"</span>)</span>
-<span id="cb11-21"><a href="#cb11-21"></a>cb <span class="op">=</span> fig.colorbar(im, ax<span class="op">=</span>ax[<span class="dv">1</span>], ticks<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], fraction<span class="op">=</span><span class="fl">0.046</span>, pad<span class="op">=</span><span class="fl">0.04</span>)</span>
-<span id="cb11-22"><a href="#cb11-22"></a>cb.ax.set_yticklabels([<span class="st">"clear"</span>, <span class="st">"thick"</span>, <span class="st">"thin"</span>, <span class="st">"shadow"</span>])</span>
-<span id="cb11-23"><a href="#cb11-23"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
-<span id="cb11-24"><a href="#cb11-24"></a>    a.axis(<span class="st">"off"</span>)</span>
-<span id="cb11-25"><a href="#cb11-25"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-ocm-mascara" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> stretch(b, m):</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    v <span class="op">=</span> b[m]</span>
+<span id="cb12-3"><a href="#cb12-3"></a>    <span class="cf">if</span> v.size <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb12-4"><a href="#cb12-4"></a>        <span class="cf">return</span> np.zeros_like(b)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    lo, hi <span class="op">=</span> np.percentile(v, [<span class="dv">2</span>, <span class="dv">98</span>])</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    <span class="cf">return</span> np.clip((b <span class="op">-</span> lo) <span class="op">/</span> (hi <span class="op">-</span> lo <span class="op">+</span> <span class="fl">1e-6</span>), <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a></span>
+<span id="cb12-9"><a href="#cb12-9"></a>cores <span class="op">=</span> ListedColormap([<span class="st">"#2c7fb8"</span>, <span class="st">"#f0f0f0"</span>, <span class="st">"#fdae6b"</span>, <span class="st">"#54278f"</span>])</span>
+<span id="cb12-10"><a href="#cb12-10"></a>norma <span class="op">=</span> BoundaryNorm([<span class="op">-</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>], cores.N)</span>
+<span id="cb12-11"><a href="#cb12-11"></a></span>
+<span id="cb12-12"><a href="#cb12-12"></a>r, g, nir <span class="op">=</span> det[<span class="dv">0</span>], det[<span class="dv">1</span>], det[<span class="dv">2</span>]</span>
+<span id="cb12-13"><a href="#cb12-13"></a>falsa_cor <span class="op">=</span> np.dstack([stretch(nir, valido), stretch(r, valido), stretch(g, valido)])</span>
+<span id="cb12-14"><a href="#cb12-14"></a>falsa_cor[<span class="op">~</span>valido] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a></span>
+<span id="cb12-16"><a href="#cb12-16"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">7.5</span>))</span>
+<span id="cb12-17"><a href="#cb12-17"></a>ax[<span class="dv">0</span>].imshow(falsa_cor)</span>
+<span id="cb12-18"><a href="#cb12-18"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Falsa cor NIR/R/G — nuvem em branco, vegetação em vermelho"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19"></a>im <span class="op">=</span> ax[<span class="dv">1</span>].imshow(np.where(valido, mask, np.nan), cmap<span class="op">=</span>cores, norm<span class="op">=</span>norma)</span>
+<span id="cb12-20"><a href="#cb12-20"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Máscara OmniCloudMask"</span>)</span>
+<span id="cb12-21"><a href="#cb12-21"></a>cb <span class="op">=</span> fig.colorbar(im, ax<span class="op">=</span>ax[<span class="dv">1</span>], ticks<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], fraction<span class="op">=</span><span class="fl">0.046</span>, pad<span class="op">=</span><span class="fl">0.04</span>)</span>
+<span id="cb12-22"><a href="#cb12-22"></a>cb.ax.set_yticklabels([<span class="st">"clear"</span>, <span class="st">"thick"</span>, <span class="st">"thin"</span>, <span class="st">"shadow"</span>])</span>
+<span id="cb12-23"><a href="#cb12-23"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
+<span id="cb12-24"><a href="#cb12-24"></a>    a.axis(<span class="st">"off"</span>)</span>
+<span id="cb12-25"><a href="#cb12-25"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-mascara" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -648,31 +672,31 @@ Figura&nbsp;1: Falsa cor e a máscara do OmniCloudMask, lado a lado.
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-ocm-zoom" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># zoom na maior mancha de nuvem, para conferir a borda de perto</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>nuvem <span class="op">=</span> np.isin(mask, [<span class="dv">1</span>, <span class="dv">2</span>])</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="cf">if</span> nuvem.<span class="bu">any</span>():</span>
-<span id="cb12-4"><a href="#cb12-4"></a>    ys, xs <span class="op">=</span> np.nonzero(nuvem)</span>
-<span id="cb12-5"><a href="#cb12-5"></a>    cy, cx <span class="op">=</span> <span class="bu">int</span>(ys.mean()), <span class="bu">int</span>(xs.mean())</span>
-<span id="cb12-6"><a href="#cb12-6"></a>    lado <span class="op">=</span> <span class="bu">min</span>(<span class="dv">160</span>, h <span class="op">//</span> <span class="dv">2</span>, w <span class="op">//</span> <span class="dv">2</span>)</span>
-<span id="cb12-7"><a href="#cb12-7"></a>    y0 <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, <span class="bu">min</span>(h <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> lado, cy <span class="op">-</span> lado))</span>
-<span id="cb12-8"><a href="#cb12-8"></a>    x0 <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, <span class="bu">min</span>(w <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> lado, cx <span class="op">-</span> lado))</span>
-<span id="cb12-9"><a href="#cb12-9"></a>    fatia <span class="op">=</span> (<span class="bu">slice</span>(y0, y0 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> lado), <span class="bu">slice</span>(x0, x0 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> lado))</span>
-<span id="cb12-10"><a href="#cb12-10"></a></span>
-<span id="cb12-11"><a href="#cb12-11"></a>    fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="fl">6.6</span>))</span>
-<span id="cb12-12"><a href="#cb12-12"></a>    ax[<span class="dv">0</span>].imshow(falsa_cor[fatia])</span>
-<span id="cb12-13"><a href="#cb12-13"></a>    ax[<span class="dv">0</span>].set_title(<span class="st">"zoom — falsa cor"</span>)</span>
-<span id="cb12-14"><a href="#cb12-14"></a>    ax[<span class="dv">1</span>].imshow(falsa_cor[fatia])</span>
-<span id="cb12-15"><a href="#cb12-15"></a>    ax[<span class="dv">1</span>].imshow(np.where(np.isin(mask[fatia], [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]), mask[fatia], np.nan),</span>
-<span id="cb12-16"><a href="#cb12-16"></a>                 cmap<span class="op">=</span>cores, norm<span class="op">=</span>norma, alpha<span class="op">=</span><span class="fl">0.55</span>)</span>
-<span id="cb12-17"><a href="#cb12-17"></a>    ax[<span class="dv">1</span>].set_title(<span class="st">"zoom — máscara sobreposta"</span>)</span>
-<span id="cb12-18"><a href="#cb12-18"></a>    <span class="cf">for</span> a <span class="kw">in</span> ax:</span>
-<span id="cb12-19"><a href="#cb12-19"></a>        a.axis(<span class="st">"off"</span>)</span>
-<span id="cb12-20"><a href="#cb12-20"></a>    plt.tight_layout()<span class="op">;</span> plt.show()</span>
-<span id="cb12-21"><a href="#cb12-21"></a><span class="cf">else</span>:</span>
-<span id="cb12-22"><a href="#cb12-22"></a>    <span class="bu">print</span>(<span class="st">"Nenhum pixel de nuvem detectado nesta cena."</span>)</span>
-<span id="cb12-23"><a href="#cb12-23"></a>    <span class="bu">print</span>(<span class="st">"Para as Aulas 02 e 03 fazerem sentido, escolha na Aula 00 uma cena com nuvem "</span></span>
-<span id="cb12-24"><a href="#cb12-24"></a>          <span class="st">"sobre a AOI (a coluna 'nuvens_est_%' da tabela de diagnóstico ajuda)."</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-ocm-zoom" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># zoom na maior mancha de nuvem, para conferir a borda de perto</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>nuvem <span class="op">=</span> np.isin(mask, [<span class="dv">1</span>, <span class="dv">2</span>])</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="cf">if</span> nuvem.<span class="bu">any</span>():</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    ys, xs <span class="op">=</span> np.nonzero(nuvem)</span>
+<span id="cb13-5"><a href="#cb13-5"></a>    cy, cx <span class="op">=</span> <span class="bu">int</span>(ys.mean()), <span class="bu">int</span>(xs.mean())</span>
+<span id="cb13-6"><a href="#cb13-6"></a>    lado <span class="op">=</span> <span class="bu">min</span>(<span class="dv">160</span>, h <span class="op">//</span> <span class="dv">2</span>, w <span class="op">//</span> <span class="dv">2</span>)</span>
+<span id="cb13-7"><a href="#cb13-7"></a>    y0 <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, <span class="bu">min</span>(h <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> lado, cy <span class="op">-</span> lado))</span>
+<span id="cb13-8"><a href="#cb13-8"></a>    x0 <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, <span class="bu">min</span>(w <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> lado, cx <span class="op">-</span> lado))</span>
+<span id="cb13-9"><a href="#cb13-9"></a>    fatia <span class="op">=</span> (<span class="bu">slice</span>(y0, y0 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> lado), <span class="bu">slice</span>(x0, x0 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> lado))</span>
+<span id="cb13-10"><a href="#cb13-10"></a></span>
+<span id="cb13-11"><a href="#cb13-11"></a>    fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="fl">6.6</span>))</span>
+<span id="cb13-12"><a href="#cb13-12"></a>    ax[<span class="dv">0</span>].imshow(falsa_cor[fatia])</span>
+<span id="cb13-13"><a href="#cb13-13"></a>    ax[<span class="dv">0</span>].set_title(<span class="st">"zoom — falsa cor"</span>)</span>
+<span id="cb13-14"><a href="#cb13-14"></a>    ax[<span class="dv">1</span>].imshow(falsa_cor[fatia])</span>
+<span id="cb13-15"><a href="#cb13-15"></a>    ax[<span class="dv">1</span>].imshow(np.where(np.isin(mask[fatia], [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]), mask[fatia], np.nan),</span>
+<span id="cb13-16"><a href="#cb13-16"></a>                 cmap<span class="op">=</span>cores, norm<span class="op">=</span>norma, alpha<span class="op">=</span><span class="fl">0.55</span>)</span>
+<span id="cb13-17"><a href="#cb13-17"></a>    ax[<span class="dv">1</span>].set_title(<span class="st">"zoom — máscara sobreposta"</span>)</span>
+<span id="cb13-18"><a href="#cb13-18"></a>    <span class="cf">for</span> a <span class="kw">in</span> ax:</span>
+<span id="cb13-19"><a href="#cb13-19"></a>        a.axis(<span class="st">"off"</span>)</span>
+<span id="cb13-20"><a href="#cb13-20"></a>    plt.tight_layout()<span class="op">;</span> plt.show()</span>
+<span id="cb13-21"><a href="#cb13-21"></a><span class="cf">else</span>:</span>
+<span id="cb13-22"><a href="#cb13-22"></a>    <span class="bu">print</span>(<span class="st">"Nenhum pixel de nuvem detectado nesta cena."</span>)</span>
+<span id="cb13-23"><a href="#cb13-23"></a>    <span class="bu">print</span>(<span class="st">"Para as Aulas 02 e 03 fazerem sentido, escolha na Aula 00 uma cena com nuvem "</span></span>
+<span id="cb13-24"><a href="#cb13-24"></a>          <span class="st">"sobre a AOI (a coluna 'nuvens_est_%' da tabela de diagnóstico ajuda)."</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -695,39 +719,38 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 <li><strong><code>_cloudmask_native.tif</code></strong> — a mesma, reamostrada para os 2 m da cena. É a que a Aula 03 consome, e ela <strong>precisa</strong> estar exatamente na grade do CBERS;</li>
 <li><strong><code>_clearmask_native.tif</code></strong> — versão binária (1 = utilizável). Conveniente para multiplicar por outros rasters.</li>
 </ul>
-<p><code>uint8</code> com nodata 255. Compressão <code>deflate</code>, sem <code>predictor</code> — em dado categórico o preditor horizontal atrapalha em vez de ajudar.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="2d477cd6" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">def</span> gravar_mascara(caminho, arr, transform):</span>
-<span id="cb13-2"><a href="#cb13-2"></a>    perfil <span class="op">=</span> <span class="bu">dict</span>(driver<span class="op">=</span><span class="st">"GTiff"</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>, count<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb13-3"><a href="#cb13-3"></a>                  height<span class="op">=</span>arr.shape[<span class="dv">0</span>], width<span class="op">=</span>arr.shape[<span class="dv">1</span>], transform<span class="op">=</span>transform,</span>
-<span id="cb13-4"><a href="#cb13-4"></a>                  crs<span class="op">=</span>nativo[<span class="st">"crs"</span>], nodata<span class="op">=</span>NODATA_MASCARA, compress<span class="op">=</span><span class="st">"deflate"</span>,</span>
-<span id="cb13-5"><a href="#cb13-5"></a>                  tiled<span class="op">=</span><span class="va">True</span>, blockxsize<span class="op">=</span><span class="dv">256</span>, blockysize<span class="op">=</span><span class="dv">256</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>)</span>
-<span id="cb13-6"><a href="#cb13-6"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb13-7"><a href="#cb13-7"></a>        dst.write(arr.astype(<span class="st">"uint8"</span>), <span class="dv">1</span>)</span>
-<span id="cb13-8"><a href="#cb13-8"></a>        dst.set_band_description(<span class="dv">1</span>, <span class="st">"ocm_classe"</span>)</span>
-<span id="cb13-9"><a href="#cb13-9"></a>        dst.update_tags(CLASSES<span class="op">=</span><span class="st">"0=clear,1=thick_cloud,2=thin_cloud,3=cloud_shadow,255=nodata"</span>)</span>
-<span id="cb13-10"><a href="#cb13-10"></a>    <span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>caminho<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11"></a>    <span class="cf">return</span> caminho</span>
-<span id="cb13-12"><a href="#cb13-12"></a></span>
-<span id="cb13-13"><a href="#cb13-13"></a></span>
-<span id="cb13-14"><a href="#cb13-14"></a>stem <span class="op">=</span> entrada.stem</span>
-<span id="cb13-15"><a href="#cb13-15"></a>cam_det <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_</span><span class="sc">{</span><span class="bu">int</span>(DETECT_RES)<span class="sc">}</span><span class="ss">m.tif"</span>,</span>
-<span id="cb13-16"><a href="#cb13-16"></a>                         mask, t_det)</span>
-<span id="cb13-17"><a href="#cb13-17"></a></span>
-<span id="cb13-18"><a href="#cb13-18"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), NODATA_MASCARA, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
-<span id="cb13-19"><a href="#cb13-19"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
-<span id="cb13-20"><a href="#cb13-20"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
-<span id="cb13-21"><a href="#cb13-21"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
-<span id="cb13-22"><a href="#cb13-22"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># categórico: só vizinho mais próximo</span></span>
-<span id="cb13-23"><a href="#cb13-23"></a>cam_nat <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_native.tif"</span>,</span>
-<span id="cb13-24"><a href="#cb13-24"></a>                         nativa, nativo[<span class="st">"transform"</span>])</span>
-<span id="cb13-25"><a href="#cb13-25"></a></span>
-<span id="cb13-26"><a href="#cb13-26"></a>clear <span class="op">=</span> (nativa <span class="op">==</span> <span class="dv">0</span>).astype(<span class="st">"uint8"</span>)</span>
-<span id="cb13-27"><a href="#cb13-27"></a>clear[nativa <span class="op">==</span> NODATA_MASCARA] <span class="op">=</span> NODATA_MASCARA</span>
-<span id="cb13-28"><a href="#cb13-28"></a>cam_clear <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_clearmask_native.tif"</span>,</span>
-<span id="cb13-29"><a href="#cb13-29"></a>                           clear, nativo[<span class="st">"transform"</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="2d477cd6" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> gravar_mascara(caminho, arr, transform):</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    perfil <span class="op">=</span> <span class="bu">dict</span>(driver<span class="op">=</span><span class="st">"GTiff"</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>, count<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb14-3"><a href="#cb14-3"></a>                  height<span class="op">=</span>arr.shape[<span class="dv">0</span>], width<span class="op">=</span>arr.shape[<span class="dv">1</span>], transform<span class="op">=</span>transform,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>                  crs<span class="op">=</span>nativo[<span class="st">"crs"</span>], nodata<span class="op">=</span>NODATA_MASCARA, compress<span class="op">=</span><span class="st">"deflate"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>                  tiled<span class="op">=</span><span class="va">True</span>, blockxsize<span class="op">=</span><span class="dv">256</span>, blockysize<span class="op">=</span><span class="dv">256</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb14-7"><a href="#cb14-7"></a>        dst.write(arr.astype(<span class="st">"uint8"</span>), <span class="dv">1</span>)</span>
+<span id="cb14-8"><a href="#cb14-8"></a>        dst.set_band_description(<span class="dv">1</span>, <span class="st">"ocm_classe"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9"></a>        dst.update_tags(CLASSES<span class="op">=</span><span class="st">"0=clear,1=thick_cloud,2=thin_cloud,3=cloud_shadow,255=nodata"</span>)</span>
+<span id="cb14-10"><a href="#cb14-10"></a>    <span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>caminho<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11"></a>    <span class="cf">return</span> caminho</span>
+<span id="cb14-12"><a href="#cb14-12"></a></span>
+<span id="cb14-13"><a href="#cb14-13"></a></span>
+<span id="cb14-14"><a href="#cb14-14"></a>stem <span class="op">=</span> entrada.stem</span>
+<span id="cb14-15"><a href="#cb14-15"></a>cam_det <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_</span><span class="sc">{</span><span class="bu">int</span>(DETECT_RES)<span class="sc">}</span><span class="ss">m.tif"</span>,</span>
+<span id="cb14-16"><a href="#cb14-16"></a>                         mask, t_det)</span>
+<span id="cb14-17"><a href="#cb14-17"></a></span>
+<span id="cb14-18"><a href="#cb14-18"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), NODATA_MASCARA, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
+<span id="cb14-19"><a href="#cb14-19"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
+<span id="cb14-20"><a href="#cb14-20"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb14-21"><a href="#cb14-21"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb14-22"><a href="#cb14-22"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># categórico: só vizinho mais próximo</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a>cam_nat <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_native.tif"</span>,</span>
+<span id="cb14-24"><a href="#cb14-24"></a>                         nativa, nativo[<span class="st">"transform"</span>])</span>
+<span id="cb14-25"><a href="#cb14-25"></a></span>
+<span id="cb14-26"><a href="#cb14-26"></a>clear <span class="op">=</span> (nativa <span class="op">==</span> <span class="dv">0</span>).astype(<span class="st">"uint8"</span>)</span>
+<span id="cb14-27"><a href="#cb14-27"></a>clear[nativa <span class="op">==</span> NODATA_MASCARA] <span class="op">=</span> NODATA_MASCARA</span>
+<span id="cb14-28"><a href="#cb14-28"></a>cam_clear <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_clearmask_native.tif"</span>,</span>
+<span id="cb14-29"><a href="#cb14-29"></a>                           clear, nativo[<span class="st">"transform"</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Escrito: pansharpening_20260301_boa_cloudmask_10m.tif
 Escrito: pansharpening_20260301_boa_cloudmask_native.tif
@@ -737,66 +760,62 @@ Escrito: pansharpening_20260301_boa_clearmask_native.tif</code></pre>
 <div id="17f4444f" class="cell markdown">
 <section id="aplicando-a-máscara-na-imagem" class="level2">
 <h2 class="anchored" data-anchor-id="aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</h2>
-<p>Agora gravamos uma cópia da cena em que nuvem e sombra viram <strong>nodata</strong>, e não zero. A diferença importa: zero é um valor de reflectância legítimo, e um pixel zerado entra em qualquer estatística puxando a média para baixo sem avisar. Como nodata, ele é ignorado pelo rasterio, pelo QGIS e pelo AROSICS.</p>
-<p>Duas opções de escrita que valem explicação, porque numa cena grande fazem diferença de minutos e de gigabytes:</p>
-<ul>
-<li><strong>escrita em faixas de linhas</strong>: cada banda numa cena de 2 m tem centenas de MB; ler e escrever em blocos mantém o pico de memória baixo;</li>
-<li><strong><code>interleave="band"</code></strong>: com <code>pixel</code>, cada bloco do arquivo guarda as quatro bandas juntas — escrevendo banda a banda, o GDAL recomprime os mesmos blocos quatro vezes e a versão antiga vira espaço morto no arquivo. Com <code>band</code>, cada banda tem seus próprios blocos e a escrita fica sequencial.</li>
-</ul>
+<p>Agora gravamos uma cópia da cena em que nuvem e sombra viram <strong>nodata</strong>.</p>
+<p>Um pixel zerado entra em qualquer estatística puxando a média para baixo sem avisar. Como nodata, ele é ignorado pelo rasterio, pelo seu software de GIS e pelo AROSICS, que não vai tentar achar ponto de amarração dentro da área removida.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="9ea00ba3" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>mascarada <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_masked.tif"</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>nublado <span class="op">=</span> np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb15-3"><a href="#cb15-3"></a></span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb15-5"><a href="#cb15-5"></a>    perfil <span class="op">=</span> src.profile.copy()</span>
-<span id="cb15-6"><a href="#cb15-6"></a>    nd <span class="op">=</span> src.nodata <span class="cf">if</span> src.nodata <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> NODATA</span>
-<span id="cb15-7"><a href="#cb15-7"></a>    <span class="cf">for</span> k <span class="kw">in</span> (<span class="st">"blockxsize"</span>, <span class="st">"blockysize"</span>, <span class="st">"tiled"</span>, <span class="st">"interleave"</span>):</span>
-<span id="cb15-8"><a href="#cb15-8"></a>        perfil.pop(k, <span class="va">None</span>)</span>
-<span id="cb15-9"><a href="#cb15-9"></a>    perfil.update(nodata<span class="op">=</span>nd, compress<span class="op">=</span><span class="st">"deflate"</span>, predictor<span class="op">=</span><span class="dv">2</span>, tiled<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb15-10"><a href="#cb15-10"></a>                  blockxsize<span class="op">=</span><span class="dv">512</span>, blockysize<span class="op">=</span><span class="dv">512</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>,</span>
-<span id="cb15-11"><a href="#cb15-11"></a>                  interleave<span class="op">=</span><span class="st">"band"</span>)</span>
-<span id="cb15-12"><a href="#cb15-12"></a>    descr <span class="op">=</span> src.descriptions</span>
-<span id="cb15-13"><a href="#cb15-13"></a></span>
-<span id="cb15-14"><a href="#cb15-14"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb15-15"><a href="#cb15-15"></a>        <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb15-16"><a href="#cb15-16"></a>            <span class="cf">for</span> r0 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, src.height, <span class="dv">2048</span>):</span>
-<span id="cb15-17"><a href="#cb15-17"></a>                nr <span class="op">=</span> <span class="bu">min</span>(<span class="dv">2048</span>, src.height <span class="op">-</span> r0)</span>
-<span id="cb15-18"><a href="#cb15-18"></a>                jan <span class="op">=</span> Window(<span class="dv">0</span>, r0, src.width, nr)</span>
-<span id="cb15-19"><a href="#cb15-19"></a>                dados <span class="op">=</span> src.read(b, window<span class="op">=</span>jan)</span>
-<span id="cb15-20"><a href="#cb15-20"></a>                dados[nublado[r0:r0 <span class="op">+</span> nr, :]] <span class="op">=</span> nd</span>
-<span id="cb15-21"><a href="#cb15-21"></a>                dst.write(dados, b, window<span class="op">=</span>jan)</span>
-<span id="cb15-22"><a href="#cb15-22"></a>            dst.set_band_description(b, descr[b <span class="op">-</span> <span class="dv">1</span>] <span class="kw">or</span> ac.NOMES_SAIDA[b <span class="op">-</span> <span class="dv">1</span>])</span>
-<span id="cb15-23"><a href="#cb15-23"></a>        dst.update_tags(MASCARA<span class="op">=</span><span class="bu">str</span>(cam_nat.name), CLASSES_MASCARADAS<span class="op">=</span><span class="st">"1,2,3"</span>)</span>
-<span id="cb15-24"><a href="#cb15-24"></a></span>
-<span id="cb15-25"><a href="#cb15-25"></a><span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>mascarada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>mascarada<span class="sc">.</span>stat()<span class="sc">.</span>st_size <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="9ea00ba3" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>mascarada <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_masked.tif"</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>nublado <span class="op">=</span> np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    perfil <span class="op">=</span> src.profile.copy()</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    nd <span class="op">=</span> src.nodata <span class="cf">if</span> src.nodata <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> NODATA</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    <span class="cf">for</span> k <span class="kw">in</span> (<span class="st">"blockxsize"</span>, <span class="st">"blockysize"</span>, <span class="st">"tiled"</span>, <span class="st">"interleave"</span>):</span>
+<span id="cb16-8"><a href="#cb16-8"></a>        perfil.pop(k, <span class="va">None</span>)</span>
+<span id="cb16-9"><a href="#cb16-9"></a>    perfil.update(nodata<span class="op">=</span>nd, compress<span class="op">=</span><span class="st">"deflate"</span>, predictor<span class="op">=</span><span class="dv">2</span>, tiled<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-10"><a href="#cb16-10"></a>                  blockxsize<span class="op">=</span><span class="dv">512</span>, blockysize<span class="op">=</span><span class="dv">512</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11"></a>                  interleave<span class="op">=</span><span class="st">"band"</span>)</span>
+<span id="cb16-12"><a href="#cb16-12"></a>    descr <span class="op">=</span> src.descriptions</span>
+<span id="cb16-13"><a href="#cb16-13"></a></span>
+<span id="cb16-14"><a href="#cb16-14"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb16-15"><a href="#cb16-15"></a>        <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb16-16"><a href="#cb16-16"></a>            <span class="cf">for</span> r0 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, src.height, <span class="dv">2048</span>):</span>
+<span id="cb16-17"><a href="#cb16-17"></a>                nr <span class="op">=</span> <span class="bu">min</span>(<span class="dv">2048</span>, src.height <span class="op">-</span> r0)</span>
+<span id="cb16-18"><a href="#cb16-18"></a>                jan <span class="op">=</span> Window(<span class="dv">0</span>, r0, src.width, nr)</span>
+<span id="cb16-19"><a href="#cb16-19"></a>                dados <span class="op">=</span> src.read(b, window<span class="op">=</span>jan)</span>
+<span id="cb16-20"><a href="#cb16-20"></a>                dados[nublado[r0:r0 <span class="op">+</span> nr, :]] <span class="op">=</span> nd</span>
+<span id="cb16-21"><a href="#cb16-21"></a>                dst.write(dados, b, window<span class="op">=</span>jan)</span>
+<span id="cb16-22"><a href="#cb16-22"></a>            dst.set_band_description(b, descr[b <span class="op">-</span> <span class="dv">1</span>] <span class="kw">or</span> ac.NOMES_SAIDA[b <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="cb16-23"><a href="#cb16-23"></a>        dst.update_tags(MASCARA<span class="op">=</span><span class="bu">str</span>(cam_nat.name), CLASSES_MASCARADAS<span class="op">=</span><span class="st">"1,2,3"</span>)</span>
+<span id="cb16-24"><a href="#cb16-24"></a></span>
+<span id="cb16-25"><a href="#cb16-25"></a><span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>mascarada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>mascarada<span class="sc">.</span>stat()<span class="sc">.</span>st_size <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Escrito: pansharpening_20260301_boa_masked.tif  (129.0 MB)</code></pre>
+<pre><code>Escrito: pansharpening_20260301_boa_masked.tif  (214.5 MB)</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># antes x depois, em resolução reduzida</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada) <span class="im">as</span> src:</span>
-<span id="cb17-3"><a href="#cb17-3"></a>    fator <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, src.width <span class="op">//</span> <span class="dv">800</span>)</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    forma <span class="op">=</span> (src.height <span class="op">//</span> fator, src.width <span class="op">//</span> fator)</span>
-<span id="cb17-5"><a href="#cb17-5"></a>    dep <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
-<span id="cb17-6"><a href="#cb17-6"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb17-8"><a href="#cb17-8"></a>    ant <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
-<span id="cb17-9"><a href="#cb17-9"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
-<span id="cb17-10"><a href="#cb17-10"></a></span>
-<span id="cb17-11"><a href="#cb17-11"></a><span class="cf">for</span> arr <span class="kw">in</span> (ant, dep):</span>
-<span id="cb17-12"><a href="#cb17-12"></a>    arr[arr <span class="op">&lt;=</span> <span class="op">-</span><span class="dv">9000</span>] <span class="op">=</span> np.nan</span>
-<span id="cb17-13"><a href="#cb17-13"></a></span>
-<span id="cb17-14"><a href="#cb17-14"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">7.5</span>))</span>
-<span id="cb17-15"><a href="#cb17-15"></a>ax[<span class="dv">0</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> ant]))</span>
-<span id="cb17-16"><a href="#cb17-16"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Aula 01 — cena fusionada"</span>)</span>
-<span id="cb17-17"><a href="#cb17-17"></a>ax[<span class="dv">1</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> dep]))</span>
-<span id="cb17-18"><a href="#cb17-18"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Aula 02 — nuvem e sombra removidas (as lacunas da Aula 03)"</span>)</span>
-<span id="cb17-19"><a href="#cb17-19"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
-<span id="cb17-20"><a href="#cb17-20"></a>    a.axis(<span class="st">"off"</span>)</span>
-<span id="cb17-21"><a href="#cb17-21"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># antes x depois, em resolução reduzida</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada) <span class="im">as</span> src:</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    fator <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, src.width <span class="op">//</span> <span class="dv">800</span>)</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    forma <span class="op">=</span> (src.height <span class="op">//</span> fator, src.width <span class="op">//</span> fator)</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    dep <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb18-8"><a href="#cb18-8"></a>    ant <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
+<span id="cb18-9"><a href="#cb18-9"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10"></a></span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="cf">for</span> arr <span class="kw">in</span> (ant, dep):</span>
+<span id="cb18-12"><a href="#cb18-12"></a>    arr[arr <span class="op">&lt;=</span> <span class="op">-</span><span class="dv">9000</span>] <span class="op">=</span> np.nan</span>
+<span id="cb18-13"><a href="#cb18-13"></a></span>
+<span id="cb18-14"><a href="#cb18-14"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">7.5</span>))</span>
+<span id="cb18-15"><a href="#cb18-15"></a>ax[<span class="dv">0</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> ant]))</span>
+<span id="cb18-16"><a href="#cb18-16"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Aula 01 — cena fusionada"</span>)</span>
+<span id="cb18-17"><a href="#cb18-17"></a>ax[<span class="dv">1</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> dep]))</span>
+<span id="cb18-18"><a href="#cb18-18"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Aula 02 — nuvem e sombra removidas (as lacunas da Aula 03)"</span>)</span>
+<span id="cb18-19"><a href="#cb18-19"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
+<span id="cb18-20"><a href="#cb18-20"></a>    a.axis(<span class="st">"off"</span>)</span>
+<span id="cb18-21"><a href="#cb18-21"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-antes-depois" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -813,35 +832,36 @@ Figura&nbsp;3: A cena antes e depois de nuvem e sombra virarem nodata.
 <div id="1347341b" class="cell markdown">
 <section id="vale-a-pena-preencher" class="level2">
 <h2 class="anchored" data-anchor-id="vale-a-pena-preencher">6. Vale a pena preencher?</h2>
-<p>A pergunta prática antes da Aula 03. Se a nuvem cobre 1% da AOI, muitas vezes compensa descartar esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área — e aí a substituição com Sentinel-2 super-resolvido paga o trabalho.</p>
-<p>Não existe limiar universal. O que existe é a informação abaixo, e a sua decisão registrada.</p>
+<p>Se a nuvem cobre 1% da AOI, muitas vezes compensa descartar esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área — e aí a substituição com Sentinel-2 super-resolvido paga o trabalho.</p>
+<p>Não existe limiar universal. O que existe é a informação — fração contaminada, área em hectares, composição por classe — e a sua decisão <strong>registrada</strong>. O notebook grava tudo isso no <code>.params.json</code> ao lado da máscara.</p>
+<p>Entre descartar e preencher com outro sensor existe o cenário ideal de <strong>compor com outra data do próprio CBERS</strong>, se você tiver uma cena próxima e limpa naquele pedaço. Fica na mesma radiometria e na mesma resolução, sem super-resolução nenhuma.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="a2554d5b" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>n_validos <span class="op">=</span> <span class="bu">int</span>((nativa <span class="op">!=</span> NODATA_MASCARA).<span class="bu">sum</span>())</span>
-<span id="cb18-2"><a href="#cb18-2"></a>n_nuvem <span class="op">=</span> <span class="bu">int</span>(np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]).<span class="bu">sum</span>())</span>
-<span id="cb18-3"><a href="#cb18-3"></a>resumo <span class="op">=</span> {</span>
-<span id="cb18-4"><a href="#cb18-4"></a>    <span class="st">"gerado_em"</span>: datetime.now().isoformat(timespec<span class="op">=</span><span class="st">"seconds"</span>),</span>
-<span id="cb18-5"><a href="#cb18-5"></a>    <span class="st">"aula"</span>: <span class="st">"02"</span>, <span class="st">"cena"</span>: CENA_ID, <span class="st">"nivel"</span>: NIVEL,</span>
-<span id="cb18-6"><a href="#cb18-6"></a>    <span class="st">"entrada"</span>: <span class="bu">str</span>(entrada), <span class="st">"detect_res_m"</span>: DETECT_RES,</span>
-<span id="cb18-7"><a href="#cb18-7"></a>    <span class="st">"patch_size"</span>: PATCH, <span class="st">"patch_overlap"</span>: OVERLAP,</span>
-<span id="cb18-8"><a href="#cb18-8"></a>    <span class="st">"bandas_usadas"</span>: {<span class="st">"red"</span>: BANDA_RED, <span class="st">"green"</span>: BANDA_GREEN, <span class="st">"nir"</span>: BANDA_NIR},</span>
-<span id="cb18-9"><a href="#cb18-9"></a>    <span class="st">"px_validos"</span>: n_validos,</span>
-<span id="cb18-10"><a href="#cb18-10"></a>    <span class="st">"px_nuvem_sombra"</span>: n_nuvem,</span>
-<span id="cb18-11"><a href="#cb18-11"></a>    <span class="st">"frac_contaminada"</span>: <span class="bu">round</span>(n_nuvem <span class="op">/</span> <span class="bu">max</span>(n_validos, <span class="dv">1</span>), <span class="dv">4</span>),</span>
-<span id="cb18-12"><a href="#cb18-12"></a>    <span class="st">"area_contaminada_ha"</span>: <span class="bu">round</span>(n_nuvem <span class="op">*</span> nativo[<span class="st">"res"</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">10_000</span>, <span class="dv">1</span>),</span>
-<span id="cb18-13"><a href="#cb18-13"></a>    <span class="st">"por_classe"</span>: {nome: <span class="bu">int</span>((nativa <span class="op">==</span> c).<span class="bu">sum</span>()) <span class="cf">for</span> c, nome <span class="kw">in</span> CLASSES.items()},</span>
-<span id="cb18-14"><a href="#cb18-14"></a>    <span class="st">"saidas"</span>: {<span class="st">"mascara_deteccao"</span>: <span class="bu">str</span>(cam_det), <span class="st">"mascara_nativa"</span>: <span class="bu">str</span>(cam_nat),</span>
-<span id="cb18-15"><a href="#cb18-15"></a>               <span class="st">"mascara_clear"</span>: <span class="bu">str</span>(cam_clear), <span class="st">"imagem_mascarada"</span>: <span class="bu">str</span>(mascarada)},</span>
-<span id="cb18-16"><a href="#cb18-16"></a>}</span>
-<span id="cb18-17"><a href="#cb18-17"></a>cam_nat.with_suffix(<span class="st">".params.json"</span>).write_text(</span>
-<span id="cb18-18"><a href="#cb18-18"></a>    json.dumps(resumo, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>), encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
-<span id="cb18-19"><a href="#cb18-19"></a></span>
-<span id="cb18-20"><a href="#cb18-20"></a><span class="bu">print</span>(<span class="ss">f"contaminado por nuvem/sombra: </span><span class="sc">{</span>resumo[<span class="st">'frac_contaminada'</span>]<span class="sc">:.2%}</span><span class="ss"> da cena "</span></span>
-<span id="cb18-21"><a href="#cb18-21"></a>      <span class="ss">f"(</span><span class="sc">{</span>resumo[<span class="st">'area_contaminada_ha'</span>]<span class="sc">:,.0f}</span><span class="ss"> ha)"</span>)</span>
-<span id="cb18-22"><a href="#cb18-22"></a><span class="bu">print</span>(<span class="ss">f"Params: </span><span class="sc">{</span>cam_nat<span class="sc">.</span>with_suffix(<span class="st">'.params.json'</span>)<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="a2554d5b" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>n_validos <span class="op">=</span> <span class="bu">int</span>((nativa <span class="op">!=</span> NODATA_MASCARA).<span class="bu">sum</span>())</span>
+<span id="cb19-2"><a href="#cb19-2"></a>n_nuvem <span class="op">=</span> <span class="bu">int</span>(np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]).<span class="bu">sum</span>())</span>
+<span id="cb19-3"><a href="#cb19-3"></a>resumo <span class="op">=</span> {</span>
+<span id="cb19-4"><a href="#cb19-4"></a>    <span class="st">"gerado_em"</span>: datetime.now().isoformat(timespec<span class="op">=</span><span class="st">"seconds"</span>),</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    <span class="st">"aula"</span>: <span class="st">"02"</span>, <span class="st">"cena"</span>: CENA_ID, <span class="st">"nivel"</span>: NIVEL,</span>
+<span id="cb19-6"><a href="#cb19-6"></a>    <span class="st">"entrada"</span>: <span class="bu">str</span>(entrada), <span class="st">"detect_res_m"</span>: DETECT_RES,</span>
+<span id="cb19-7"><a href="#cb19-7"></a>    <span class="st">"patch_size"</span>: PATCH, <span class="st">"patch_overlap"</span>: OVERLAP,</span>
+<span id="cb19-8"><a href="#cb19-8"></a>    <span class="st">"bandas_usadas"</span>: {<span class="st">"red"</span>: BANDA_RED, <span class="st">"green"</span>: BANDA_GREEN, <span class="st">"nir"</span>: BANDA_NIR},</span>
+<span id="cb19-9"><a href="#cb19-9"></a>    <span class="st">"px_validos"</span>: n_validos,</span>
+<span id="cb19-10"><a href="#cb19-10"></a>    <span class="st">"px_nuvem_sombra"</span>: n_nuvem,</span>
+<span id="cb19-11"><a href="#cb19-11"></a>    <span class="st">"frac_contaminada"</span>: <span class="bu">round</span>(n_nuvem <span class="op">/</span> <span class="bu">max</span>(n_validos, <span class="dv">1</span>), <span class="dv">4</span>),</span>
+<span id="cb19-12"><a href="#cb19-12"></a>    <span class="st">"area_contaminada_ha"</span>: <span class="bu">round</span>(n_nuvem <span class="op">*</span> nativo[<span class="st">"res"</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">10_000</span>, <span class="dv">1</span>),</span>
+<span id="cb19-13"><a href="#cb19-13"></a>    <span class="st">"por_classe"</span>: {nome: <span class="bu">int</span>((nativa <span class="op">==</span> c).<span class="bu">sum</span>()) <span class="cf">for</span> c, nome <span class="kw">in</span> CLASSES.items()},</span>
+<span id="cb19-14"><a href="#cb19-14"></a>    <span class="st">"saidas"</span>: {<span class="st">"mascara_deteccao"</span>: <span class="bu">str</span>(cam_det), <span class="st">"mascara_nativa"</span>: <span class="bu">str</span>(cam_nat),</span>
+<span id="cb19-15"><a href="#cb19-15"></a>               <span class="st">"mascara_clear"</span>: <span class="bu">str</span>(cam_clear), <span class="st">"imagem_mascarada"</span>: <span class="bu">str</span>(mascarada)},</span>
+<span id="cb19-16"><a href="#cb19-16"></a>}</span>
+<span id="cb19-17"><a href="#cb19-17"></a>cam_nat.with_suffix(<span class="st">".params.json"</span>).write_text(</span>
+<span id="cb19-18"><a href="#cb19-18"></a>    json.dumps(resumo, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>), encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb19-19"><a href="#cb19-19"></a></span>
+<span id="cb19-20"><a href="#cb19-20"></a><span class="bu">print</span>(<span class="ss">f"contaminado por nuvem/sombra: </span><span class="sc">{</span>resumo[<span class="st">'frac_contaminada'</span>]<span class="sc">:.2%}</span><span class="ss"> da cena "</span></span>
+<span id="cb19-21"><a href="#cb19-21"></a>      <span class="ss">f"(</span><span class="sc">{</span>resumo[<span class="st">'area_contaminada_ha'</span>]<span class="sc">:,.0f}</span><span class="ss"> ha)"</span>)</span>
+<span id="cb19-22"><a href="#cb19-22"></a><span class="bu">print</span>(<span class="ss">f"Params: </span><span class="sc">{</span>cam_nat<span class="sc">.</span>with_suffix(<span class="st">'.params.json'</span>)<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>contaminado por nuvem/sombra: 12.74% da cena (1,378 ha)
+<pre><code>contaminado por nuvem/sombra: 11.26% da cena (2,026 ha)
 Params: pansharpening_20260301_boa_cloudmask_native.params.json</code></pre>
 </div>
 </div></div>
@@ -864,6 +884,11 @@ data/interim/pansharpening_&lt;DATA&gt;_&lt;nivel&gt;_masked.tif             cen
 </div>
 
 
+<div id="refs" class="references csl-bib-body" data-entry-spacing="1" role="list">
+<div id="ref-wright_training_2025" class="csl-entry" role="listitem">
+WRIGHT, Nicholas <em>et al.</em> <a href="https://doi.org/10.1016/j.rse.2025.114694">Training sensor-agnostic deep learning models for remote sensing: <span>Achieving</span> state-of-the-art cloud and cloud shadow identification with <span>OmniCloudMask</span></a>. <strong>Remote Sensing of Environment</strong>, v. 322, p. 114694, 2025.
+</div>
+</div>
      </main> <!-- /main -->  <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

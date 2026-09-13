@@ -1,13 +1,13 @@
-  {
+{
   "_fonte": "AOD: MCD19A2 (MAIAC). Vapor e ozonio: MERRA-2 slv. Altitude: NASADEM.",
   "_data": "2026-03-01",
   "_hora_utc": 13,
-  "_nota_aerossol": "Queimada em 2023-08-01. Perfil BiomassBurning e mais adequado que Continental quando o AOD esta elevado.",
-  "aot550": 0.0897,
-  "aot550_desvio": 0.0326,
+  "_nota_aerossol": "AOD550 obtido a partir do produto MCD19A2 (MAIAC) da NASA. O valor de AOD550 é uma média espacial de 3x3 pixels (1 km/pixel) centrada na coordenada do alvo. O desvio padrão é calculado a partir dos 9 pixels.",
+  "aot550": 0.0882,
+  "aot550_desvio": 0.0313,
   "vapor_agua_gcm2": 2.0007,
   "ozonio_cmatm": 0.2533,
-  "altitude_alvo_km": 0.6106,
+  "altitude_alvo_km": 0.6024,
   "altitude_min_m": 529,
   "altitude_max_m": 745,
   "angulo_visada": 0,
@@ -36,4 +36,3 @@
     ]
   }
 }
-

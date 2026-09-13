@@ -412,7 +412,7 @@
 </tbody>
 </table>
 <p><code>L4-DN</code> = ortorretificado, em <strong>números digitais</strong> (<code>int16</code>, <code>nodata = 0</code>), sem correção atmosférica.</p>
-<p><strong>Duas particularidades desta coleção:</strong> (1) não há metadado de nuvem — escolhemos a cena pela miniatura e por um diagnóstico calculado na própria AOI; (2) os arquivos não são COG, então o custo do recorte cresce com a <strong>altura</strong> da AOI. Comece com uma AOI pequena (5–10 km).</p>
+<p><strong>Uma particularidades desta coleção:</strong> não há metadado de nuvem — escolhemos a cena pela miniatura e por um diagnóstico calculado na própria AOI.</p>
 </div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="23c1ff39" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Detecta o ambiente. No Colab, instala as bibliotecas na sessao.</span></span>
@@ -428,7 +428,7 @@
 <h2 class="anchored" data-anchor-id="configuração-e-imports">0. Configuração e imports</h2>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="c04cf722" class="cell" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="c04cf722" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> os</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co"># ajustes de GDAL para leitura remota (defina ANTES de importar o rasterio)</span></span>
@@ -469,7 +469,7 @@
 <span id="cb2-38"><a href="#cb2-38"></a></span>
 <span id="cb2-39"><a href="#cb2-39"></a>client <span class="op">=</span> Client.<span class="bu">open</span>(STAC_URL)</span>
 <span id="cb2-40"><a href="#cb2-40"></a>client</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="1">
 
 
 <style>
@@ -1130,6 +1130,57 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/sentinel-1-grd-bundle-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"Sentinel-1 - Level-1 - Interferometric Wide Swath Ground Range Detected High Resolution"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">12</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
             <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-s2-paraiba-3m-1"</span>
         </li>
     
@@ -1165,7 +1216,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">12</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">13</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1216,7 +1267,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">13</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">14</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1267,7 +1318,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">14</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">15</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1318,7 +1369,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">15</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">16</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1369,7 +1420,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">16</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">17</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1420,7 +1471,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">17</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">18</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1471,7 +1522,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">18</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">19</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1522,7 +1573,58 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">19</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">20</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/s3-olci-rrs-water-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"Sentinel-3 - Aquatic Remote Sensing Reflectance"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">21</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1573,7 +1675,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">20</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">22</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1624,7 +1726,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">21</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">23</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1640,7 +1742,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/S2_L2A-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-WFI-L4-DN-1"</span>
         </li>
     
             
@@ -1658,7 +1760,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"Sentinel-2 - Level-2A - Cloud Optimized GeoTIFF"</span>
+            <span class="pystac-v">"CBERS-4/WFI - Level-4-DN"</span>
         </li>
     
             
@@ -1675,7 +1777,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">22</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">24</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1726,7 +1828,58 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">23</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">25</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-2"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"Landsat Collection 2 - Level-2"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">26</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1777,7 +1930,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">24</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">27</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -1828,262 +1981,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">25</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-tsirf-bimonthly-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Landsat TSIRF bimonthly"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">26</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/AMZ1-WFI-L4-DN-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"AMAZONIA-1/WFI - Level-4-DN"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">27</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mod13q1-6.1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"MOD13Q1 v061 - Cloud Optimized GeoTIFF"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
             <summary class="pystac-summary"><span class="pystac-k">28</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-landsat-brazil-6m-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Landsat 6M Mosaic"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">29</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-MUX-L4-DN-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/MUX - Level-4-DN"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">30</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -2134,7 +2032,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">31</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">29</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -2150,7 +2048,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-PAN5M-L2-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-tsirf-bimonthly-1"</span>
         </li>
     
             
@@ -2168,7 +2066,109 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/PAN5M - Level-2-DN"</span>
+            <span class="pystac-v">"Landsat TSIRF bimonthly"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">30</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/AMZ1-WFI-L4-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"AMAZONIA-1/WFI - Level-4-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">31</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-landsat-brazil-6m-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"Landsat 6M Mosaic"</span>
         </li>
     
             
@@ -2201,7 +2201,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-WFI-L2-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-MUX-L4-DN-1"</span>
         </li>
     
             
@@ -2219,7 +2219,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/WFI - Level-2-DN"</span>
+            <span class="pystac-v">"CBERS-4/MUX - Level-4-DN"</span>
         </li>
     
             
@@ -2303,7 +2303,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-PAN5M-L4-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/myd13q1-6.1"</span>
         </li>
     
             
@@ -2321,7 +2321,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/PAN5M - Level-4-DN"</span>
+            <span class="pystac-v">"MYD13Q1 v061 - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -2405,6 +2405,57 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-PAN5M-L4-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4/PAN5M - Level-4-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">37</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
             <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-s2-cerrado-4m-1"</span>
         </li>
     
@@ -2440,57 +2491,6 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">37</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/sentinel-1-grd-bundle-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Sentinel-1 - Level-1 - Interferometric Wide Swath Ground Range Detected High Resolution"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
             <summary class="pystac-summary"><span class="pystac-k">38</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
@@ -2507,7 +2507,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/myd13q1-6.1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mod13q1-6.1"</span>
         </li>
     
             
@@ -2525,7 +2525,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"MYD13Q1 v061 - Cloud Optimized GeoTIFF"</span>
+            <span class="pystac-v">"MOD13Q1 v061 - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -2660,57 +2660,6 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WFI-L2-DN-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4A/WFI - Level-2-DN"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">42</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
             <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-tsirf-yearly-1"</span>
         </li>
     
@@ -2746,7 +2695,160 @@
             
                 
         <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">42</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WFI-L2-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4A/WFI - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
             <summary class="pystac-summary"><span class="pystac-k">43</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-PAN5M-L2-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4/PAN5M - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">44</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-WFI-L2-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4/WFI - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">45</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -2797,7 +2899,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">44</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">46</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -2848,7 +2950,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">45</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">47</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -2899,619 +3001,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">46</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-lgi-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Landsat INPE Data Archive"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">47</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB2-CCD-L2-DN-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-2/CCD - Level-2-DN"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
             <summary class="pystac-summary"><span class="pystac-k">48</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CBERS4-WFI-16D-2"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/WFI - Level-4-SR - Data Cube - LCF 16 days"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">49</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mod11a2-6.1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"MOD11A2 v061 - Cloud Optimized GeoTIFF"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">50</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WPM-L4-DN-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4A/WPM - Level-4-DN"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">51</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-2"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Landsat Collection 2 - Level-2"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">52</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WFI-L4-SR-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4A/WFI - Level-4-SR - Cloud Optimized GeoTIFF"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">53</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/sentinel-3-olci-l1-bundle-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Sentinel-3/OLCI - Level-1B Full Resolution"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">54</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-MUX-L4-SR-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4A/MUX - Level-4-SR - Cloud Optimized GeoTIFF"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">55</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/s3-olci-rrs-water-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Sentinel-3 - Aquatic Remote Sensing Reflectance"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">56</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/s3-olci-pc-tiete-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"Sentinel-3 - Phycocyanin - Tietê River Cascade Reservoirs"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">57</span></summary>
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">rel</span>
-            <span class="pystac-v">"child"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-PAN10M-L2-DN-1"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">type</span>
-            <span class="pystac-v">"application/json"</span>
-        </li>
-    
-            
-        
-            
-                
-        <li class="pystac-row">
-            <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/PAN10M - Level-2-DN"</span>
-        </li>
-    
-            
-        
-    </ul>
-        </details></li>
-    
-            
-        
-    </ul>
-        
-            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
-        
-            
-                
-        <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">58</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3562,7 +3052,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">59</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">49</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3578,7 +3068,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-MUX-L2-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/landsat-lgi-1"</span>
         </li>
     
             
@@ -3596,7 +3086,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/MUX - Level-2-DN"</span>
+            <span class="pystac-v">"Landsat INPE Data Archive"</span>
         </li>
     
             
@@ -3613,7 +3103,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">60</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">50</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3629,7 +3119,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-MUX-L2-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB2-CCD-L2-DN-1"</span>
         </li>
     
             
@@ -3647,7 +3137,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4A/MUX - Level-2-DN"</span>
+            <span class="pystac-v">"CBERS-2/CCD - Level-2-DN"</span>
         </li>
     
             
@@ -3664,7 +3154,58 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">61</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">51</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CBERS4-WFI-16D-2"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4/WFI - Level-4-SR - Data Cube - LCF 16 days"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">52</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3715,7 +3256,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">62</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">53</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3731,7 +3272,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-s2-brazil-3m-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WPM-L4-DN-1"</span>
         </li>
     
             
@@ -3749,7 +3290,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"S2 3M Mosaic"</span>
+            <span class="pystac-v">"CBERS-4A/WPM - Level-4-DN"</span>
         </li>
     
             
@@ -3766,7 +3307,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">63</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">54</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3782,7 +3323,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-s2-amazon-1m-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mod11a2-6.1"</span>
         </li>
     
             
@@ -3800,7 +3341,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"S2 1M Amazon Biome Mosaic"</span>
+            <span class="pystac-v">"MOD11A2 v061 - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -3817,7 +3358,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">64</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">55</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3833,7 +3374,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/sentinel-1-rtc-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WFI-L4-SR-1"</span>
         </li>
     
             
@@ -3851,7 +3392,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"Sentinel-1 - Level-2 - Radiometrically Terrain Corrected (RTC)"</span>
+            <span class="pystac-v">"CBERS-4A/WFI - Level-4-SR - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -3868,7 +3409,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">65</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">56</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3884,7 +3425,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/GOES13-L3-IMAGER-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/sentinel-3-olci-l1-bundle-1"</span>
         </li>
     
             
@@ -3902,7 +3443,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"GOES-13/Imager - Level-3 - VIS/IR Imagery (Binary)"</span>
+            <span class="pystac-v">"Sentinel-3/OLCI - Level-1B Full Resolution"</span>
         </li>
     
             
@@ -3919,7 +3460,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">66</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">57</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3935,7 +3476,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB2B-CCD-L2-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-MUX-L4-SR-1"</span>
         </li>
     
             
@@ -3953,7 +3494,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-2B/CCD - Level-2-DN"</span>
+            <span class="pystac-v">"CBERS-4A/MUX - Level-4-SR - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -3970,7 +3511,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">67</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">58</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -3986,7 +3527,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WPM-L2-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-MUX-L2-DN-1"</span>
         </li>
     
             
@@ -4004,7 +3545,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4A/WPM - Level-2-DN"</span>
+            <span class="pystac-v">"CBERS-4/MUX - Level-2-DN"</span>
         </li>
     
             
@@ -4021,7 +3562,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">68</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">59</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4037,7 +3578,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CBERS4-MUX-2M-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/s3-olci-pc-tiete-1"</span>
         </li>
     
             
@@ -4055,7 +3596,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/MUX - Level-4-SR - Data Cube - LCF 2 months"</span>
+            <span class="pystac-v">"Sentinel-3 - Phycocyanin - Tietê River Cascade Reservoirs"</span>
         </li>
     
             
@@ -4072,7 +3613,58 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">69</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">60</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-PAN10M-L2-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4/PAN10M - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">61</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4123,7 +3715,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">70</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">62</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4139,7 +3731,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4-WFI-L4-DN-1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-MUX-L2-DN-1"</span>
         </li>
     
             
@@ -4157,7 +3749,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"CBERS-4/WFI - Level-4-DN"</span>
+            <span class="pystac-v">"CBERS-4A/MUX - Level-2-DN"</span>
         </li>
     
             
@@ -4174,7 +3766,364 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">71</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">63</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-s2-brazil-3m-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"S2 3M Mosaic"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">64</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/mosaic-s2-amazon-1m-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"S2 1M Amazon Biome Mosaic"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">65</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/sentinel-1-rtc-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"Sentinel-1 - Level-2 - Radiometrically Terrain Corrected (RTC)"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">66</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/GOES13-L3-IMAGER-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"GOES-13/Imager - Level-3 - VIS/IR Imagery (Binary)"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">67</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB2B-CCD-L2-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-2B/CCD - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">68</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CB4A-WPM-L2-DN-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4A/WPM - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">69</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/CBERS4-MUX-2M-1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"CBERS-4/MUX - Level-4-SR - Data Cube - LCF 2 months"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">70</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4225,7 +4174,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">72</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">71</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4276,7 +4225,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">73</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">72</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4327,7 +4276,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">74</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">73</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4378,7 +4327,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">75</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">74</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4429,7 +4378,7 @@
             
                 
         <li><details>
-            <summary class="pystac-summary"><span class="pystac-k">76</span></summary>
+            <summary class="pystac-summary"><span class="pystac-k">75</span></summary>
             <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
         
             
@@ -4464,6 +4413,57 @@
         <li class="pystac-row">
             <span class="pystac-k">title</span>
             <span class="pystac-v">"CBERS-2/WFI - Level-2-DN"</span>
+        </li>
+    
+            
+        
+    </ul>
+        </details></li>
+    
+            
+        
+    </ul>
+        
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li><details>
+            <summary class="pystac-summary"><span class="pystac-k">76</span></summary>
+            <ul style="margin: 0px; padding: 0px 0px 0px 1.75em; list-style: none; display: block;">
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">rel</span>
+            <span class="pystac-v">"child"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">href</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/myd11a2-6.1"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">type</span>
+            <span class="pystac-v">"application/json"</span>
+        </li>
+    
+            
+        
+            
+                
+        <li class="pystac-row">
+            <span class="pystac-k">title</span>
+            <span class="pystac-v">"MYD11A2 v061 - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -4649,7 +4649,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">href</span>
-            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/myd11a2-6.1"</span>
+            <span class="pystac-v">"https://data.inpe.br/bdc/stac/v1/collections/S2_L2A-1"</span>
         </li>
     
             
@@ -4667,7 +4667,7 @@
                 
         <li class="pystac-row">
             <span class="pystac-k">title</span>
-            <span class="pystac-v">"MYD11A2 v061 - Cloud Optimized GeoTIFF"</span>
+            <span class="pystac-v">"Sentinel-2 - Level-2A - Cloud Optimized GeoTIFF"</span>
         </li>
     
             
@@ -5056,12 +5056,12 @@
 <h2 class="anchored" data-anchor-id="definindo-a-aoi">1. Definindo a AOI</h2>
 <p>Duas opções: um <strong>bbox</strong> manual (mais simples) ou a geometria de um <strong>município</strong> via <code>geobr</code>. Use o <a href="https://rodostoteknoloji.com/online-tools/bbox-tool-en.html">bbox finder</a> para pegar as coordenadas.</p>
 <p>O <code>bbox</code> é sempre <code>[oeste, sul, leste, norte]</code> em graus (<strong>EPSG:4326</strong>).</p>
-<p>Comece pequeno. Como os arquivos não são COG, o custo da leitura cresce com a <strong>altura</strong> da AOI: um recorte de ~0,04° (≈ 4 km) resolve para experimentar; depois você aumenta.</p>
+<p>Comece com uma AOI pequena. O custo computacional é maior para AOIs maiores.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="6c329ee7" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="6c329ee7" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># ---- opção A: bbox na mão ----</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>AOI_BBOX <span class="op">=</span> [<span class="op">-</span><span class="fl">47.596712</span>, <span class="op">-</span><span class="fl">22.467523</span>, <span class="op">-</span><span class="fl">47.495068</span>, <span class="op">-</span><span class="fl">22.374216</span>]</span>
+<span id="cb3-2"><a href="#cb3-2"></a>AOI_BBOX <span class="op">=</span> [<span class="op">-</span><span class="fl">47.625969</span>, <span class="op">-</span><span class="fl">22.467835</span>, <span class="op">-</span><span class="fl">47.498227</span>, <span class="op">-</span><span class="fl">22.344048</span>]</span>
 <span id="cb3-3"><a href="#cb3-3"></a>AOI_NOME <span class="op">=</span> <span class="st">"rio_claro"</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="co"># # ---- opção B: município inteiro via geobr (descomente — cuidado, fica bem mais lento) ----</span></span>
@@ -5095,22 +5095,23 @@
 <span id="cb3-33"><a href="#cb3-33"></a><span class="bu">print</span>(<span class="ss">f"pixels estimados: MS </span><span class="sc">{</span>largura_km <span class="op">*</span> <span class="dv">125</span><span class="sc">:.0f}</span><span class="ss"> x </span><span class="sc">{</span>altura_km <span class="op">*</span> <span class="dv">125</span><span class="sc">:.0f}</span><span class="ss"> | "</span></span>
 <span id="cb3-34"><a href="#cb3-34"></a>      <span class="ss">f"PAN </span><span class="sc">{</span>largura_km <span class="op">*</span> <span class="dv">500</span><span class="sc">:.0f}</span><span class="ss"> x </span><span class="sc">{</span>altura_km <span class="op">*</span> <span class="dv">500</span><span class="sc">:.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>AOI: [-47.596712, -22.467523, -47.495068, -22.374216]
-tamanho aproximado: 10.4 x 10.4 km
-pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
+<pre><code>AOI: [-47.625969, -22.467835, -47.498227, -22.344048]
+tamanho aproximado: 13.1 x 13.7 km
+pixels estimados: MS 1638 x 1718 | PAN 6552 x 6870</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="be4e3d92" class="cell" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="be4e3d92" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># visualização rápida da AOI (opcional)</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="im">import</span> folium</span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="im">from</span> shapely.geometry <span class="im">import</span> box</span>
 <span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a>m <span class="op">=</span> folium.Map()</span>
-<span id="cb5-6"><a href="#cb5-6"></a>folium.GeoJson(box(<span class="op">*</span>AOI_BBOX).__geo_interface__,</span>
-<span id="cb5-7"><a href="#cb5-7"></a>               style_function<span class="op">=</span><span class="kw">lambda</span> x: {<span class="st">"fillColor"</span>: <span class="st">"none"</span>, <span class="st">"color"</span>: <span class="st">"red"</span>, <span class="st">"weight"</span>: <span class="dv">3</span>}).add_to(m)</span>
-<span id="cb5-8"><a href="#cb5-8"></a>m.fit_bounds([[AOI_BBOX[<span class="dv">1</span>], AOI_BBOX[<span class="dv">0</span>]], [AOI_BBOX[<span class="dv">3</span>], AOI_BBOX[<span class="dv">2</span>]]])</span>
-<span id="cb5-9"><a href="#cb5-9"></a>m</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<span id="cb5-5"><a href="#cb5-5"></a>m <span class="op">=</span> folium.Map(tiles<span class="op">=</span><span class="st">"https://</span><span class="sc">{s}</span><span class="st">.tile-cyclosm.openstreetmap.fr/cyclosm/</span><span class="sc">{z}</span><span class="st">/</span><span class="sc">{x}</span><span class="st">/</span><span class="sc">{y}</span><span class="st">.png"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    attr<span class="op">=</span><span class="st">'&amp;copy; &lt;a href="https://github.com"&gt;CyclOSM&lt;/a&gt; tiles courtesy of &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt;'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7"></a>folium.GeoJson(box(<span class="op">*</span>AOI_BBOX).__geo_interface__,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>               style_function<span class="op">=</span><span class="kw">lambda</span> x: {<span class="st">"fillColor"</span>: <span class="st">"none"</span>, <span class="st">"color"</span>: <span class="st">"red"</span>, <span class="st">"weight"</span>: <span class="dv">3</span>}).add_to(m)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>m.fit_bounds([[AOI_BBOX[<span class="dv">1</span>], AOI_BBOX[<span class="dv">0</span>]], [AOI_BBOX[<span class="dv">3</span>], AOI_BBOX[<span class="dv">2</span>]]])</span>
+<span id="cb5-10"><a href="#cb5-10"></a>m</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -&gt; Trust Notebook</span><iframe srcdoc="<!DOCTYPE html>
 <html>
 <head>
@@ -5130,7 +5131,7 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
             <meta name=&quot;viewport&quot; content=&quot;width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; />
             <style>
-                #map_1ad311035a8ced5713901f763d119a3f {
+                #map_44de13d8a3c58309b56f593c0c20d2b9 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -5167,14 +5168,14 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 <body>
     
     
-            <div class=&quot;folium-map&quot; id=&quot;map_1ad311035a8ced5713901f763d119a3f&quot; ></div>
+            <div class=&quot;folium-map&quot; id=&quot;map_44de13d8a3c58309b56f593c0c20d2b9&quot; ></div>
         
 </body>
 <script>
     
     
-            var map_1ad311035a8ced5713901f763d119a3f = L.map(
-                &quot;map_1ad311035a8ced5713901f763d119a3f&quot;,
+            var map_44de13d8a3c58309b56f593c0c20d2b9 = L.map(
+                &quot;map_44de13d8a3c58309b56f593c0c20d2b9&quot;,
                 {
                     center: [0.0, 0.0],
                     crs: L.CRS.EPSG3857,
@@ -5191,14 +5192,14 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 
         
     
-            var tile_layer_2de7a052ccbfefa77bf2d1d10d79c813 = L.tileLayer(
-                &quot;https://tile.openstreetmap.org/{z}/{x}/{y}.png&quot;,
+            var tile_layer_dddd2cf08bc2cac279ecb184ea582a45 = L.tileLayer(
+                &quot;https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png&quot;,
                 {
   &quot;minZoom&quot;: 0,
-  &quot;maxZoom&quot;: 19,
-  &quot;maxNativeZoom&quot;: 19,
+  &quot;maxZoom&quot;: 18,
+  &quot;maxNativeZoom&quot;: 18,
   &quot;noWrap&quot;: false,
-  &quot;attribution&quot;: &quot;\u0026copy; \u003ca href=\&quot;https://www.openstreetmap.org/copyright\&quot;\u003eOpenStreetMap\u003c/a\u003e contributors&quot;,
+  &quot;attribution&quot;: &quot;\u0026copy; \u003ca href=\&quot;https://github.com\&quot;\u003eCyclOSM\u003c/a\u003e tiles courtesy of \u003ca href=\&quot;https://www.openstreetmap.org/\&quot;\u003eOpenStreetMap\u003c/a\u003e&quot;,
   &quot;subdomains&quot;: &quot;abc&quot;,
   &quot;detectRetina&quot;: false,
   &quot;tms&quot;: false,
@@ -5208,42 +5209,42 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
             );
         
     
-            tile_layer_2de7a052ccbfefa77bf2d1d10d79c813.addTo(map_1ad311035a8ced5713901f763d119a3f);
+            tile_layer_dddd2cf08bc2cac279ecb184ea582a45.addTo(map_44de13d8a3c58309b56f593c0c20d2b9);
         
     
-        function geo_json_f8e6f0d9bb03f501531c806fb187c44f_styler(feature) {
+        function geo_json_4091b516477946c70975d8c7e1edb6e9_styler(feature) {
             switch(feature.id) {
                 default:
                     return {&quot;color&quot;: &quot;red&quot;, &quot;fillColor&quot;: &quot;none&quot;, &quot;weight&quot;: 3};
             }
         }
 
-        function geo_json_f8e6f0d9bb03f501531c806fb187c44f_onEachFeature(feature, layer) {
+        function geo_json_4091b516477946c70975d8c7e1edb6e9_onEachFeature(feature, layer) {
 
             layer.on({
             });
         };
-        var geo_json_f8e6f0d9bb03f501531c806fb187c44f = L.geoJson(null, {
-                onEachFeature: geo_json_f8e6f0d9bb03f501531c806fb187c44f_onEachFeature,
+        var geo_json_4091b516477946c70975d8c7e1edb6e9 = L.geoJson(null, {
+                onEachFeature: geo_json_4091b516477946c70975d8c7e1edb6e9_onEachFeature,
             
-                style: geo_json_f8e6f0d9bb03f501531c806fb187c44f_styler,
+                style: geo_json_4091b516477946c70975d8c7e1edb6e9_styler,
             ...{
 }
         });
 
-        function geo_json_f8e6f0d9bb03f501531c806fb187c44f_add (data) {
-            geo_json_f8e6f0d9bb03f501531c806fb187c44f
+        function geo_json_4091b516477946c70975d8c7e1edb6e9_add (data) {
+            geo_json_4091b516477946c70975d8c7e1edb6e9
                 .addData(data);
         }
-            geo_json_f8e6f0d9bb03f501531c806fb187c44f_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[-47.495068, -22.467523], [-47.495068, -22.374216], [-47.596712, -22.374216], [-47.596712, -22.467523], [-47.495068, -22.467523]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;id&quot;: &quot;0&quot;, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
+            geo_json_4091b516477946c70975d8c7e1edb6e9_add({&quot;features&quot;: [{&quot;geometry&quot;: {&quot;coordinates&quot;: [[[-47.498227, -22.467835], [-47.498227, -22.344048], [-47.625969, -22.344048], [-47.625969, -22.467835], [-47.498227, -22.467835]]], &quot;type&quot;: &quot;Polygon&quot;}, &quot;id&quot;: &quot;0&quot;, &quot;type&quot;: &quot;Feature&quot;}], &quot;type&quot;: &quot;FeatureCollection&quot;});
 
         
     
-            geo_json_f8e6f0d9bb03f501531c806fb187c44f.addTo(map_1ad311035a8ced5713901f763d119a3f);
+            geo_json_4091b516477946c70975d8c7e1edb6e9.addTo(map_44de13d8a3c58309b56f593c0c20d2b9);
         
     
-            map_1ad311035a8ced5713901f763d119a3f.fitBounds(
-                [[-22.467523, -47.596712], [-22.374216, -47.495068]],
+            map_44de13d8a3c58309b56f593c0c20d2b9.fitBounds(
+                [[-22.467835, -47.625969], [-22.344048, -47.498227]],
                 {}
             );
         
@@ -5254,10 +5255,10 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 <div id="3e36524f" class="cell markdown">
 <section id="buscando-as-cenas" class="level2">
 <h2 class="anchored" data-anchor-id="buscando-as-cenas">2. Buscando as cenas</h2>
-<p>A busca por <code>bbox</code> retorna toda cena cujo <strong>footprint</strong> cruza a AOI — inclusive as que só encostam em uma quina e cobrem a sua área só com <code>nodata</code>. Por isso a tabela tem a coluna <code>orbita_ponto</code>: cenas de órbitas diferentes cobrem partes diferentes (e, como veremos, chegam até em <strong>zonas UTM diferentes</strong>).</p>
+<p>A busca por <code>bbox</code> retorna toda cena cujo <strong>footprint</strong> cruza a AOI — inclusive as que só encostam em uma pequena parte e cobrem a área só com <code>nodata</code>. Por isso a tabela tem a coluna <code>orbita_ponto</code>: cenas de órbitas diferentes cobrem partes diferentes.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="68f20d8f" class="cell" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="68f20d8f" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">def</span> buscar_cenas(bbox, datetime_range, collection<span class="op">=</span>COLLECTION, limite<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb6-2"><a href="#cb6-2"></a>    <span class="co">"""Busca cenas no STAC e devolve (lista_de_items, DataFrame com o resumo)."""</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a>    busca <span class="op">=</span> client.search(</span>
@@ -5291,7 +5292,7 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 <pre><code>9 cenas encontradas
 </code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
 
@@ -5396,15 +5397,15 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 </div>
 </div></div>
 <div id="023b6ed8" class="cell markdown">
-<p>Repare que <code>nuvens_meta_%</code> está toda vazia — é o problema descrito lá em cima. Vamos resolver isso de outro jeito.</p>
+<p>Repare que <code>nuvens_meta_%</code> está vazia — é o problema descrito lá em cima.</p>
 </div>
 <div id="54052ba9" class="cell markdown">
 <section id="escolhendo-no-olho-as-miniaturas" class="level2">
 <h2 class="anchored" data-anchor-id="escolhendo-no-olho-as-miniaturas">3. Escolhendo no olho: as miniaturas</h2>
-<p>Cada item traz um asset <code>thumbnail</code>: um PNG leve da cena inteira. É a forma mais rápida de ver se a cena está limpa e se ela realmente cobre a sua região.</p>
+<p>Cada item traz um asset <code>thumbnail</code>: um PNG leve da cena inteira. É a forma mais rápida de ver se a cena cobre a região.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="7407526c" class="cell" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="7407526c" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">def</span> mostrar_thumbnails(items, df, n<span class="op">=</span><span class="dv">8</span>, colunas<span class="op">=</span><span class="dv">4</span>):</span>
 <span id="cb8-2"><a href="#cb8-2"></a>    <span class="co">"""Mostra as miniaturas das primeiras n cenas do DataFrame."""</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a>    <span class="im">from</span> PIL <span class="im">import</span> Image</span>
@@ -5448,7 +5449,7 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 <div id="bcace3e1" class="cell markdown">
 <section id="lendo-só-a-aoi" class="level2">
 <h2 class="anchored" data-anchor-id="lendo-só-a-aoi">4. Lendo só a AOI</h2>
-<p>Daqui em diante nada é lido por inteiro: a cena PAN tem 3,2 gigapixels e tudo o que interessa é o retângulo da AOI. As três funções abaixo fazem esse recorte, e são usadas também na pré-visualização (seção 6) e na exportação (seção 7) — <strong>rode esta seção mesmo que você já saiba qual cena quer</strong>.</p>
+<p>Daqui em diante nada é lido por inteiro: uma cena PAN inteira tem 3,2 gigapixels e tudo o que interessa é o retângulo da nossa AOI. As três funções abaixo fazem esse recorte, e são usadas também na pré-visualização (seção 6) e na exportação (seção 7) — <strong>rode esta seção mesmo que você já saiba qual cena quer</strong>.</p>
 <ul>
 <li><code>reprojetar_bounds</code> leva o bbox de graus para o CRS da cena;</li>
 <li><code>janela_da_aoi</code> converte esses limites numa janela de pixels, calculada no <code>transform</code> de <strong>cada arquivo</strong> — a PAN tem grade de 2 m e as multiespectrais de 8 m, e cenas de órbitas diferentes podem até cair em zonas UTM diferentes;</li>
@@ -5456,7 +5457,7 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 </ul>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="f790a62a" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="f790a62a" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">def</span> reprojetar_bounds(bounds, de<span class="op">=</span><span class="st">"EPSG:4326"</span>, para<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb9-2"><a href="#cb9-2"></a>    <span class="co">"""Converte um bbox de um CRS para outro."""</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a>    transformer <span class="op">=</span> Transformer.from_crs(de, para, always_xy<span class="op">=</span><span class="va">True</span>)</span>
@@ -5631,16 +5632,16 @@ pixels estimados: MS 1303 x 1295 | PAN 5213 x 5179</code></pre>
 <div id="a222ffda" class="cell markdown">
 <section id="escolhendo-a-cena" class="level2">
 <h2 class="anchored" data-anchor-id="escolhendo-a-cena">5. Escolhendo a cena</h2>
-<p>Pegue o número da coluna <code>idx</code> da cena que você quer e coloque em <code>ESCOLHA</code>. Dois critérios:</p>
+<p>Pegue o número da coluna <code>idx</code> da cena que você quer e preencha <code>ESCOLHA</code>. Dois critérios:</p>
 <ol type="1">
 <li><strong><code>cobertura_aoi_%</code> acima de 95</strong> — abaixo disso a cena não cobre a sua área de verdade;</li>
 <li><strong>nuvem sobre uma parte da AOI</strong>, olhando a miniatura da seção 3.</li>
 </ol>
-<p>O segundo critério vai contra o instinto, e é de propósito. Normalmente você quer a cena mais limpa possível; mas nas Aulas 02 e 03 a gente detecta nuvem e preenche o buraco com Sentinel-2 super-resolvido, e para isso <strong>precisa de nuvem</strong>. Não precisa ser muita: uma mancha pequena sobre a área urbana já dá o que fazer nas duas aulas seguintes.</p>
-<p>A cena de referência do curso é a <strong><code>CBERS_4A_WPM_20260301_203_141_L4</code></strong> (01/03/2026) — é a que aparece nos vídeos e a que os notebooks das aulas seguintes usam por padrão. Se você escolher outra, ou estiver em outra área, <strong>anote o <code>id</code></strong>: as Aulas 01, 02 e 03 pedem esse identificador na célula de configuração.</p>
+<p>Normalmente buscamos a cena mais limpa possível; mas nas Aulas 02 e 03 iremos detectar nuvens e preencher pixels contaminados com Sentinel-2 super-resolvido, e para isso <strong>precisamos de nuvem</strong>.</p>
+<p>A cena de referência do curso é a <strong><code>CBERS_4A_WPM_20260301_203_141_L4</code></strong> (idx 1) (01/03/2026) — é a que aparece nos vídeos e a que os notebooks das aulas seguintes usam por padrão. Se você escolher outra, ou estiver em outra área, <strong>anote o <code>id</code></strong>: as Aulas 01, 02 e 03 pedem esse identificador na célula de configuração.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="91cbf033" class="cell" data-execution_count="9">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="91cbf033" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>ESCOLHA <span class="op">=</span> <span class="dv">1</span>  <span class="co"># &lt;-- troque aqui pelo "idx" da cena desejada</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>             <span class="co">#     (a cena de referência do curso tem nuvem sobre parte da AOI)</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
@@ -5659,10 +5660,10 @@ assets:  ['BAND0', 'BAND1', 'BAND2', 'BAND3', 'BAND4', 'thumbnail']</code></pre>
 <div id="18db3f93" class="cell markdown">
 <section id="pré-visualização-em-rgb" class="level2">
 <h2 class="anchored" data-anchor-id="pré-visualização-em-rgb">6. Pré-visualização em RGB</h2>
-<p>Contraste por <strong>percentil</strong> (2%–98%): mais robusto que min/max, porque um pixel saturado (nuvem) ou uma sombra não achatam a imagem inteira. O <code>nodata = 0</code> é descartado antes de calcular os percentis, senão a borda preta puxaria o contraste toda vez que a AOI encosta no limite da cena.</p>
+<p>Contraste por <strong>percentil</strong> (2%–98%). O <code>nodata = 0</code> é descartado antes de calcular os percentis, senão a borda preta puxaria o contraste toda vez que a AOI encosta no limite da cena.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-fig-preview-rgb" class="cell" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-preview-rgb" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">def</span> stretch(array, low_pct<span class="op">=</span><span class="dv">2</span>, high_pct<span class="op">=</span><span class="dv">98</span>):</span>
 <span id="cb13-2"><a href="#cb13-2"></a>    <span class="co">"""Normaliza um array para 0–1 usando contraste por percentil, ignorando nodata (0)."""</span></span>
 <span id="cb13-3"><a href="#cb13-3"></a>    dados <span class="op">=</span> np.ma.filled(array.astype(<span class="st">"float64"</span>), np.nan)</span>
@@ -5703,7 +5704,7 @@ Figura&nbsp;1: Pré-visualização em cor natural (R/G/B) do recorte da AOI, ant
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="7d7bc21c" class="cell" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="7d7bc21c" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># falsa cor (NIR, R, G): vegetação em vermelho — bom para conferir a cena antes de exportar</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a>_ <span class="op">=</span> preview_rgb(item, AOI_BBOX, bandas<span class="op">=</span>(<span class="st">"BAND4"</span>, <span class="st">"BAND3"</span>, <span class="st">"BAND2"</span>),</span>
 <span id="cb14-3"><a href="#cb14-3"></a>                titulo<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss"> — falsa cor (NIR/R/G)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
@@ -5714,9 +5715,6 @@ Figura&nbsp;1: Pré-visualização em cor natural (R/G/B) do recorte da AOI, ant
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>shape do preview: (800, 783, 3)</code></pre>
-</div>
 </div></div>
 <div id="fcf2f1f6" class="cell markdown">
 <p><strong>Gostou da cena?</strong> Se não, volte na célula do <code>ESCOLHA</code>, troque o <code>idx</code> e rode de novo. Quando estiver satisfeito, siga para a exportação.</p>
@@ -5724,123 +5722,123 @@ Figura&nbsp;1: Pré-visualização em cor natural (R/G/B) do recorte da AOI, ant
 <div id="ee50217f" class="cell markdown">
 <section id="exportando-as-bandas-recortadas" class="level2">
 <h2 class="anchored" data-anchor-id="exportando-as-bandas-recortadas">7. Exportando as bandas recortadas</h2>
-<p>Agora lemos em <strong>resolução total</strong> (sem <code>max_dim</code>) e gravamos em GeoTIFF, preservando:</p>
+<p>Agora lemos em <strong>resolução total</strong> e gravamos em GeoTIFF, preservando:</p>
 <ul>
 <li>o <code>dtype</code> original (<code>int16</code>, números digitais) e o <code>nodata = 0</code> — sem perder informação radiométrica;</li>
 <li>o CRS e o <code>transform</code> <strong>da janela</strong> recortada, então o arquivo abre georreferenciado no QGIS;</li>
 <li>compressão <code>deflate</code> e <em>tiling</em> — ou seja, a saída fica mais bem organizada que a entrada.</li>
 </ul>
 <p>Saem 5 GeoTIFFs, nomeados com o <strong>asset do INPE</strong> (<code>BAND0</code> = PAN, <code>BAND1</code> = blue, <code>BAND2</code> = green, <code>BAND3</code> = red, <code>BAND4</code> = nir) — assim o recorte carrega o mesmo nome de banda do produto original. Ao lado de cada um vem o <strong>XML de metadados</strong> daquela banda (asset <code>BANDn_xml</code> do STAC): ângulos de visada e solar, órbita/ponto, data de passagem e parâmetros de processamento. São poucos KB cada e descrevem a <strong>cena inteira</strong> — não são recortados junto com o raster, mas valem como procedência do recorte. Passe <code>com_xml=False</code> se não quiser baixá-los.</p>
-<p>A PAN é a mais demorada de longe: são 4x mais linhas e 4x mais colunas que a MS. Numa AOI de 4 x 4 km, medindo de verdade: cada banda MS (506 x 563 px) leva ~2 s, e a PAN (2022 x 2251 px) leva ~45 s. Escale a partir daí — e lembre que o custo acompanha a <strong>altura</strong> da AOI.</p>
+<p>A PAN é a mais demorada: são 4x mais linhas e 4x mais colunas que a MS. Numa AOI de 4 x 4 km, medindo de verdade: cada banda MS (506 x 563 px) leva ~2 s, e a PAN (2022 x 2251 px) leva ~45 s.</p>
 <blockquote class="blockquote">
 <p><strong>CRS da saída:</strong> o arquivo herda a zona UTM da cena de origem. Se você exportar cenas de órbitas diferentes da mesma AOI (ex.: 204 em EPSG:32723 e 205 em EPSG:32722), elas <strong>não</strong> vão estar no mesmo CRS — reprojete antes de comparar.</p>
 </blockquote>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="f537b763" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">def</span> exportar_banda(href, bbox, caminho_saida):</span>
-<span id="cb16-2"><a href="#cb16-2"></a>    <span class="co">"""Lê a AOI em resolução total e salva como GeoTIFF."""</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(href) <span class="im">as</span> src:</span>
-<span id="cb16-4"><a href="#cb16-4"></a>        janela <span class="op">=</span> janela_da_aoi(src, bbox)</span>
-<span id="cb16-5"><a href="#cb16-5"></a>        dados <span class="op">=</span> src.read(<span class="dv">1</span>, window<span class="op">=</span>janela)</span>
-<span id="cb16-6"><a href="#cb16-6"></a>        altura, largura <span class="op">=</span> <span class="bu">int</span>(janela.height), <span class="bu">int</span>(janela.width)</span>
-<span id="cb16-7"><a href="#cb16-7"></a></span>
-<span id="cb16-8"><a href="#cb16-8"></a>        perfil <span class="op">=</span> src.profile.copy()</span>
-<span id="cb16-9"><a href="#cb16-9"></a>        perfil.update(</span>
-<span id="cb16-10"><a href="#cb16-10"></a>            driver<span class="op">=</span><span class="st">"GTiff"</span>,</span>
-<span id="cb16-11"><a href="#cb16-11"></a>            height<span class="op">=</span>altura,</span>
-<span id="cb16-12"><a href="#cb16-12"></a>            width<span class="op">=</span>largura,</span>
-<span id="cb16-13"><a href="#cb16-13"></a>            count<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb16-14"><a href="#cb16-14"></a>            transform<span class="op">=</span>window_transform(janela, src.transform),</span>
-<span id="cb16-15"><a href="#cb16-15"></a>            compress<span class="op">=</span><span class="st">"deflate"</span>,</span>
-<span id="cb16-16"><a href="#cb16-16"></a>            predictor<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb16-17"><a href="#cb16-17"></a>        )</span>
-<span id="cb16-18"><a href="#cb16-18"></a>        <span class="co"># tiling só faz sentido se o recorte for maior que o bloco</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a>        <span class="cf">if</span> altura <span class="op">&gt;=</span> <span class="dv">512</span> <span class="kw">and</span> largura <span class="op">&gt;=</span> <span class="dv">512</span>:</span>
-<span id="cb16-20"><a href="#cb16-20"></a>            perfil.update(tiled<span class="op">=</span><span class="va">True</span>, blockxsize<span class="op">=</span><span class="dv">512</span>, blockysize<span class="op">=</span><span class="dv">512</span>)</span>
-<span id="cb16-21"><a href="#cb16-21"></a>        <span class="cf">else</span>:</span>
-<span id="cb16-22"><a href="#cb16-22"></a>            perfil.update(tiled<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb16-23"><a href="#cb16-23"></a>            perfil.pop(<span class="st">"blockxsize"</span>, <span class="va">None</span>)</span>
-<span id="cb16-24"><a href="#cb16-24"></a>            perfil.pop(<span class="st">"blockysize"</span>, <span class="va">None</span>)</span>
-<span id="cb16-25"><a href="#cb16-25"></a></span>
-<span id="cb16-26"><a href="#cb16-26"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho_saida, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb16-27"><a href="#cb16-27"></a>        dst.write(dados, <span class="dv">1</span>)</span>
-<span id="cb16-28"><a href="#cb16-28"></a></span>
-<span id="cb16-29"><a href="#cb16-29"></a>    validos <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> np.count_nonzero(dados) <span class="op">/</span> dados.size</span>
-<span id="cb16-30"><a href="#cb16-30"></a>    tamanho_mb <span class="op">=</span> os.path.getsize(caminho_saida) <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span></span>
-<span id="cb16-31"><a href="#cb16-31"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>basename(caminho_saida)<span class="sc">:55s}</span><span class="ss"> </span><span class="sc">{</span>dados<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>dados<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss"> "</span></span>
-<span id="cb16-32"><a href="#cb16-32"></a>          <span class="ss">f"| </span><span class="sc">{</span>validos<span class="sc">:5.1f}</span><span class="ss">% válidos | </span><span class="sc">{</span>tamanho_mb<span class="sc">:6.1f}</span><span class="ss"> MB"</span>)</span>
-<span id="cb16-33"><a href="#cb16-33"></a>    <span class="cf">return</span> caminho_saida</span>
-<span id="cb16-34"><a href="#cb16-34"></a></span>
-<span id="cb16-35"><a href="#cb16-35"></a></span>
-<span id="cb16-36"><a href="#cb16-36"></a><span class="kw">def</span> exportar_xml(item, asset, caminho_saida):</span>
-<span id="cb16-37"><a href="#cb16-37"></a>    <span class="co">"""Baixa o XML de metadados da banda (asset `&lt;BANDA&gt;_xml`, poucos KB).</span></span>
-<span id="cb16-38"><a href="#cb16-38"></a></span>
-<span id="cb16-39"><a href="#cb16-39"></a><span class="co">    Atenção: o XML descreve a **cena inteira** (footprint, ângulos, órbita, data de</span></span>
-<span id="cb16-40"><a href="#cb16-40"></a><span class="co">    processamento) — ele não é recortado junto com o raster. Guarde-o como procedência</span></span>
-<span id="cb16-41"><a href="#cb16-41"></a><span class="co">    do recorte, não como descrição da AOI.</span></span>
-<span id="cb16-42"><a href="#cb16-42"></a><span class="co">    """</span></span>
-<span id="cb16-43"><a href="#cb16-43"></a>    chave <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">_xml"</span></span>
-<span id="cb16-44"><a href="#cb16-44"></a>    <span class="cf">if</span> chave <span class="kw">not</span> <span class="kw">in</span> item.assets:</span>
-<span id="cb16-45"><a href="#cb16-45"></a>        <span class="bu">print</span>(<span class="ss">f"  ! asset </span><span class="sc">{</span>chave<span class="sc">}</span><span class="ss"> não existe nesta cena — pulando"</span>)</span>
-<span id="cb16-46"><a href="#cb16-46"></a>        <span class="cf">return</span> <span class="va">None</span></span>
-<span id="cb16-47"><a href="#cb16-47"></a></span>
-<span id="cb16-48"><a href="#cb16-48"></a>    resposta <span class="op">=</span> requests.get(item.assets[chave].href, timeout<span class="op">=</span><span class="dv">120</span>)</span>
-<span id="cb16-49"><a href="#cb16-49"></a>    resposta.raise_for_status()</span>
-<span id="cb16-50"><a href="#cb16-50"></a>    <span class="cf">with</span> <span class="bu">open</span>(caminho_saida, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
-<span id="cb16-51"><a href="#cb16-51"></a>        f.write(resposta.content)</span>
-<span id="cb16-52"><a href="#cb16-52"></a></span>
-<span id="cb16-53"><a href="#cb16-53"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>basename(caminho_saida)<span class="sc">:55s}</span><span class="ss"> "</span></span>
-<span id="cb16-54"><a href="#cb16-54"></a>          <span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(resposta.content) <span class="op">/</span> <span class="dv">1024</span><span class="sc">:21.1f}</span><span class="ss"> KB de metadados"</span>)</span>
-<span id="cb16-55"><a href="#cb16-55"></a>    <span class="cf">return</span> caminho_saida</span>
-<span id="cb16-56"><a href="#cb16-56"></a></span>
-<span id="cb16-57"><a href="#cb16-57"></a></span>
-<span id="cb16-58"><a href="#cb16-58"></a><span class="kw">def</span> exportar_cena(item, bbox, prefixo, output_dir<span class="op">=</span>OUTPUT_DIR, bandas<span class="op">=</span>BANDAS, com_xml<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb16-59"><a href="#cb16-59"></a>    <span class="co">"""Exporta todas as bandas da AOI (+ os XML de metadados). Retorna {asset: caminho}.</span></span>
-<span id="cb16-60"><a href="#cb16-60"></a></span>
-<span id="cb16-61"><a href="#cb16-61"></a><span class="co">    Os arquivos saem com o nome do asset do INPE (`BAND0`..`BAND4`), e não com o apelido —</span></span>
-<span id="cb16-62"><a href="#cb16-62"></a><span class="co">    assim o nome do recorte casa com o do produto original e com o XML que o acompanha.</span></span>
-<span id="cb16-63"><a href="#cb16-63"></a><span class="co">    Use `BANDAS[asset]` quando precisar do apelido (`red`, `nir`, ...).</span></span>
-<span id="cb16-64"><a href="#cb16-64"></a><span class="co">    """</span></span>
-<span id="cb16-65"><a href="#cb16-65"></a>    saidas <span class="op">=</span> {}</span>
-<span id="cb16-66"><a href="#cb16-66"></a>    <span class="bu">print</span>(<span class="ss">f"Exportando </span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">:"</span>)</span>
-<span id="cb16-67"><a href="#cb16-67"></a>    <span class="cf">for</span> asset, apelido <span class="kw">in</span> bandas.items():</span>
-<span id="cb16-68"><a href="#cb16-68"></a>        <span class="cf">if</span> asset <span class="kw">not</span> <span class="kw">in</span> item.assets:</span>
-<span id="cb16-69"><a href="#cb16-69"></a>            <span class="bu">print</span>(<span class="ss">f"  ! asset </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss"> não existe nesta cena — pulando"</span>)</span>
-<span id="cb16-70"><a href="#cb16-70"></a>            <span class="cf">continue</span></span>
-<span id="cb16-71"><a href="#cb16-71"></a>        base <span class="op">=</span> os.path.join(output_dir, <span class="ss">f"</span><span class="sc">{</span>prefixo<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-72"><a href="#cb16-72"></a>        <span class="cf">try</span>:</span>
-<span id="cb16-73"><a href="#cb16-73"></a>            saidas[asset] <span class="op">=</span> exportar_banda(item.assets[asset].href, bbox, base <span class="op">+</span> <span class="st">".tif"</span>)</span>
-<span id="cb16-74"><a href="#cb16-74"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> erro:</span>
-<span id="cb16-75"><a href="#cb16-75"></a>            <span class="co"># a API do INPE derruba conexão de vez em quando; rode a célula de novo para o que faltou</span></span>
-<span id="cb16-76"><a href="#cb16-76"></a>            <span class="bu">print</span>(<span class="ss">f"  ! falhou em </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>apelido<span class="sc">}</span><span class="ss">): </span><span class="sc">{</span><span class="bu">type</span>(erro)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>erro<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-77"><a href="#cb16-77"></a></span>
-<span id="cb16-78"><a href="#cb16-78"></a>        <span class="cf">if</span> com_xml:</span>
-<span id="cb16-79"><a href="#cb16-79"></a>            <span class="cf">try</span>:</span>
-<span id="cb16-80"><a href="#cb16-80"></a>                caminho_xml <span class="op">=</span> exportar_xml(item, asset, base <span class="op">+</span> <span class="st">".xml"</span>)</span>
-<span id="cb16-81"><a href="#cb16-81"></a>                <span class="cf">if</span> caminho_xml:</span>
-<span id="cb16-82"><a href="#cb16-82"></a>                    saidas[<span class="ss">f"</span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">_xml"</span>] <span class="op">=</span> caminho_xml</span>
-<span id="cb16-83"><a href="#cb16-83"></a>            <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> erro:</span>
-<span id="cb16-84"><a href="#cb16-84"></a>                <span class="bu">print</span>(<span class="ss">f"  ! falhou no XML de </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="bu">type</span>(erro)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>erro<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-85"><a href="#cb16-85"></a>    <span class="cf">return</span> saidas</span>
-<span id="cb16-86"><a href="#cb16-86"></a></span>
-<span id="cb16-87"><a href="#cb16-87"></a></span>
-<span id="cb16-88"><a href="#cb16-88"></a>arquivos <span class="op">=</span> exportar_cena(item, AOI_BBOX, AOI_NOME)</span>
-<span id="cb16-89"><a href="#cb16-89"></a>arquivos</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="f537b763" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">def</span> exportar_banda(href, bbox, caminho_saida):</span>
+<span id="cb15-2"><a href="#cb15-2"></a>    <span class="co">"""Lê a AOI em resolução total e salva como GeoTIFF."""</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(href) <span class="im">as</span> src:</span>
+<span id="cb15-4"><a href="#cb15-4"></a>        janela <span class="op">=</span> janela_da_aoi(src, bbox)</span>
+<span id="cb15-5"><a href="#cb15-5"></a>        dados <span class="op">=</span> src.read(<span class="dv">1</span>, window<span class="op">=</span>janela)</span>
+<span id="cb15-6"><a href="#cb15-6"></a>        altura, largura <span class="op">=</span> <span class="bu">int</span>(janela.height), <span class="bu">int</span>(janela.width)</span>
+<span id="cb15-7"><a href="#cb15-7"></a></span>
+<span id="cb15-8"><a href="#cb15-8"></a>        perfil <span class="op">=</span> src.profile.copy()</span>
+<span id="cb15-9"><a href="#cb15-9"></a>        perfil.update(</span>
+<span id="cb15-10"><a href="#cb15-10"></a>            driver<span class="op">=</span><span class="st">"GTiff"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11"></a>            height<span class="op">=</span>altura,</span>
+<span id="cb15-12"><a href="#cb15-12"></a>            width<span class="op">=</span>largura,</span>
+<span id="cb15-13"><a href="#cb15-13"></a>            count<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb15-14"><a href="#cb15-14"></a>            transform<span class="op">=</span>window_transform(janela, src.transform),</span>
+<span id="cb15-15"><a href="#cb15-15"></a>            compress<span class="op">=</span><span class="st">"deflate"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16"></a>            predictor<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb15-17"><a href="#cb15-17"></a>        )</span>
+<span id="cb15-18"><a href="#cb15-18"></a>        <span class="co"># tiling só faz sentido se o recorte for maior que o bloco</span></span>
+<span id="cb15-19"><a href="#cb15-19"></a>        <span class="cf">if</span> altura <span class="op">&gt;=</span> <span class="dv">512</span> <span class="kw">and</span> largura <span class="op">&gt;=</span> <span class="dv">512</span>:</span>
+<span id="cb15-20"><a href="#cb15-20"></a>            perfil.update(tiled<span class="op">=</span><span class="va">True</span>, blockxsize<span class="op">=</span><span class="dv">512</span>, blockysize<span class="op">=</span><span class="dv">512</span>)</span>
+<span id="cb15-21"><a href="#cb15-21"></a>        <span class="cf">else</span>:</span>
+<span id="cb15-22"><a href="#cb15-22"></a>            perfil.update(tiled<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-23"><a href="#cb15-23"></a>            perfil.pop(<span class="st">"blockxsize"</span>, <span class="va">None</span>)</span>
+<span id="cb15-24"><a href="#cb15-24"></a>            perfil.pop(<span class="st">"blockysize"</span>, <span class="va">None</span>)</span>
+<span id="cb15-25"><a href="#cb15-25"></a></span>
+<span id="cb15-26"><a href="#cb15-26"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho_saida, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb15-27"><a href="#cb15-27"></a>        dst.write(dados, <span class="dv">1</span>)</span>
+<span id="cb15-28"><a href="#cb15-28"></a></span>
+<span id="cb15-29"><a href="#cb15-29"></a>    validos <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> np.count_nonzero(dados) <span class="op">/</span> dados.size</span>
+<span id="cb15-30"><a href="#cb15-30"></a>    tamanho_mb <span class="op">=</span> os.path.getsize(caminho_saida) <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span></span>
+<span id="cb15-31"><a href="#cb15-31"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>basename(caminho_saida)<span class="sc">:55s}</span><span class="ss"> </span><span class="sc">{</span>dados<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>dados<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss"> "</span></span>
+<span id="cb15-32"><a href="#cb15-32"></a>          <span class="ss">f"| </span><span class="sc">{</span>validos<span class="sc">:5.1f}</span><span class="ss">% válidos | </span><span class="sc">{</span>tamanho_mb<span class="sc">:6.1f}</span><span class="ss"> MB"</span>)</span>
+<span id="cb15-33"><a href="#cb15-33"></a>    <span class="cf">return</span> caminho_saida</span>
+<span id="cb15-34"><a href="#cb15-34"></a></span>
+<span id="cb15-35"><a href="#cb15-35"></a></span>
+<span id="cb15-36"><a href="#cb15-36"></a><span class="kw">def</span> exportar_xml(item, asset, caminho_saida):</span>
+<span id="cb15-37"><a href="#cb15-37"></a>    <span class="co">"""Baixa o XML de metadados da banda (asset `&lt;BANDA&gt;_xml`, poucos KB).</span></span>
+<span id="cb15-38"><a href="#cb15-38"></a></span>
+<span id="cb15-39"><a href="#cb15-39"></a><span class="co">    Atenção: o XML descreve a **cena inteira** (footprint, ângulos, órbita, data de</span></span>
+<span id="cb15-40"><a href="#cb15-40"></a><span class="co">    processamento) — ele não é recortado junto com o raster. Guarde-o como procedência</span></span>
+<span id="cb15-41"><a href="#cb15-41"></a><span class="co">    do recorte, não como descrição da AOI.</span></span>
+<span id="cb15-42"><a href="#cb15-42"></a><span class="co">    """</span></span>
+<span id="cb15-43"><a href="#cb15-43"></a>    chave <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">_xml"</span></span>
+<span id="cb15-44"><a href="#cb15-44"></a>    <span class="cf">if</span> chave <span class="kw">not</span> <span class="kw">in</span> item.assets:</span>
+<span id="cb15-45"><a href="#cb15-45"></a>        <span class="bu">print</span>(<span class="ss">f"  ! asset </span><span class="sc">{</span>chave<span class="sc">}</span><span class="ss"> não existe nesta cena — pulando"</span>)</span>
+<span id="cb15-46"><a href="#cb15-46"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb15-47"><a href="#cb15-47"></a></span>
+<span id="cb15-48"><a href="#cb15-48"></a>    resposta <span class="op">=</span> requests.get(item.assets[chave].href, timeout<span class="op">=</span><span class="dv">120</span>)</span>
+<span id="cb15-49"><a href="#cb15-49"></a>    resposta.raise_for_status()</span>
+<span id="cb15-50"><a href="#cb15-50"></a>    <span class="cf">with</span> <span class="bu">open</span>(caminho_saida, <span class="st">"wb"</span>) <span class="im">as</span> f:</span>
+<span id="cb15-51"><a href="#cb15-51"></a>        f.write(resposta.content)</span>
+<span id="cb15-52"><a href="#cb15-52"></a></span>
+<span id="cb15-53"><a href="#cb15-53"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>basename(caminho_saida)<span class="sc">:55s}</span><span class="ss"> "</span></span>
+<span id="cb15-54"><a href="#cb15-54"></a>          <span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(resposta.content) <span class="op">/</span> <span class="dv">1024</span><span class="sc">:21.1f}</span><span class="ss"> KB de metadados"</span>)</span>
+<span id="cb15-55"><a href="#cb15-55"></a>    <span class="cf">return</span> caminho_saida</span>
+<span id="cb15-56"><a href="#cb15-56"></a></span>
+<span id="cb15-57"><a href="#cb15-57"></a></span>
+<span id="cb15-58"><a href="#cb15-58"></a><span class="kw">def</span> exportar_cena(item, bbox, prefixo, output_dir<span class="op">=</span>OUTPUT_DIR, bandas<span class="op">=</span>BANDAS, com_xml<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb15-59"><a href="#cb15-59"></a>    <span class="co">"""Exporta todas as bandas da AOI (+ os XML de metadados). Retorna {asset: caminho}.</span></span>
+<span id="cb15-60"><a href="#cb15-60"></a></span>
+<span id="cb15-61"><a href="#cb15-61"></a><span class="co">    Os arquivos saem com o nome do asset do INPE (`BAND0`..`BAND4`), e não com o apelido —</span></span>
+<span id="cb15-62"><a href="#cb15-62"></a><span class="co">    assim o nome do recorte casa com o do produto original e com o XML que o acompanha.</span></span>
+<span id="cb15-63"><a href="#cb15-63"></a><span class="co">    Use `BANDAS[asset]` quando precisar do apelido (`red`, `nir`, ...).</span></span>
+<span id="cb15-64"><a href="#cb15-64"></a><span class="co">    """</span></span>
+<span id="cb15-65"><a href="#cb15-65"></a>    saidas <span class="op">=</span> {}</span>
+<span id="cb15-66"><a href="#cb15-66"></a>    <span class="bu">print</span>(<span class="ss">f"Exportando </span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">:"</span>)</span>
+<span id="cb15-67"><a href="#cb15-67"></a>    <span class="cf">for</span> asset, apelido <span class="kw">in</span> bandas.items():</span>
+<span id="cb15-68"><a href="#cb15-68"></a>        <span class="cf">if</span> asset <span class="kw">not</span> <span class="kw">in</span> item.assets:</span>
+<span id="cb15-69"><a href="#cb15-69"></a>            <span class="bu">print</span>(<span class="ss">f"  ! asset </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss"> não existe nesta cena — pulando"</span>)</span>
+<span id="cb15-70"><a href="#cb15-70"></a>            <span class="cf">continue</span></span>
+<span id="cb15-71"><a href="#cb15-71"></a>        base <span class="op">=</span> os.path.join(output_dir, <span class="ss">f"</span><span class="sc">{</span>prefixo<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-72"><a href="#cb15-72"></a>        <span class="cf">try</span>:</span>
+<span id="cb15-73"><a href="#cb15-73"></a>            saidas[asset] <span class="op">=</span> exportar_banda(item.assets[asset].href, bbox, base <span class="op">+</span> <span class="st">".tif"</span>)</span>
+<span id="cb15-74"><a href="#cb15-74"></a>        <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> erro:</span>
+<span id="cb15-75"><a href="#cb15-75"></a>            <span class="co"># a API do INPE derruba conexão de vez em quando; rode a célula de novo para o que faltou</span></span>
+<span id="cb15-76"><a href="#cb15-76"></a>            <span class="bu">print</span>(<span class="ss">f"  ! falhou em </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>apelido<span class="sc">}</span><span class="ss">): </span><span class="sc">{</span><span class="bu">type</span>(erro)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>erro<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-77"><a href="#cb15-77"></a></span>
+<span id="cb15-78"><a href="#cb15-78"></a>        <span class="cf">if</span> com_xml:</span>
+<span id="cb15-79"><a href="#cb15-79"></a>            <span class="cf">try</span>:</span>
+<span id="cb15-80"><a href="#cb15-80"></a>                caminho_xml <span class="op">=</span> exportar_xml(item, asset, base <span class="op">+</span> <span class="st">".xml"</span>)</span>
+<span id="cb15-81"><a href="#cb15-81"></a>                <span class="cf">if</span> caminho_xml:</span>
+<span id="cb15-82"><a href="#cb15-82"></a>                    saidas[<span class="ss">f"</span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">_xml"</span>] <span class="op">=</span> caminho_xml</span>
+<span id="cb15-83"><a href="#cb15-83"></a>            <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> erro:</span>
+<span id="cb15-84"><a href="#cb15-84"></a>                <span class="bu">print</span>(<span class="ss">f"  ! falhou no XML de </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="bu">type</span>(erro)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>erro<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-85"><a href="#cb15-85"></a>    <span class="cf">return</span> saidas</span>
+<span id="cb15-86"><a href="#cb15-86"></a></span>
+<span id="cb15-87"><a href="#cb15-87"></a></span>
+<span id="cb15-88"><a href="#cb15-88"></a>arquivos <span class="op">=</span> exportar_cena(item, AOI_BBOX, AOI_NOME)</span>
+<span id="cb15-89"><a href="#cb15-89"></a>arquivos</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Exportando CBERS_4A_WPM_20260301_203_141_L4:
-  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND1.tif    (1314, 1287) int16 | 100.0% válidos |    1.6 MB
+  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND1.tif    (1742, 1615) int16 | 100.0% válidos |    2.5 MB
   rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND1.xml                     19.4 KB de metadados
-  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND2.tif    (1314, 1287) int16 | 100.0% válidos |    1.7 MB
+  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND2.tif    (1742, 1615) int16 | 100.0% válidos |    2.7 MB
   rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND2.xml                     19.4 KB de metadados
-  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND3.tif    (1314, 1287) int16 | 100.0% válidos |    1.8 MB
+  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND3.tif    (1742, 1615) int16 | 100.0% válidos |    2.9 MB
   rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND3.xml                     19.4 KB de metadados
-  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND4.tif    (1314, 1287) int16 | 100.0% válidos |    2.1 MB
+  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND4.tif    (1742, 1615) int16 | 100.0% válidos |    3.5 MB
   rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND4.xml                     19.4 KB de metadados
-  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND0.tif    (5257, 5146) int16 | 100.0% válidos |   27.0 MB
+  rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND0.tif    (6968, 6462) int16 | 100.0% válidos |   43.8 MB
   rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND0.xml                     19.4 KB de metadados</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>{'BAND1': 'data/raw\\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND1.tif',
  'BAND1_xml': 'data/raw\\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND1.xml',
  'BAND2': 'data/raw\\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND2.tif',
@@ -5853,35 +5851,35 @@ Figura&nbsp;1: Pré-visualização em cor natural (R/G/B) do recorte da AOI, ant
  'BAND0_xml': 'data/raw\\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND0.xml'}</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="384f4b34" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">def</span> empilhar(caminhos, caminho_saida, descricoes<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb19-2"><a href="#cb19-2"></a>    <span class="co">"""Empilha vários GeoTIFFs de mesma grade em um único arquivo multibanda."""</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminhos[<span class="dv">0</span>]) <span class="im">as</span> ref:</span>
-<span id="cb19-4"><a href="#cb19-4"></a>        perfil <span class="op">=</span> ref.profile.copy()</span>
-<span id="cb19-5"><a href="#cb19-5"></a>    perfil.update(count<span class="op">=</span><span class="bu">len</span>(caminhos))</span>
-<span id="cb19-6"><a href="#cb19-6"></a></span>
-<span id="cb19-7"><a href="#cb19-7"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho_saida, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb19-8"><a href="#cb19-8"></a>        <span class="cf">for</span> i, caminho <span class="kw">in</span> <span class="bu">enumerate</span>(caminhos, start<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb19-9"><a href="#cb19-9"></a>            <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho) <span class="im">as</span> src:</span>
-<span id="cb19-10"><a href="#cb19-10"></a>                dst.write(src.read(<span class="dv">1</span>), i)</span>
-<span id="cb19-11"><a href="#cb19-11"></a>            <span class="cf">if</span> descricoes:</span>
-<span id="cb19-12"><a href="#cb19-12"></a>                dst.set_band_description(i, descricoes[i <span class="op">-</span> <span class="dv">1</span>])</span>
-<span id="cb19-13"><a href="#cb19-13"></a></span>
-<span id="cb19-14"><a href="#cb19-14"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>caminho_saida<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span><span class="bu">len</span>(caminhos)<span class="sc">}</span><span class="ss"> bandas, "</span></span>
-<span id="cb19-15"><a href="#cb19-15"></a>          <span class="ss">f"</span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>getsize(caminho_saida) <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB)"</span>)</span>
-<span id="cb19-16"><a href="#cb19-16"></a>    <span class="cf">return</span> caminho_saida</span>
-<span id="cb19-17"><a href="#cb19-17"></a></span>
-<span id="cb19-18"><a href="#cb19-18"></a></span>
-<span id="cb19-19"><a href="#cb19-19"></a><span class="co"># só as multiespectrais (8 m) — a PAN (BAND0, 2 m) tem outra grade e fica em arquivo separado</span></span>
-<span id="cb19-20"><a href="#cb19-20"></a>ordem <span class="op">=</span> [a <span class="cf">for</span> a <span class="kw">in</span> [<span class="st">"BAND3"</span>, <span class="st">"BAND2"</span>, <span class="st">"BAND1"</span>, <span class="st">"BAND4"</span>] <span class="cf">if</span> a <span class="kw">in</span> arquivos]  <span class="co"># R, G, B, NIR</span></span>
-<span id="cb19-21"><a href="#cb19-21"></a>stack_rgbn <span class="op">=</span> empilhar(</span>
-<span id="cb19-22"><a href="#cb19-22"></a>    [arquivos[a] <span class="cf">for</span> a <span class="kw">in</span> ordem],</span>
-<span id="cb19-23"><a href="#cb19-23"></a>    os.path.join(OUTPUT_DIR, <span class="ss">f"</span><span class="sc">{</span>AOI_NOME<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">_RGBN.tif"</span>),</span>
-<span id="cb19-24"><a href="#cb19-24"></a>    <span class="co"># no arquivo empilhado a descrição da banda guarda o apelido: red, green, blue, nir</span></span>
-<span id="cb19-25"><a href="#cb19-25"></a>    descricoes<span class="op">=</span>[BANDAS[a] <span class="cf">for</span> a <span class="kw">in</span> ordem],</span>
-<span id="cb19-26"><a href="#cb19-26"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="384f4b34" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">def</span> empilhar(caminhos, caminho_saida, descricoes<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb18-2"><a href="#cb18-2"></a>    <span class="co">"""Empilha vários GeoTIFFs de mesma grade em um único arquivo multibanda."""</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminhos[<span class="dv">0</span>]) <span class="im">as</span> ref:</span>
+<span id="cb18-4"><a href="#cb18-4"></a>        perfil <span class="op">=</span> ref.profile.copy()</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    perfil.update(count<span class="op">=</span><span class="bu">len</span>(caminhos))</span>
+<span id="cb18-6"><a href="#cb18-6"></a></span>
+<span id="cb18-7"><a href="#cb18-7"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho_saida, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb18-8"><a href="#cb18-8"></a>        <span class="cf">for</span> i, caminho <span class="kw">in</span> <span class="bu">enumerate</span>(caminhos, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb18-9"><a href="#cb18-9"></a>            <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho) <span class="im">as</span> src:</span>
+<span id="cb18-10"><a href="#cb18-10"></a>                dst.write(src.read(<span class="dv">1</span>), i)</span>
+<span id="cb18-11"><a href="#cb18-11"></a>            <span class="cf">if</span> descricoes:</span>
+<span id="cb18-12"><a href="#cb18-12"></a>                dst.set_band_description(i, descricoes[i <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="cb18-13"><a href="#cb18-13"></a></span>
+<span id="cb18-14"><a href="#cb18-14"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>caminho_saida<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span><span class="bu">len</span>(caminhos)<span class="sc">}</span><span class="ss"> bandas, "</span></span>
+<span id="cb18-15"><a href="#cb18-15"></a>          <span class="ss">f"</span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>getsize(caminho_saida) <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB)"</span>)</span>
+<span id="cb18-16"><a href="#cb18-16"></a>    <span class="cf">return</span> caminho_saida</span>
+<span id="cb18-17"><a href="#cb18-17"></a></span>
+<span id="cb18-18"><a href="#cb18-18"></a></span>
+<span id="cb18-19"><a href="#cb18-19"></a><span class="co"># só as multiespectrais (8 m) — a PAN (BAND0, 2 m) tem outra grade e fica em arquivo separado</span></span>
+<span id="cb18-20"><a href="#cb18-20"></a>ordem <span class="op">=</span> [a <span class="cf">for</span> a <span class="kw">in</span> [<span class="st">"BAND3"</span>, <span class="st">"BAND2"</span>, <span class="st">"BAND1"</span>, <span class="st">"BAND4"</span>] <span class="cf">if</span> a <span class="kw">in</span> arquivos]  <span class="co"># R, G, B, NIR</span></span>
+<span id="cb18-21"><a href="#cb18-21"></a>stack_rgbn <span class="op">=</span> empilhar(</span>
+<span id="cb18-22"><a href="#cb18-22"></a>    [arquivos[a] <span class="cf">for</span> a <span class="kw">in</span> ordem],</span>
+<span id="cb18-23"><a href="#cb18-23"></a>    os.path.join(OUTPUT_DIR, <span class="ss">f"</span><span class="sc">{</span>AOI_NOME<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">_RGBN.tif"</span>),</span>
+<span id="cb18-24"><a href="#cb18-24"></a>    <span class="co"># no arquivo empilhado a descrição da banda guarda o apelido: red, green, blue, nir</span></span>
+<span id="cb18-25"><a href="#cb18-25"></a>    descricoes<span class="op">=</span>[BANDAS[a] <span class="cf">for</span> a <span class="kw">in</span> ordem],</span>
+<span id="cb18-26"><a href="#cb18-26"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>data/raw\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_RGBN.tif  (4 bandas, 7.4 MB)</code></pre>
+<pre><code>data/raw\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_RGBN.tif  (4 bandas, 12.0 MB)</code></pre>
 </div>
 </div></div>
 <div id="7a717bda" class="cell markdown">
@@ -5890,38 +5888,38 @@ Figura&nbsp;1: Pré-visualização em cor natural (R/G/B) do recorte da AOI, ant
 <p>Abrindo os arquivos locais para garantir que o recorte, a georreferência e os valores estão certos.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-fig-exportacao" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(stack_rgbn) <span class="im">as</span> src:</span>
-<span id="cb21-2"><a href="#cb21-2"></a>    <span class="bu">print</span>(<span class="st">"CRS:       "</span>, src.crs)</span>
-<span id="cb21-3"><a href="#cb21-3"></a>    <span class="bu">print</span>(<span class="st">"shape:     "</span>, src.height, <span class="st">"x"</span>, src.width, <span class="ss">f"(</span><span class="sc">{</span>src<span class="sc">.</span>count<span class="sc">}</span><span class="ss"> bandas, </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4"></a>    <span class="bu">print</span>(<span class="st">"resolução: "</span>, src.res, <span class="st">"m"</span>)</span>
-<span id="cb21-5"><a href="#cb21-5"></a>    <span class="bu">print</span>(<span class="st">"bounds:    "</span>, src.bounds)</span>
-<span id="cb21-6"><a href="#cb21-6"></a>    <span class="bu">print</span>(<span class="st">"descrições:"</span>, src.descriptions)</span>
-<span id="cb21-7"><a href="#cb21-7"></a>    r, g, b, nir <span class="op">=</span> [src.read(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>)]</span>
-<span id="cb21-8"><a href="#cb21-8"></a></span>
-<span id="cb21-9"><a href="#cb21-9"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(arquivos[<span class="st">"BAND0"</span>]) <span class="im">as</span> src:</span>
-<span id="cb21-10"><a href="#cb21-10"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">PAN -&gt;"</span>, src.height, <span class="st">"x"</span>, src.width, <span class="st">"| resolução:"</span>, src.res, <span class="st">"m"</span>)</span>
-<span id="cb21-11"><a href="#cb21-11"></a>    pan <span class="op">=</span> src.read(<span class="dv">1</span>)</span>
-<span id="cb21-12"><a href="#cb21-12"></a></span>
-<span id="cb21-13"><a href="#cb21-13"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">6</span>))</span>
-<span id="cb21-14"><a href="#cb21-14"></a>axes[<span class="dv">0</span>].imshow(np.dstack([stretch(r), stretch(g), stretch(b)]))</span>
-<span id="cb21-15"><a href="#cb21-15"></a>axes[<span class="dv">0</span>].set_title(<span class="st">"RGB exportado (8 m)"</span>)</span>
-<span id="cb21-16"><a href="#cb21-16"></a>axes[<span class="dv">1</span>].imshow(np.dstack([stretch(nir), stretch(r), stretch(g)]))</span>
-<span id="cb21-17"><a href="#cb21-17"></a>axes[<span class="dv">1</span>].set_title(<span class="st">"Falsa cor NIR/R/G (8 m)"</span>)</span>
-<span id="cb21-18"><a href="#cb21-18"></a>axes[<span class="dv">2</span>].imshow(stretch(pan), cmap<span class="op">=</span><span class="st">"gray"</span>)</span>
-<span id="cb21-19"><a href="#cb21-19"></a>axes[<span class="dv">2</span>].set_title(<span class="st">"PAN (2 m)"</span>)</span>
-<span id="cb21-20"><a href="#cb21-20"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
-<span id="cb21-21"><a href="#cb21-21"></a>    ax.axis(<span class="st">"off"</span>)</span>
-<span id="cb21-22"><a href="#cb21-22"></a>plt.tight_layout()</span>
-<span id="cb21-23"><a href="#cb21-23"></a>plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-fig-exportacao" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(stack_rgbn) <span class="im">as</span> src:</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    <span class="bu">print</span>(<span class="st">"CRS:       "</span>, src.crs)</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    <span class="bu">print</span>(<span class="st">"shape:     "</span>, src.height, <span class="st">"x"</span>, src.width, <span class="ss">f"(</span><span class="sc">{</span>src<span class="sc">.</span>count<span class="sc">}</span><span class="ss"> bandas, </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4"></a>    <span class="bu">print</span>(<span class="st">"resolução: "</span>, src.res, <span class="st">"m"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5"></a>    <span class="bu">print</span>(<span class="st">"bounds:    "</span>, src.bounds)</span>
+<span id="cb20-6"><a href="#cb20-6"></a>    <span class="bu">print</span>(<span class="st">"descrições:"</span>, src.descriptions)</span>
+<span id="cb20-7"><a href="#cb20-7"></a>    r, g, b, nir <span class="op">=</span> [src.read(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>)]</span>
+<span id="cb20-8"><a href="#cb20-8"></a></span>
+<span id="cb20-9"><a href="#cb20-9"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(arquivos[<span class="st">"BAND0"</span>]) <span class="im">as</span> src:</span>
+<span id="cb20-10"><a href="#cb20-10"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">PAN -&gt;"</span>, src.height, <span class="st">"x"</span>, src.width, <span class="st">"| resolução:"</span>, src.res, <span class="st">"m"</span>)</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    pan <span class="op">=</span> src.read(<span class="dv">1</span>)</span>
+<span id="cb20-12"><a href="#cb20-12"></a></span>
+<span id="cb20-13"><a href="#cb20-13"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">6</span>))</span>
+<span id="cb20-14"><a href="#cb20-14"></a>axes[<span class="dv">0</span>].imshow(np.dstack([stretch(r), stretch(g), stretch(b)]))</span>
+<span id="cb20-15"><a href="#cb20-15"></a>axes[<span class="dv">0</span>].set_title(<span class="st">"RGB exportado (8 m)"</span>)</span>
+<span id="cb20-16"><a href="#cb20-16"></a>axes[<span class="dv">1</span>].imshow(np.dstack([stretch(nir), stretch(r), stretch(g)]))</span>
+<span id="cb20-17"><a href="#cb20-17"></a>axes[<span class="dv">1</span>].set_title(<span class="st">"Falsa cor NIR/R/G (8 m)"</span>)</span>
+<span id="cb20-18"><a href="#cb20-18"></a>axes[<span class="dv">2</span>].imshow(stretch(pan), cmap<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb20-19"><a href="#cb20-19"></a>axes[<span class="dv">2</span>].set_title(<span class="st">"PAN (2 m)"</span>)</span>
+<span id="cb20-20"><a href="#cb20-20"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb20-21"><a href="#cb20-21"></a>    ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb20-22"><a href="#cb20-22"></a>plt.tight_layout()</span>
+<span id="cb20-23"><a href="#cb20-23"></a>plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>CRS:        EPSG:32723
-shape:      1314 x 1287 (4 bandas, int16)
+shape:      1742 x 1615 (4 bandas, int16)
 resolução:  (8.0, 8.0) m
-bounds:     BoundingBox(left=232788.0, bottom=7513110.0, right=243084.0, top=7523622.0)
+bounds:     BoundingBox(left=229772.0, bottom=7513022.0, right=242692.0, top=7526958.0)
 descrições: ('red', 'green', 'blue', 'nir')
 
-PAN -&gt; 5257 x 5146 | resolução: (2.0, 2.0) m</code></pre>
+PAN -&gt; 6968 x 6462 | resolução: (2.0, 2.0) m</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div id="fig-exportacao" class="quarto-float quarto-figure quarto-figure-center anchored">

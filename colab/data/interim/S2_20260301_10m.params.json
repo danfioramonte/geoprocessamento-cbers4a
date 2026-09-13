@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-09-10T21:08:38",
+  "gerado_em": "2026-09-13T18:44:06",
   "aula": "03",
   "etapa": "mosaico S2",
   "data_referencia": "2026-03-01",
@@ -21,8 +21,8 @@
       "baseline": "05.12",
       "offset": -1000.0,
       "cobre_aoi": 1.0,
-      "frac_limpa": 0.9117,
-      "px_usados": 1081050
+      "frac_limpa": 0.945,
+      "px_usados": 1826028
     },
     {
       "id": "S2B_MSIL2A_20260304T132229_R038_T22KHA_20260304T183249",
@@ -31,8 +31,8 @@
       "baseline": "05.12",
       "offset": -1000.0,
       "cobre_aoi": 1.0,
-      "frac_limpa": 0.9502,
-      "px_usados": 45777
+      "frac_limpa": 0.9695,
+      "px_usados": 47447
     },
     {
       "id": "S2B_MSIL2A_20260314T132229_R038_T23KKR_20260314T182541",
@@ -42,7 +42,7 @@
       "offset": -1000.0,
       "cobre_aoi": 1.0,
       "frac_limpa": 1.0,
-      "px_usados": 58973
+      "px_usados": 58805
     }
   ],
   "cobertura": 1.0

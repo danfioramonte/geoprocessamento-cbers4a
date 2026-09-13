@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-09-10T21:04:35",
+  "gerado_em": "2026-09-13T18:41:43",
   "aula": "02",
   "cena": "CBERS_4A_WPM_20260301_203_141_L4",
   "nivel": "boa",
@@ -12,15 +12,15 @@
     "green": 2,
     "nir": 4
   },
-  "px_validos": 27036589,
-  "px_nuvem_sombra": 3445745,
-  "frac_contaminada": 0.1274,
-  "area_contaminada_ha": 1378.3,
+  "px_validos": 44984983,
+  "px_nuvem_sombra": 5065155,
+  "frac_contaminada": 0.1126,
+  "area_contaminada_ha": 2026.1,
   "por_classe": {
-    "clear": 23590844,
-    "thick_cloud": 2011205,
+    "clear": 39919828,
+    "thick_cloud": 3082430,
     "thin_cloud": 0,
-    "cloud_shadow": 1434540
+    "cloud_shadow": 1982725
   },
   "saidas": {
     "mascara_deteccao": "data\\interim\\pansharpening_20260301_boa_cloudmask_10m.tif",

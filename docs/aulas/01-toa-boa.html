@@ -298,7 +298,6 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#os-três-parâmetros-atmosféricos" id="toc-os-três-parâmetros-atmosféricos" class="nav-link" data-scroll-target="#os-três-parâmetros-atmosféricos">3.1 Os três parâmetros atmosféricos</a></li>
   <li><a href="#escolhendo-o-aod-quando-você-não-tem-a-medida-do-dia" id="toc-escolhendo-o-aod-quando-você-não-tem-a-medida-do-dia" class="nav-link" data-scroll-target="#escolhendo-o-aod-quando-você-não-tem-a-medida-do-dia">3.2 Escolhendo o AOD quando você não tem a medida do dia</a></li>
-  <li><a href="#reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma" id="toc-reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma" class="nav-link" data-scroll-target="#reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma">3.3 Reflectância negativa: o que é normal e o que é sintoma</a></li>
   </ul></li>
   <li><a href="#gravando-o-composto-rgbn-de-8-m" id="toc-gravando-o-composto-rgbn-de-8-m" class="nav-link" data-scroll-target="#gravando-o-composto-rgbn-de-8-m">4. Gravando o composto RGBN de 8 m</a></li>
   <li><a href="#alinhando-a-multiespectral-com-a-pancromática" id="toc-alinhando-a-multiespectral-com-a-pancromática" class="nav-link" data-scroll-target="#alinhando-a-multiespectral-com-a-pancromática">5. Alinhando a multiespectral com a pancromática</a></li>
@@ -306,7 +305,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#como-simular-a-pancromática-e-por-que-isso-decide-tudo" id="toc-como-simular-a-pancromática-e-por-que-isso-decide-tudo" class="nav-link" data-scroll-target="#como-simular-a-pancromática-e-por-que-isso-decide-tudo">Como simular a pancromática — e por que isso decide tudo</a></li>
   </ul></li>
-  <li><a href="#o-que-ficou-pronto" id="toc-o-que-ficou-pronto" class="nav-link" data-scroll-target="#o-que-ficou-pronto">O que ficou pronto</a></li>
+  <li><a href="#arquivos-finais-desta-aula" id="toc-arquivos-finais-desta-aula" class="nav-link" data-scroll-target="#arquivos-finais-desta-aula">Arquivos finais desta aula</a></li>
   <li><a href="#erros-comuns-nesta-aula" id="toc-erros-comuns-nesta-aula" class="nav-link" data-scroll-target="#erros-comuns-nesta-aula">Erros comuns nesta aula</a></li>
   <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a>
   <ul class="collapse">
@@ -354,7 +353,8 @@ window.Quarto = {
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/ID-DO-VIDEO" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <section id="o-que-vamos-aprender" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-vamos-aprender">O que vamos aprender</h2>
-<p>A Aula 00 deixou em <code>data/raw</code> cinco GeoTIFFs em <strong>números digitais</strong> — quatro bandas multiespectrais de 8 m e uma pancromática de 2 m. Número digital não é uma grandeza física: é o valor que o conversor analógico-digital do sensor gravou. Ele depende do ganho da câmera, da posição do Sol no dia da passagem e do que a atmosfera fez com a luz no caminho. Duas cenas da mesma área em datas diferentes não são comparáveis em DN.</p>
+<p>Nessa aula, vamos aprender a converter uma imagem CBERS-4A WPM de <strong>números digitais (DN)</strong> para <strong>reflectância de superfície (BOA)</strong>, passando por <strong>radiância</strong> e <strong>reflectância no topo da atmosfera (TOA)</strong>. Também vamos aprender a fundir as bandas multiespectrais com a pancromática por meio de código Python, aumentando a resolução espacial de 8 m para 2 m.</p>
+<p>A Aula 00 deixou em <code>data/raw</code> cinco GeoTIFFs em <strong>números digitais</strong> — quatro bandas multiespectrais de 8 m e uma pancromática de 2 m. Número digital não é uma grandeza física: é o valor gravado pelo conversor analógico-digital do sensor. Os valores dependem do ganho da câmera, da posição do Sol no dia da passagem e do que a atmosfera fez com a luz no caminho. Duas cenas da mesma área em datas diferentes não são comparáveis em DN.</p>
 <p>Nesta aula transformamos esse número numa grandeza física e comparável, em quatro trechos:</p>
 <table class="caption-top table">
 <colgroup>
@@ -398,19 +398,19 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>Ao final você tem <code>data/interim/pansharpening_&lt;DATA&gt;_boa.tif</code>: quatro bandas em reflectância de superfície, 2 m, prontas para a detecção de nuvem da Aula 02.</p>
+<p>Ao final dessas etapas, você terá o arquivo <code>data/interim/pansharpening_&lt;DATA&gt;_boa.tif</code>: quatro bandas em reflectância de superfície, 2 m, prontas para a detecção de nuvem da Aula 02.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>A ordem importa: converter ANTES de fundir
+<span class="screen-reader-only">Importante</span>Converta para radiância ANTES de aplicar Gram-Schmidt para 2 metros
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>A conversão é feita nas bandas multiespectrais <strong>nativas de 8 m, antes da fusão</strong>. A fusão redistribui valores entre as bandas e não preserva a linearidade radiométrica banda a banda — aplicar coeficientes de calibração sobre um produto já fusionado seria uma aproximação. Convertendo antes, a fusão passa a operar em espaço de reflectância.</p>
-<p>Isso <strong>não</strong> torna a fusão radiometricamente rigorosa: o Gram-Schmidt continua sem preservar exatamente a resposta espectral. O que muda é que as entradas passam a ser fisicamente válidas.</p>
+<p>Cabe ressaltar que essa aplicação <strong>não</strong> torna a fusão radiometricamente rigorosa: apesar de preservar a média e o desvio das bandas, o Gram-Schmidt acaba introduzindo ruídos na imagem, fazendo com que altere, mesmo que pouco, a resposta espectral.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -423,13 +423,13 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Porque na Aula 03 vamos colar pedaços de <strong>Sentinel-2 L2A</strong> dentro desta imagem, e o L2A é reflectância <strong>de superfície</strong>. Comparar e harmonizar duas imagens no mesmo nível radiométrico é muito mais defensável do que corrigir a diferença depois, no ajuste empírico da emenda.</p>
-<p>Fora do curso, o TOA continua sendo suficiente para muita coisa: índices dentro de uma mesma cena, inspeção visual, classificação de uma data só. O BOA é o que permite <strong>comparar datas e sensores</strong>.</p>
+<p>Na Aula 03 vamos subsitutir pixels com partes de imagens <strong>Sentinel-2 L2A</strong>. As imagens L2A são de reflectância <strong>de superfície</strong>. Combinar e harmonizar duas imagens no mesmo nível radiométrico é o cenário correto, pois possibilita análises de sensoriamento remoto que dependem de parâmetros radiométricos corretos.</p>
 </div>
 </div>
 </section>
 <section id="antes-de-começar" class="level2">
 <h2 class="anchored" data-anchor-id="antes-de-começar">Antes de começar</h2>
+<p><a href="https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/01_toa_boa.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Windows (pixi)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Google Colab</a></li></ul>
 <div class="tab-content">
@@ -440,14 +440,14 @@ window.Quarto = {
 <p>Abra <code>colab/01_toa_boa.ipynb</code>. O ambiente já tem o Py6S <strong>e</strong> o executável do 6S — as duas células de instalação do topo do notebook não fazem nada aqui.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>Clique no botão do Colab no topo da página. Diferente das outras aulas, aqui a instalação tem <strong>duas células e um reinício da sessão</strong> no meio: o 6S não é uma biblioteca Python, é um programa em Fortran, e no Colab ele só chega pelo conda.</p>
-<div id="3171bb94" class="cell">
+<p>Clique no botão do Colab acima. Diferente das outras aulas, aqui a instalação tem <strong>duas células e um reinício da sessão</strong> no meio: o 6S não é uma biblioteca Python, é um programa em Fortran, e no Colab ele só chega pelo conda.</p>
+<div id="076e3a16" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># célula 1 — instala o conda na sessão; o ambiente REINICIA aqui</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="op">!</span>pip install <span class="op">-</span>q condacolab</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="im">import</span> condacolab</span>
 <span id="cb2-4"><a href="#cb2-4"></a>condacolab.install()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="e8aabfdf" class="cell">
+<div id="69b702ae" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># célula 2 — rode DEPOIS do reinício</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj py6s sixs pystac<span class="op">-</span>client requests</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -467,8 +467,8 @@ Aviso
 </div>
 </div>
 </div>
-<p>O notebook também traz uma célula que baixa <code>aulas_cbers.py</code> e a pasta <code>config/</code> do repositório. <code>aulas_cbers.py</code> guarda, de forma condensada, as etapas das aulas anteriores — é o que permite começar o curso por qualquer aula. Se você não fez a Aula 00, ele baixa a cena para você.</p>
-<div id="3554731c" class="cell">
+<p>O notebook também traz uma célula que baixa <code>aulas_cbers.py</code> e a pasta <code>config/</code> do repositório. <code>aulas_cbers.py</code> guarda, de forma condensada, as etapas das aulas anteriores — é o que permite começar o curso por qualquer aula. Se você está fazendo somente essa aula, ele baixa a cena que elaboramos na aula anterior para você.</p>
+<div id="2866a468" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> aulas_cbers <span class="im">as</span> ac</span>
 <span id="cb4-2"><a href="#cb4-2"></a>ac.configurar_gdal()</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
@@ -491,13 +491,13 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>CENA_ID</code> precisa ser o <code>id</code> da cena que <strong>você</strong> escolheu na Aula 00, e o bbox precisa ser o mesmo em todas as aulas. É essa disciplina que faz o coregistro do AROSICS fechar na Aula 03.</p>
+<p><code>CENA_ID</code> precisa ser o <code>id</code> da cena que <strong>você</strong> escolheu na Aula 00, e o bbox precisa ser o mesmo em todas as aulas. Isso é necessário para que o coregistro do AROSICS funcione na Aula 03.</p>
 </div>
 </div>
 </section>
 <section id="calibração-de-dn-para-radiância" class="level2">
 <h2 class="anchored" data-anchor-id="calibração-de-dn-para-radiância">1. Calibração: de DN para radiância</h2>
-<p>Ao lado de cada banda, a Aula 00 baixou o <strong>XML de metadados</strong> do produto. É de lá que vem tudo o que a física da conversão precisa:</p>
+<p>Ao lado de cada banda, a Aula 00 baixou o <strong>XML de metadados</strong> do produto. É de lá que vem todos os dados físicos que a conversão precisa:</p>
 <ul>
 <li><code>absoluteCalibrationCoefficient</code> — um ganho por banda, que transforma DN em radiância;</li>
 <li><code>sunPosition/elevation</code> — a elevação do Sol no momento da passagem;</li>
@@ -517,12 +517,11 @@ Aviso
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><span class="citation" data-cites="pinto_first_2016">Pinto et al. (<a href="#ref-pinto_first_2016" role="doc-biblioref">2016</a>)</span> confirmam a forma <span class="math inline">\(L = G \cdot DN + b\)</span> para os sensores CBERS. Eles ajustaram ganho e intercepto por regressão sobre dois alvos de calibração (Dunas de Algodones e Libya-4) e <strong>todos os interceptos saíram estatisticamente consistentes com zero</strong> — as incertezas do intercepto variaram de 95% a 850%. Os ganhos publicados são os de intercepto forçado em zero, com R² entre 0,98 e 1,00.</p>
-<p>Fisicamente é o que se espera: sem energia incidente na abertura, a resposta é zero. E o XML do WPM, coerentemente, traz só o ganho — não existe campo de offset.</p>
+<p><span class="citation" data-cites="pinto_first_2016">Pinto et al. (<a href="#ref-pinto_first_2016" role="doc-biblioref">2016</a>)</span> confirmam a forma <span class="math inline">\(L = G \cdot DN + b\)</span> para os sensores CBERS. Os autores ajustaram ganho e intercepto por regressão sobre dois alvos de calibração (Dunas de Algodones e Libya-4) e <strong>todos os interceptos saíram estatisticamente consistentes com zero</strong> — as incertezas do intercepto variaram de 95% a 850%. Os ganhos publicados são os de intercepto forçado em zero, com a métrica R² entre 0,98 e 1,00.</p>
 </div>
 </div>
 </div>
-<div id="8a56e311" class="cell">
+<div id="5c555260" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>meta <span class="op">=</span> ac.ler_xml(CENA_ID)      <span class="co"># coeficientes + geometria solar, do XML</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>esun <span class="op">=</span> ac.ler_esun()            <span class="co"># config/esun_wpm.json</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a></span>
@@ -538,8 +537,8 @@ Aviso
 <section id="de-radiância-para-reflectância-toa" class="level2">
 <h2 class="anchored" data-anchor-id="de-radiância-para-reflectância-toa">2. De radiância para reflectância TOA</h2>
 <p><span class="math display">\[\rho_{TOA} = \frac{\pi \, d^2 \, L_\lambda}{ESUN_\lambda \, \cos\theta_z}\]</span></p>
-<p>onde <span class="math inline">\(d\)</span> é a distância Terra-Sol em unidades astronômicas (função do dia do ano), <span class="math inline">\(\theta_z\)</span> é o ângulo zenital solar (90° menos a elevação) e <span class="math inline">\(ESUN_\lambda\)</span> é a irradiância solar exoatmosférica da banda.</p>
-<p>O <span class="math inline">\(ESUN\)</span> do WPM vem de <code>config/esun_wpm.json</code>, com valores publicados pela <strong>CRESDA</strong> (a operadora chinesa do satélite) e derivados da resposta espectral real do sensor. Não é aproximação por adoção de outro sensor — o arquivo documenta a fonte e a incerteza.</p>
+<p>Onde <span class="math inline">\(d\)</span> é a distância Terra-Sol em unidades astronômicas (função do dia do ano), <span class="math inline">\(\theta_z\)</span> é o ângulo zenital solar (90° menos a elevação) e <span class="math inline">\(ESUN_\lambda\)</span> é a irradiância solar exoatmosférica da banda.</p>
+<p>O <span class="math inline">\(ESUN\)</span> do WPM vem de <code>config/esun_wpm.json</code>, com valores publicados pela <strong>CRESDA</strong> (a operadora chinesa do satélite) e derivados da resposta espectral real do sensor. Os valores publicados estão disponíveis publicamente e podem ser baixados do <a href="https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html">site oficial</a>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -554,7 +553,7 @@ Aviso
 <p>A razão é física: em reflectância TOA o azul <strong>nunca</strong> é zero sobre a terra, porque a radiância de trajetória do espalhamento Rayleigh garante sinal até dentro de sombra profunda. Um zero isolado, portanto, não é alvo escuro — é artefato da borda da faixa imageada. Se ficar como válido, entra na fusão deformando a estatística por banda e depois contamina a harmonização da Aula 03.</p>
 </div>
 </div>
-<div id="d4a26a26" class="cell">
+<div id="1cbd3903" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>zeros <span class="op">=</span> np.zeros(forma, dtype<span class="op">=</span><span class="bu">bool</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="cf">for</span> n <span class="kw">in</span> dn:</span>
 <span id="cb6-3"><a href="#cb6-3"></a>    zeros <span class="op">|=</span> (dn[n] <span class="op">==</span> <span class="dv">0</span>)</span>
@@ -567,7 +566,7 @@ Aviso
 </div>
 <section id="conferindo-antes-de-seguir" class="level3">
 <h3 class="anchored" data-anchor-id="conferindo-antes-de-seguir">2.1 Conferindo antes de seguir</h3>
-<p>Trinta segundos aqui evitam refazer tudo depois. Se a convenção do coeficiente estivesse invertida (divisiva em vez de multiplicativa), a reflectância passaria de 1,0 na maioria dos pixels — fisicamente impossível. Se o vermelho e o NIR estivessem trocados, o NDVI ficaria negativo sobre vegetação.</p>
+<p>Se a convenção do coeficiente estivesse invertida (divisiva em vez de multiplicativa), a reflectância passaria de 1,0 na maioria dos pixels (o que é fisicamente impossível). Se as bandas do vermelho e o NIR estivessem trocadas, o NDVI ficaria negativo sobre vegetação.</p>
 <p>Faixas esperadas em TOA:</p>
 <table class="caption-top table">
 <thead>
@@ -604,7 +603,7 @@ Aviso
 </section>
 <section id="de-toa-para-boa-a-correção-atmosférica-com-o-6s" class="level2">
 <h2 class="anchored" data-anchor-id="de-toa-para-boa-a-correção-atmosférica-com-o-6s">3. De TOA para BOA: a correção atmosférica com o 6S</h2>
-<p>A reflectância TOA ainda inclui o que a atmosfera fez com a luz: <strong>espalhamento</strong> (que acrescenta brilho, sobretudo no azul), <strong>absorção</strong> por vapor d’água e ozônio (que tira sinal) e o efeito de vizinhança. O <strong>6S</strong> <span class="citation" data-cites="vermote_second_1997">(<a href="#ref-vermote_second_1997" role="doc-biblioref">Vermote et al., 1997</a>)</span> modela isso e devolve três coeficientes por banda, que invertem a relação:</p>
+<p>A reflectância em TOA ainda inclui o que a atmosfera fez com a luz: <strong>espalhamento</strong> (que acrescenta brilho, sobretudo no azul), <strong>absorção</strong> por vapor d’água e ozônio e o efeito de vizinhança. O <strong>6S</strong> <span class="citation" data-cites="vermote_second_1997">(<a href="#ref-vermote_second_1997" role="doc-biblioref">Vermote et al., 1997</a>)</span> modela isso e devolve três coeficientes por banda, que invertem a relação:</p>
 <p><span class="math display">\[y = x_a L - x_b \qquad\qquad \rho_{BOA} = \frac{y}{1 + x_c \, y}\]</span></p>
 <p>O <span class="math inline">\(x_b\)</span> é o termo que a atmosfera <strong>acrescenta</strong> — a radiância de trajetória. Ele é maior no azul, que é onde o espalhamento Rayleigh domina. Se você rodar a correção e o azul não cair, o 6S provavelmente não rodou.</p>
 <section id="os-três-parâmetros-atmosféricos" class="level3">
@@ -646,21 +645,9 @@ Aviso
 </tr>
 </tbody>
 </table>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Os valores que vêm no arquivo são <strong>padrões plausíveis para o verão do interior paulista, não medidas do dia da cena</strong>. Servem para a aula rodar de ponta a ponta. Para um trabalho publicável, substitua pelos valores reais — o próprio JSON explica de onde tirar cada um.</p>
-</div>
-</div>
+<p>Os valores de coeficientes atmosféricos mudam de dia para dia. O código para obter as condições atmosféricas reais está disponível no Google Earth Enginee e também são de autoria própria. <a href="https://code.earthengine.google.com/e21fe3b1452d05f15f0ac79594c4ef25">Acesse aqui</a></p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -669,10 +656,10 @@ Aviso
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Com AOD baixo, o termo dominante da correção é o espalhamento <strong>Rayleigh</strong>, que depende da pressão e portanto da <strong>altitude</strong>. Em Rio Claro o relevo é suave e uma altitude única resolve.</p>
-<p>Numa área de grande amplitude — a Serra do Cipó, por exemplo, com 600 a 1.685 m — uma altitude só erraria esse termo <strong>mais do que a contribuição inteira dos aerossóis</strong>. Ali o caminho é estratificar: dividir a cena em faixas de altitude por quantis com um modelo digital de elevação e rodar o 6S uma vez por faixa.</p>
+<p>Numa área de grande amplitude, uma altitude única erraria esse termo <strong>mais do que a contribuição inteira dos aerossóis</strong>. Ali o caminho é estratificar: dividir a cena em faixas de altitude por quantis com um modelo digital de elevação e rodar o 6S uma vez por faixa.</p>
 </div>
 </div>
 </div>
@@ -682,7 +669,7 @@ Aviso
 <p>Dos três, o <strong>AOD</strong> é o que mais mexe no resultado e o mais difícil de obter. Dá para estimá-lo a partir da própria imagem, com um método antigo e conhecido: o <strong>critério do alvo escuro</strong>.</p>
 <p>Numa cena com água ou sombra densa, o pixel mais escuro tem reflectância de superfície no azul perto de <strong>zero, mas não negativa</strong> — em torno de 0,005. Se o AOD informado for alto demais, o 6S subtrai mais radiância de trajetória do que existe e o percentil 1 do azul <strong>afunda abaixo de zero</strong>. Se for baixo demais, sobra brilho atmosférico e o percentil 1 fica alto.</p>
 <p>Então: roda-se o 6S só na banda azul, com vários AOD, e escolhe-se o que deixa o alvo escuro no lugar certo. O notebook faz isso automaticamente com <code>AJUSTAR_AOD = True</code> (custa uns 30 s):</p>
-<div id="9e790dec" class="cell">
+<div id="a9351818" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">for</span> aod <span class="kw">in</span> [<span class="fl">0.03</span>, <span class="fl">0.05</span>, <span class="fl">0.08</span>, <span class="fl">0.12</span>, <span class="fl">0.16</span>, <span class="fl">0.22</span>]:</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    xa, xb, xc <span class="op">=</span> ac.coeficientes_6s(meta, <span class="bu">dict</span>(atm, aot550<span class="op">=</span>aod), <span class="dv">1</span>)   <span class="co"># 1 = azul</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>    y <span class="op">=</span> xa <span class="op">*</span> L_azul <span class="op">-</span> xb</span>
@@ -693,43 +680,30 @@ Aviso
 </div>
 <p>Na cena do curso, a busca sai assim:</p>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-aod" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="9">
+<div id="tbl-aod" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-aod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
 </figcaption>
 <div aria-describedby="tbl-aod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-stdout">
-<pre><code>  AOD 550    p1 azul   p50 azul   % negativo
-     0.03     0.0247     0.0471       0.00%
-     0.05     0.0231     0.0457       0.00%
-     0.08     0.0214     0.0445       0.00%
-     0.12     0.0183     0.0418       0.00%
-     0.16     0.0153     0.0394       0.00%
-     0.22     0.0102     0.0352       0.00%
-
-no arquivo de configuração: aot550 = 0.0897
-sugestão pelo alvo escuro : aot550 = 0.22  (p1 do azul = +0.0102)
-AVISO: a sugestão caiu na ponta da lista testada. Amplie a lista de AOD acima — o valor certo pode estar fora dela.
-aplicado nesta execução   : aot550 = 0.22
-Para congelar a escolha, edite 'aot550' em config/atmosfera_rio_claro.json.</code></pre>
+<pre><code>busca de AOD desligada — usando aot550 = 0.0882 do arquivo.</code></pre>
 </div>
 </div>
 </figure>
 </div>
 <a class="quarto-notebook-link" id="nblink-1" href="..\colab\01_toa_boa-preview.html#cell-tbl-aod">Fonte: Aula 01 — De DN para reflectância (TOA e BOA) e fusão com a pancromática</a></div>
-<p>É uma <strong>estimativa, não uma medida</strong> — mas é muito melhor que um chute, e pode ser declarada no método. Depois de rodar, traga o valor sugerido para dentro do JSON, para congelar a escolha.</p>
-<p>O efeito da correção aparece direto no histograma: o <strong>azul cai</strong> — era o mais contaminado pelo espalhamento — e o <strong>NDVI sobe</strong>, porque o vermelho cai proporcionalmente mais que o NIR.</p>
+<p>O efeito da correção aparece direto no histograma: o <strong>azul cai</strong> (era o mais contaminado pelo espalhamento) e o <strong>NDVI sobe</strong>, porque o vermelho cai proporcionalmente mais que o NIR.</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-toa-boa" class="cell" data-execution_count="9">
+<div id="cell-fig-toa-boa" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-stdout">
 <pre><code>banda         TOA p50    BOA p50     variação
-azul           0.1024     0.0437      -0.0586
-verde          0.0959     0.0692      -0.0267
-vermelho       0.0798     0.0669      -0.0129
-nir            0.2406     0.2529      +0.0123
+azul           0.1012     0.0424      -0.0588
+verde          0.0953     0.0685      -0.0268
+vermelho       0.0740     0.0605      -0.0135
+nir            0.2596     0.2736      +0.0140
 
-NDVI mediano: TOA 0.4865 -&gt; BOA 0.5709</code></pre>
+NDVI mediano: TOA 0.5546 -&gt; BOA 0.6415</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div id="fig-toa-boa" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -746,55 +720,6 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 </div>
 </div>
 </section>
-<section id="reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma" class="level3">
-<h3 class="anchored" data-anchor-id="reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma">3.3 Reflectância negativa: o que é normal e o que é sintoma</h3>
-<p>Olhando os valores em ponto flutuante, antes de gravar, você vai encontrar <strong>valores negativos</strong>. Isso assusta na primeira vez, então vale separar três coisas.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Um pouco de negativo é esperado — no cálculo, não no arquivo
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Reflectância de superfície levemente negativa é resultado normal de qualquer correção atmosférica, e os produtos operacionais convivem com ela: a faixa <strong>válida</strong> do produto de reflectância de superfície do <strong>Landsat Collection 2 (USGS) vai de −0,2 a 1,6</strong>. Sobre água, sombra profunda e asfalto molhado o sinal real é tão baixo que o erro do modelo — alguns milésimos — atravessa o zero.</p>
-<p>Só que reflectância negativa <strong>não existe fisicamente</strong>: é ruído em torno de zero, não medida. Por isso o arquivo sai com <strong>piso em 0</strong>, e o diagnóstico roda <strong>antes</strong> do piso. Ou seja: o sintoma continua visível na tabela, e o <code>.tif</code> não carrega um número impossível.</p>
-</div>
-</div>
-<p>O que <strong>é</strong> sintoma:</p>
-<ul>
-<li>a <strong>mediana</strong> de alguma banda negativa;</li>
-<li><strong>mais de uns 5%</strong> dos pixels de uma banda abaixo de zero.</li>
-</ul>
-<p>Nos dois casos não é ruído, é correção demais — quase sempre <strong>AOD alto demais</strong>. Volte para a seção 3.2. O notebook imprime essa tabela automaticamente e diz qual dos dois casos é o seu:</p>
-<div id="dcafeae2" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>neg <span class="op">=</span> diagnostico_negativos(refl, valido)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="quarto-embed-nb-cell">
-<div id="tbl-negativos" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-negativos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabela&nbsp;2
-</figcaption>
-<div aria-describedby="tbl-negativos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-stdout">
-<pre><code>banda          % &lt; 0        p1   mediana    mínimo
-azul          0.00%    0.0206    0.0437   -0.0069
-verde         0.00%    0.0296    0.0692   -0.0028
-vermelho      0.00%    0.0248    0.0669   -0.0077
-nir           0.00%    0.0813    0.2536    0.0318
-
-&gt; Negativos restritos à cauda escura: comportamento esperado de um produto BOA.</code></pre>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>A gravação recorta na faixa <code>[PISO_REFLECTANCIA, TETO_REFLECTANCIA]</code>, que por padrão é <code>[0.0, 1.6]</code>. O piso introduz um viés positivo nos alvos escuros, mas medido nesta cena ele dá <strong>+1 na escala de 10.000</strong> — 0,0001 de reflectância —, e só nos pixels ceifados. Se o seu trabalho precisa da cauda negativa preservada (comparação direta com produtos Landsat C2, por exemplo), ponha <code>PISO_REFLECTANCIA = -0.2</code> e declare isso no método.</p>
-<p>Repare que o nodata é <code>-9999</code>, não <code>0</code>: o pixel ceifado vale 0 e <strong>continua sendo dado válido</strong>. Isso é diferente do que faz a ferramenta do ArcGIS, que grava em <code>uint16</code> com <code>NoData = 0</code> — lá o negativo é ceifado em zero <em>e desaparece</em>, virando buraco na imagem.</p>
-</section>
 </section>
 <section id="gravando-o-composto-rgbn-de-8-m" class="level2">
 <h2 class="anchored" data-anchor-id="gravando-o-composto-rgbn-de-8-m">4. Gravando o composto RGBN de 8 m</h2>
@@ -806,31 +731,30 @@ nir           0.00%    0.0813    0.2536    0.0318
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Por que carimbar o nome das bandas
+<span class="screen-reader-only">Importante</span>Por que renomear as bandas
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>A ordem das bandas costuma ser a única informação do pipeline que vive apenas na cabeça de quem roda os scripts. Uma troca silenciosa de R por B não quebra nada: as métricas continuam saindo, só que erradas. Com os nomes gravados no GeoTIFF, as aulas seguintes <strong>leem</strong> a ordem do metadado em vez de assumir — e avisam quando não conseguem.</p>
 </div>
 </div>
-<div id="660a0c10" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(rgbcomp, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb12-2"><a href="#cb12-2"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(ac.ORDEM_SAIDA, start<span class="op">=</span><span class="dv">1</span>):        <span class="co"># [3, 2, 1, 4] = R, G, B, NIR</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a>        arr <span class="op">=</span> refl[ac.BANDAS_NATIVAS[n]]</span>
-<span id="cb12-4"><a href="#cb12-4"></a>        esc <span class="op">=</span> np.clip(np.rint(arr <span class="op">*</span> ESCALA), PISO_ESC, TETO_ESC)</span>
-<span id="cb12-5"><a href="#cb12-5"></a>        dst.write(np.where(valido, esc, NODATA).astype(<span class="st">"int16"</span>), i)</span>
-<span id="cb12-6"><a href="#cb12-6"></a>        dst.set_band_description(i, ac.NOMES_SAIDA[i <span class="op">-</span> <span class="dv">1</span>])  <span class="co"># o carimbo</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="3eefd608" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(rgbcomp, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb10-2"><a href="#cb10-2"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(ac.ORDEM_SAIDA, start<span class="op">=</span><span class="dv">1</span>):        <span class="co"># [3, 2, 1, 4] = R, G, B, NIR</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>        arr <span class="op">=</span> refl[ac.BANDAS_NATIVAS[n]]</span>
+<span id="cb10-4"><a href="#cb10-4"></a>        esc <span class="op">=</span> np.clip(np.rint(arr <span class="op">*</span> ESCALA), PISO_ESC, TETO_ESC)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>        dst.write(np.where(valido, esc, NODATA).astype(<span class="st">"int16"</span>), i)</span>
+<span id="cb10-6"><a href="#cb10-6"></a>        dst.set_band_description(i, ac.NOMES_SAIDA[i <span class="op">-</span> <span class="dv">1</span>])  <span class="co"># o carimbo</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Ao lado do GeoTIFF sai um <code>.params.json</code> com tudo o que foi usado: coeficientes de calibração, ESUN, geometria solar, parâmetros atmosféricos, coeficientes do 6S e o diagnóstico de negativos. É o que permite, meses depois, responder como aquele arquivo foi gerado.</p>
+<p>Juntamente com o GeoTIFF, o arquivo <code>.params.json</code> é gravado com tudo o que foi usado: coeficientes de calibração, ESUN, geometria solar, parâmetros atmosféricos, coeficientes do 6S e o diagnóstico de negativos. É o que permite, meses depois, responder como aquele arquivo foi gerado.</p>
 </section>
 <section id="alinhando-a-multiespectral-com-a-pancromática" class="level2">
 <h2 class="anchored" data-anchor-id="alinhando-a-multiespectral-com-a-pancromática">5. Alinhando a multiespectral com a pancromática</h2>
-<p>A Aula 00 recortou cada banda calculando a janela <strong>na grade dela</strong>: a MS arredonda em passos de 8 m, a PAN em passos de 2 m. As duas cobrem a mesma AOI, mas podem terminar deslocadas em alguns metros e com uma razão que não é exatamente 4:1.</p>
-<p>O Gram-Schmidt precisa de razão inteira e origens coincidentes. Sem isso a fusão introduz um deslocamento subpixel que se propaga por tudo — inclusive pelo coregistro da Aula 03, onde ele apareceria como um erro sem origem aparente.</p>
-<div id="d18f390f" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>ms, pan, t_ms, t_pan, crs, nod_ms, FATOR <span class="op">=</span> ac.alinhar_ms_pan(rgbcomp, arquivos[<span class="st">"BAND0"</span>])</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># recorta as duas à extensão comum encaixada na grade de 8 m e reamostra a PAN</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="co"># para a grade derivada dessa, com fator exato de 4</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>O Gram-Schmidt precisa de razão inteira e origens coincidentes. Sem isso a fusão introduz um deslocamento subpixel que se propaga por tudo — inclusive pelo coregistro da Aula 03.</p>
+<div id="89474f8e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>ms, pan, t_ms, t_pan, crs, nod_ms, FATOR <span class="op">=</span> ac.alinhar_ms_pan(rgbcomp, arquivos[<span class="st">"BAND0"</span>])</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># recorta as duas à extensão comum encaixada na grade de 8 m e reamostra a PAN</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># para a grade derivada dessa, com fator exato de 4</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="a-fusão-gram-schmidt" class="level2">
@@ -852,13 +776,13 @@ nir           0.00%    0.0813    0.2536    0.0318
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O passo 2. O casamento de média e desvio absorve qualquer fator multiplicativo da pancromática, então a escala dela não chega na saída. Isso <strong>não</strong> valeria para Brovey ou IHS, onde a escala da PAN propaga direto para o resultado — se um dia você trocar de método, converta a pancromática também.</p>
+<p>O casamento de média e desvio absorve qualquer fator multiplicativo da pancromática, então a escala dela não chega na saída. Isso <strong>não</strong> valeria para Brovey ou IHS, onde a escala da PAN propaga direto para o resultado — se um dia você trocar de método, converta a pancromática também.</p>
 </div>
 </div>
 <section id="como-simular-a-pancromática-e-por-que-isso-decide-tudo" class="level3">
 <h3 class="anchored" data-anchor-id="como-simular-a-pancromática-e-por-que-isso-decide-tudo">Como simular a pancromática — e por que isso decide tudo</h3>
 <p>A forma clássica do passo 1 usa <strong>pesos fixos</strong>: R 0,166 | G 0,167 | B 0,167 | NIR 0,5, os padrões genéricos do ArcGIS Pro, já que o CBERS-4A não consta na lista de sensores da ferramenta. O peso alto no NIR é coerente com a pancromática do WPM, que cobre 0,45–0,90 µm e portanto <strong>inclui o infravermelho próximo</strong>.</p>
-<p>O problema é que esses pesos são um chute sobre a resposta espectral do sensor. Com 0,5 no NIR, <span class="math inline">\(I\)</span> fica dominado pelo infravermelho e <strong>não se parece com a pancromática de verdade</strong>. Aí o passo 3 degringola: <span class="math inline">\(\Delta\)</span> deixa de ser só detalhe de alta frequência e passa a carregar o descasamento espectral inteiro, que é injetado nas bandas e empurra os alvos escuros para baixo de zero.</p>
+<p>O problema é que esses pesos são um chute sobre a resposta espectral do sensor. Com 0,5 no NIR, <span class="math inline">\(I\)</span> fica dominado pelo infravermelho e <strong>não se parece com a pancromática de verdade</strong>.</p>
 <p>A correção é a de <span class="citation" data-cites="aiazzi_improving_2007">Aiazzi; Baronti; Selva (<a href="#ref-aiazzi_improving_2007" role="doc-biblioref">2007</a>)</span>: degradar a pancromática para a grade de 8 m e achar <strong>por mínimos quadrados</strong> os coeficientes que melhor a reproduzem a partir das próprias bandas multiespectrais,</p>
 <p><span class="math display">\[I = a_0 + \sum_i a_i \, MS_i .\]</span></p>
 <p>É o método conhecido como <strong>GSA</strong> (<em>Gram-Schmidt Adaptive</em>), e é o que o notebook usa. Medido na cena do curso:</p>
@@ -901,43 +825,43 @@ nir           0.00%    0.0813    0.2536    0.0318
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Dica</span>Sem ArcGIS
+<span class="screen-reader-only">Dica</span>Pansharpening via código Python
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A implementação do notebook é em NumPy e substitui o <code>CreatePansharpenedRasterDataset</code> do ArcGIS Pro, que exige licença e só roda no interpretador do próprio ArcGIS. Duas diferenças que valem declarar no método: a intensidade aqui é estimada por regressão, não pelos pesos fixos; e a saída é <code>int16</code> com <code>NoData = -9999</code>, enquanto a ferramenta da ESRI grava <code>uint16</code> com <code>NoData = 0</code> — lá o pixel que a fusão empurrou para baixo de zero é ceifado <strong>e vira buraco</strong>.</p>
+<p>A implementação original do código é em NumPy e substitui o <code>CreatePansharpenedRasterDataset</code> do ArcGIS Pro, que exige licença e só roda no interpretador do próprio ArcGIS. A intensidade aqui é estimada por regressão, não pelos pesos fixos da ESRI. O resultado acaba sendo <strong>mais fiel à pancromática real</strong>, resultando em menos pixels negativos.</p>
 </div>
 </div>
-<div id="1b4eab3e" class="cell">
+<div id="d7f7fcda" class="cell">
 <details class="code-fold">
 <summary>Função gram_schmidt()</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> gram_schmidt(ms_up, pan, pesos, valido):</span>
-<span id="cb14-2"><a href="#cb14-2"></a>    <span class="co">"""ms_up: (4, h, w) já na grade da PAN, ordem RGBN. pan: (h, w)."""</span></span>
-<span id="cb14-3"><a href="#cb14-3"></a>    w <span class="op">=</span> np.array([pesos[n] <span class="cf">for</span> n <span class="kw">in</span> NOMES], dtype<span class="op">=</span><span class="st">"float32"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    w <span class="op">=</span> w <span class="op">/</span> w.<span class="bu">sum</span>()</span>
-<span id="cb14-5"><a href="#cb14-5"></a></span>
-<span id="cb14-6"><a href="#cb14-6"></a>    I <span class="op">=</span> np.tensordot(w, ms_up, axes<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>))          <span class="co"># pancromática simulada</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a></span>
-<span id="cb14-8"><a href="#cb14-8"></a>    <span class="co"># estatísticas numa amostra: com dezenas de milhões de pixels, média,</span></span>
-<span id="cb14-9"><a href="#cb14-9"></a>    <span class="co"># desvio e covariância convergem muito antes de usar todos eles</span></span>
-<span id="cb14-10"><a href="#cb14-10"></a>    idx <span class="op">=</span> np.flatnonzero(valido.ravel())</span>
-<span id="cb14-11"><a href="#cb14-11"></a>    <span class="cf">if</span> idx.size <span class="op">&gt;</span> <span class="dv">2_000_000</span>:</span>
-<span id="cb14-12"><a href="#cb14-12"></a>        idx <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>).choice(idx, <span class="dv">2_000_000</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb14-13"><a href="#cb14-13"></a>    pa <span class="op">=</span> pan.ravel()[idx].astype(<span class="st">"float64"</span>)</span>
-<span id="cb14-14"><a href="#cb14-14"></a>    ia <span class="op">=</span> I.ravel()[idx].astype(<span class="st">"float64"</span>)</span>
-<span id="cb14-15"><a href="#cb14-15"></a></span>
-<span id="cb14-16"><a href="#cb14-16"></a>    pan_ajustada <span class="op">=</span> (pan <span class="op">-</span> pa.mean()) <span class="op">*</span> (ia.std() <span class="op">/</span> <span class="bu">max</span>(pa.std(), <span class="fl">1e-9</span>)) <span class="op">+</span> ia.mean()</span>
-<span id="cb14-17"><a href="#cb14-17"></a>    delta <span class="op">=</span> pan_ajustada <span class="op">-</span> I</span>
-<span id="cb14-18"><a href="#cb14-18"></a></span>
-<span id="cb14-19"><a href="#cb14-19"></a>    ia_c <span class="op">=</span> ia <span class="op">-</span> ia.mean()</span>
-<span id="cb14-20"><a href="#cb14-20"></a>    var_I <span class="op">=</span> <span class="bu">max</span>(<span class="bu">float</span>(ia.var()), <span class="fl">1e-9</span>)</span>
-<span id="cb14-21"><a href="#cb14-21"></a>    saida, ganhos <span class="op">=</span> np.empty_like(ms_up), {}</span>
-<span id="cb14-22"><a href="#cb14-22"></a>    <span class="cf">for</span> i, nome <span class="kw">in</span> <span class="bu">enumerate</span>(NOMES):</span>
-<span id="cb14-23"><a href="#cb14-23"></a>        bi <span class="op">=</span> ms_up[i].ravel()[idx].astype(<span class="st">"float64"</span>)</span>
-<span id="cb14-24"><a href="#cb14-24"></a>        g <span class="op">=</span> <span class="bu">float</span>(np.dot(bi <span class="op">-</span> bi.mean(), ia_c) <span class="op">/</span> ia_c.size) <span class="op">/</span> var_I</span>
-<span id="cb14-25"><a href="#cb14-25"></a>        ganhos[nome] <span class="op">=</span> g</span>
-<span id="cb14-26"><a href="#cb14-26"></a>        saida[i] <span class="op">=</span> ms_up[i] <span class="op">+</span> g <span class="op">*</span> delta</span>
-<span id="cb14-27"><a href="#cb14-27"></a>    <span class="cf">return</span> saida, ganhos</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> gram_schmidt(ms_up, pan, pesos, valido):</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    <span class="co">"""ms_up: (4, h, w) já na grade da PAN, ordem RGBN. pan: (h, w)."""</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>    w <span class="op">=</span> np.array([pesos[n] <span class="cf">for</span> n <span class="kw">in</span> NOMES], dtype<span class="op">=</span><span class="st">"float32"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    w <span class="op">=</span> w <span class="op">/</span> w.<span class="bu">sum</span>()</span>
+<span id="cb12-5"><a href="#cb12-5"></a></span>
+<span id="cb12-6"><a href="#cb12-6"></a>    I <span class="op">=</span> np.tensordot(w, ms_up, axes<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>))          <span class="co"># pancromática simulada</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a>    <span class="co"># estatísticas numa amostra: com dezenas de milhões de pixels, média,</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>    <span class="co"># desvio e covariância convergem muito antes de usar todos eles</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a>    idx <span class="op">=</span> np.flatnonzero(valido.ravel())</span>
+<span id="cb12-11"><a href="#cb12-11"></a>    <span class="cf">if</span> idx.size <span class="op">&gt;</span> <span class="dv">2_000_000</span>:</span>
+<span id="cb12-12"><a href="#cb12-12"></a>        idx <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>).choice(idx, <span class="dv">2_000_000</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-13"><a href="#cb12-13"></a>    pa <span class="op">=</span> pan.ravel()[idx].astype(<span class="st">"float64"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14"></a>    ia <span class="op">=</span> I.ravel()[idx].astype(<span class="st">"float64"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15"></a></span>
+<span id="cb12-16"><a href="#cb12-16"></a>    pan_ajustada <span class="op">=</span> (pan <span class="op">-</span> pa.mean()) <span class="op">*</span> (ia.std() <span class="op">/</span> <span class="bu">max</span>(pa.std(), <span class="fl">1e-9</span>)) <span class="op">+</span> ia.mean()</span>
+<span id="cb12-17"><a href="#cb12-17"></a>    delta <span class="op">=</span> pan_ajustada <span class="op">-</span> I</span>
+<span id="cb12-18"><a href="#cb12-18"></a></span>
+<span id="cb12-19"><a href="#cb12-19"></a>    ia_c <span class="op">=</span> ia <span class="op">-</span> ia.mean()</span>
+<span id="cb12-20"><a href="#cb12-20"></a>    var_I <span class="op">=</span> <span class="bu">max</span>(<span class="bu">float</span>(ia.var()), <span class="fl">1e-9</span>)</span>
+<span id="cb12-21"><a href="#cb12-21"></a>    saida, ganhos <span class="op">=</span> np.empty_like(ms_up), {}</span>
+<span id="cb12-22"><a href="#cb12-22"></a>    <span class="cf">for</span> i, nome <span class="kw">in</span> <span class="bu">enumerate</span>(NOMES):</span>
+<span id="cb12-23"><a href="#cb12-23"></a>        bi <span class="op">=</span> ms_up[i].ravel()[idx].astype(<span class="st">"float64"</span>)</span>
+<span id="cb12-24"><a href="#cb12-24"></a>        g <span class="op">=</span> <span class="bu">float</span>(np.dot(bi <span class="op">-</span> bi.mean(), ia_c) <span class="op">/</span> ia_c.size) <span class="op">/</span> var_I</span>
+<span id="cb12-25"><a href="#cb12-25"></a>        ganhos[nome] <span class="op">=</span> g</span>
+<span id="cb12-26"><a href="#cb12-26"></a>        saida[i] <span class="op">=</span> ms_up[i] <span class="op">+</span> g <span class="op">*</span> delta</span>
+<span id="cb12-27"><a href="#cb12-27"></a>    <span class="cf">return</span> saida, ganhos</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -951,12 +875,12 @@ nir           0.00%    0.0813    0.2536    0.0318
 </div>
 <div class="callout-body-container callout-body">
 <p>Mesmo com a intensidade por regressão sobra uma cauda abaixo de zero: o termo <span class="math inline">\(g_i \Delta\)</span> é aditivo e negativo onde a pancromática é escura, e a reamostragem cúbica da multiespectral produz <em>undershoot</em> nas bordas de contraste alto. Sobre alvos que já estavam perto de zero — o azul sobre água e sombra —, o resultado atravessa.</p>
-<p>Na cena do curso isso dá 1,9 % da banda azul e 1,1 % da vermelha, com <strong>mediana dos negativos em torno de −0,005</strong>: ruído em volta do zero, não medida. O notebook imprime a tabela e grava com o piso de <code>PISO_REFLECTANCIA</code>, registrando no <code>.params.json</code> quantos pixels foram ceifados.</p>
+<p>Na cena do curso isso dá 1,9 % da banda azul e 1,1 % da vermelha, com <strong>mediana dos negativos em torno de −0,005</strong>: ruído em volta do zero, não medida. O notebook imprime a tabela e grava com o piso de <code>PISO_REFLECTANCIA</code>, registrando no <code>.params.json</code> quantos pixels foram perdidos.</p>
 </div>
 </div>
 <p>E o resultado, na área do curso:</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-fusao" class="cell" data-execution_count="17">
+<div id="cell-fig-fusao" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display">
 <div id="fig-fusao" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -971,15 +895,29 @@ Figura&nbsp;2: Cena fusionada em 2 m: cor natural e falsa cor NIR/R/G.
 </div>
 </div>
 </div>
-<!-- Rode também a última célula do notebook (o zoom 8 m x 2 m) e salve; depois
-     acrescente aqui:  {{< embed ../colab/01_toa_boa.ipynb#fig-fusao-zoom >}}  -->
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-fusao-zoom" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display">
+<div id="fig-fusao-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fusao-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-toa-boa_files/figure-html/..-colab-01_toa_boa-fig-fusao-zoom-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fusao-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: O mesmo trecho antes (8 m) e depois (2 m) da fusão Gram-Schmidt.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
 </section>
-<section id="o-que-ficou-pronto" class="level2">
-<h2 class="anchored" data-anchor-id="o-que-ficou-pronto">O que ficou pronto</h2>
+<section id="arquivos-finais-desta-aula" class="level2">
+<h2 class="anchored" data-anchor-id="arquivos-finais-desta-aula">Arquivos finais desta aula</h2>
 <pre><code>data/interim/rgbcomp_&lt;DATA&gt;_boa.tif          8 m, RGBN, reflectância x10000
-data/interim/pansharpening_&lt;DATA&gt;_boa.tif    2 m, RGBN, reflectância x10000   &lt;- produto da aula
-data/interim/*.params.json                   o que foi usado para gerar cada um</code></pre>
+**data/interim/pansharpening_&lt;DATA&gt;_boa.tif    2 m, RGBN, reflectância x10000**   &lt;- produto da aula
+data/interim/*.params.json                   o que foi usado para gerar os arquivos</code></pre>
 <p>Na <a href="../aulas/02-omnicloudmask.html">Aula 02</a> esse arquivo de 2 m entra no OmniCloudMask, que separa nuvem densa, nuvem fina e sombra de nuvem.</p>
 </section>
 <section id="erros-comuns-nesta-aula" class="level2">

@@ -26,9 +26,8 @@ São quatro etapas, e cada uma resolve um problema diferente:
 | 4. harmonização e emenda | sensores diferentes têm brilho e resposta diferentes | casamento de momentos |
 
 O SEN2SR [@aybar_radiometrically_2026] resolve a escala levando o Sentinel-2 de 10 m para 2,5 m
-antes da substituição. Não é
-mágica: o modelo não inventa informação que não existe, ele aprende como cenas de alta resolução
-costumam se parecer e usa isso para reconstruir os detalhes de forma plausível.
+antes da substituição. O modelo não inventa informação que não existe, ele aprende como cenas de alta resolução
+costumam se parecer e usa isso para reconstruir os detalhes de maneira plausível.
 
 ::: {.callout-important}
 ## 2,5 m não é 2 m
@@ -51,8 +50,8 @@ acessibilidade.
 ::: {.callout-warning}
 ## Tudo na mesma bounding box
 
-Esta é a aula que cobra a disciplina das anteriores. Todo o curso trabalha na mesma janela e, do
-passo 3 em diante, na mesma grade de 2 m do CBERS. É isso que faz o AROSICS ter o que casar. Se
+Esta é a aula que usa os mesmos parâmetros das aulas anteriores. Todo o curso trabalha na mesma janela e, do
+passo 3 em diante, na mesma grade de 2 m do CBERS. É isso que possibilita o AROSICS funcionar. Se
 você mudou o bbox em alguma aula, volte e acerte antes de continuar.
 :::
 
@@ -116,9 +115,8 @@ ac.definir_base('/content/drive/MyDrive/geoproc/data')
 
 ## 1. Montando o mosaico Sentinel-2
 
-O script original desta etapa consumia um export do Google Earth Engine — com conta, fila e
-espera. Aqui a gente monta o mosaico direto do **STAC do Microsoft Planetary Computer**: sem
-conta, sem autenticação, sem export.
+O script original desta etapa fazia a montagem do mosaico via Google Earth Engine. Aqui a gente monta o
+mosaico direto do **STAC do Microsoft Planetary Computer**: é uma maneira mais dinâmica, onde você consegue baixar as imagens sem conta, sem autenticação e sem esperar export.
 
 **A grade é definida pelo CBERS**, não pelo Sentinel-2: mesmo CRS, mesma origem, resolução de
 10 m, e uma margem de alguns pixels além da AOI.
@@ -126,12 +124,11 @@ conta, sem autenticação, sem export.
 ::: {.callout-note}
 ## Por que a margem
 
-Duas razões. O coregistro **desloca** a imagem alvo — sem folga, a borda ficaria sem dado depois
+O coregistro **desloca** a imagem alvo — sem folga, a borda ficaria sem dado depois
 do deslocamento. E o AROSICS precisa de contexto **além** do buraco para achar pontos de
 amarração: se o mosaico terminasse exatamente na borda da AOI, os pontos das extremidades não
 teriam par.
 
-O padrão de 240 m equivale a 24 pixels de 10 m. É barato.
 :::
 
 ### 1.1 Composição por data mais próxima
@@ -140,22 +137,16 @@ Para cada pixel, pegamos a cena Sentinel-2 **mais próxima em data** que esteja 
 segundo a banda `SCL` do produto L2A. Isso é melhor que uma mediana temporal: preserva a textura
 real de uma data, em vez de misturar datas num borrão.
 
-O preço é que pixels vizinhos podem vir de datas diferentes. Por isso gravamos a banda
-**`delta_days`**, que registra de quantos dias de distância veio cada pixel. É procedência, não
-decoração — sem ela você não consegue responder de quando é o dado que preencheu cada buraco.
+Atenção: pixels vizinhos podem vir de datas diferentes. Por isso gravamos a banda
+**`delta_days`**, que registra de quantos dias de distância veio cada pixel.
 
-### 1.2 Vendo as candidatas antes de escolher
+### 1.2 Vendo as cenas candidatas antes de escolher
 
-A coluna `nuvem_cena_%` que vem do STAC é da **cena inteira**, uns 110 km de lado. A sua AOI tem
-10 km: uma cena com 40% de nuvem pode estar perfeitamente limpa em cima de você, e uma com 3%
-pode ter justamente aquela nuvem no seu pedaço. Julgar por esse número é chute.
+A coluna `nuvem_cena_%`, para o satélite Sentinel-2 apresenta resultados, só que é referente a **cena inteira**. A nossa AOI é um recorte disso. Uma cena com 40% de nuvem pode estar perfeitamente limpa em cima de você, e uma com 3% pode ter justamente aquela nuvem no seu pedaço. 
 
-Então a gente lê uma versão bem reduzida de cada candidata **só na AOI**. Sai barato: os arquivos
-do Planetary Computer são COG, e o GDAL pega a visão reduzida já pronta em vez do dado inteiro.
-Para cada candidata aparece a cor natural na sua área, quanto dela a cena **cobre**, e a fração
-limpa **medida ali**.
+Por isso, vamos ler uma versão bem reduzida de cada candidata **só na AOI**. Para cada imagem, aparece a cor natural na sua área, quanto dela a cena **cobre**, e a fração limpa **medida ali**.
 
-É o mesmo espírito da escolha de cena da Aula 00: o número ajuda, o olho decide.
+É a mesma ideia da escolha de cena da Aula 00.
 
 ```{python}
 #| eval: false
@@ -183,12 +174,12 @@ Na área do curso, as candidatas saem assim:
 ### 1.3 Escolhendo as cenas
 
 `ESCOLHA_S2 = None` deixa no automático — as `MAX_CENAS` mais próximas em data. Uma **lista de
-`idx`** assume o controle, e a ordem é a sua **ordem de preferência**: a primeira preenche o que
-puder, a segunda preenche o que sobrou, e assim por diante.
+`idx`** define as imagens a serem utilizadas e a ordem é a nossa **ordem de preferência**: a primeira preenche o que
+puder, a segunda preenche o que sobrou, e assim por diante. Por isso, vamos usar as imagens nessa ordem: 1, 2, 9 e 10. A 1 e a 2 estão praticamente perfeitas, foram capturadas 3 dias depois da nossa imagem CBERS e vão preencher a maior parte da lacuna. Iremos usar a 9 e a 10 para preencher uma parte de névoa que está presente na parte sudoeste da imagem.
 
 ```{python}
 #| eval: false
-ESCOLHA_S2 = [3, 4]      # ou None para automático
+ESCOLHA_S2 = [1, 2, 9, 10]      # ou None para automático
 
 selecionadas = [itens[i] for i in ESCOLHA_S2] if ESCOLHA_S2 else itens[:MAX_CENAS]
 ```
@@ -212,8 +203,7 @@ tira só o que o SCL chama de nuvem, nada além disso. A prévia é a sua confer
 
 ### 1.4 A máscara de nuvem
 
-Uma só, e simples: o **SCL** do próprio produto L2A, mascarando **apenas o que ele chama de
-nuvem** — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).
+O satélite Sentinel-2 conta com uma máscara própria, chamada de **SCL**. Nessa máscara, estamos interessados em marcar **apenas o que ele chama de **nuvem** — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).
 
 Nada além disso. Você escolheu as cenas olhando a prévia; se elas estão limpas, não há o que
 remover, e qualquer camada a mais só tem como errar para o lado de tirar pixel bom.
@@ -231,14 +221,13 @@ limpo = dentro & ~nuvem
 ```
 
 ::: {.callout-important}
-## Se a sua cena tiver nuvem, e o preço de mascarar a sombra
+## Importante
 
 Acrescente a classe **3 (sombra de nuvem)** em `CLASSES_NUVEM`. Mas saiba o que vem junto: o SCL
 chama **água escura de sombra** com muita frequência, e o resultado é um buraco em cima de
 represa e rio, que aparece branco no mosaico.
 
-Não existe escolha certa aqui — existe a sua cena. Se ela está limpa, deixe a 3 de fora; se tem
-nuvem sobre área seca, coloque; se tem nuvem **e** água, coloque e depois confira a represa.
+Se sua cena está limpa, deixe a 3 de fora; se tem nuvem sobre área seca, coloque; se tem nuvem **e** água, coloque e depois confira a represa.
 :::
 
 ::: {.callout-tip}
@@ -253,10 +242,10 @@ ajuste `CLASSES_NUVEM` ou use `MASCARA_SCL = False`. O notebook imprime a contag
 sugestão.
 :::
 
-### 1.5 A escolha final, pixel a pixel
+### 1.5 A escolha final
 
 Entre as candidatas com dado limpo, vence **a primeira da ordem** — a mais próxima em data no
-automático, ou a que você pôs primeiro em `ESCOLHA_S2`. Só isso.
+automático, ou a que você pôs primeiro em `ESCOLHA_S2`.
 
 ```{python}
 #| eval: false
@@ -278,18 +267,6 @@ Ler `MAX_CENAS` cenas inteiras de uma vez custa memória: são `n × 4 × altura
 baixe `MAX_CENAS`.
 :::
 
-::: {.callout-important}
-## O deslocamento da baseline 04.00
-
-Desde 25/01/2022 os produtos Sentinel-2 L2A trazem um offset de **−1000** na reflectância: o
-valor físico é `(DN − 1000) / 10000`, e **não** `DN / 10000`.
-
-Esquecer isso desloca a reflectância inteira em 0,1. O detalhe cruel é que a harmonização
-empírica da etapa 4 **absorve boa parte desse deslocamento** — então nada quebra, nada avisa, e
-o erro reaparece depois como um viés que você não consegue explicar. O notebook lê a
-`s2:processing_baseline` de cada item e aplica o offset quando é o caso.
-:::
-
 A saída é um GeoTIFF de **6 bandas** em `int16`, exatamente no formato que as etapas seguintes
 esperam:
 
@@ -305,19 +282,7 @@ O modelo leva o Sentinel-2 de 10 m para 2,5 m. Vale repetir: a textura da área 
 **reconstruída**, não observada. É plausível, é suficiente para a emenda não gritar, e é honesto
 declarar isso no método.
 
-O código baixa os pesos com o `mlstac` e roda a inferência em blocos. Três detalhes de
-implementação que não são cosméticos:
-
-- **o janelamento é nosso, não do `predict_large`.** A função pronta entrega blocos de borda
-  truncados ao modelo, e o módulo `hard_constraint` do SEN2SR quebra, porque a máscara FFT dele é
-  de tamanho fixo. Aqui todo bloco tem exatamente 128×128;
-- **preenchimento por vizinho mais próximo antes da inferência.** O campo receptivo da rede
-  propagaria zeros para dentro dos pixels bons se deixássemos buraco na entrada. O conteúdo
-  desses pixels é descartado no fim;
-- **acolchoamento por reflexão e mistura com rampa.** As bordas dos blocos recebem peso
-  crescente, então a costura entre blocos vizinhos some. A rampa começa em 0,001 e não em zero,
-  porque na borda externa da cena não há bloco vizinho somando peso — e zero puro daria divisão
-  por zero.
+O código baixa os pesos com o `mlstac` e roda a inferência em blocos.
 
 ```{python}
 #| eval: false
@@ -356,9 +321,8 @@ with torch.no_grad():
 
 ## 3. Reamostragem para 2 m e coregistro com o AROSICS
 
-Duas imagens de satélites diferentes nunca caem exatamente uma sobre a outra: ortorretificação,
+Duas imagens de satélites diferentes não estão posicionadas geograficamente exatamente uma sobre a outra: ortorretificação,
 modelo de elevação e efeito de paralaxe do relevo produzem deslocamentos de um a alguns pixels.
-Em 2 m isso é visível — e numa emenda é o que faz uma estrada aparecer cortada.
 
 O **AROSICS** [@scheffler_arosics_2017] resolve por correlação de fase: acha pontos de amarração
 numa malha regular, mede o deslocamento local em cada um, filtra os não confiáveis e deforma a
@@ -373,7 +337,7 @@ ajudaria em nada — e, pior, harmonizar usando pixels desalinhados ajustaria os
 contra o alvo errado.
 :::
 
-Dois cuidados que valem código:
+Dois cuidados importantes:
 
 **Máscaras de dado ruim.** O AROSICS só acha ponto onde as duas imagens têm dado válido.
 Passamos explicitamente o que ignorar: no CBERS, os buracos de nuvem e o nodata; no Sentinel-2,
@@ -416,7 +380,6 @@ seguir sem coregistro nenhum. O `.params.json` registra qual dos dois foi usado.
 
 ## 4. Harmonização e substituição
 
-Faltam duas decisões, e as duas mudam o resultado visível.
 
 ### 4.1 Em que escala fica o produto final
 
@@ -443,22 +406,18 @@ Com `ANEL_LACUNA > 0`, o ajuste é calculado só numa faixa de N pixels em torno
 não na cena toda. Serve para quando a área que estava sob nuvem é sistematicamente diferente do
 resto — mais úmida, mais vegetada — e a relação entre os sensores ali não é a média da cena.
 
-Sintoma de que você precisa disso: viés grande e **do mesmo sinal em todas as bandas** no
-relatório da seção 5. Tente `ANEL_LACUNA = 200`.
 :::
 
 {{< embed ../colab/03_sen2sr.ipynb#tbl-harmonizacao >}}
 
 O coeficiente `a` vai sair perto de **10.000**, e isso é esperado: o S2 super-resolvido está em
-reflectância 0–1 e o CBERS em reflectância × 10.000. O que interessa é o desvio em torno disso.
+reflectância 0–1 e o CBERS em reflectância × 10.000.
 
 ### 4.3 A transição
 
-Como a lacuna é um **buraco** no CBERS, não há com o que misturar dentro dela. A transição
-acontece do lado de fora, invadindo alguns pixels de CBERS válido ao redor.
-
-Ou seja: uma faixa estreita de dado nativo é parcialmente substituída. É o preço de uma emenda
-sem degrau — e a banda de procedência registra exatamente onde isso aconteceu.
+Como a lacuna é um buraco no CBERS, não há com o que misturar *dentro* dela. A
+transição acontece do lado de fora, invadindo alguns pixels de CBERS válido ao redor. Ou seja:
+uma faixa estreita de dado válido é parcialmente substituída para que o resultado fique natural e sem cortes abruptos.
 
 | código | procedência |
 |---|---|
@@ -489,7 +448,7 @@ Somado à cauda escura que vem da fusão da Aula 01, é isso que faz o mosaico f
 com mínimo negativo.
 
 O produto é gravado com o mesmo `PISO_REFLECTANCIA` da Aula 01, e o notebook reporta quantos
-pixels de cada banda foram ceifados — o número vai para o `.params.json`, em vez de sumir. Como
+pixels de cada banda foram removidos — o número vai para o `.params.json`, em vez de sumir. Como
 o nodata é `-9999`, o pixel ceifado vale 0 e **continua sendo dado válido**.
 :::
 
@@ -530,17 +489,21 @@ data/processed/mosaico_<DATA>_proveniencia.tif de onde veio cada pixel
 
 Abra os dois últimos juntos no QGIS. A banda de procedência é o que permite responder, para
 qualquer análise feita em cima deste mosaico, **quais pixels são observação e quais são
-reconstrução** — e essa distinção precisa aparecer em qualquer resultado publicado.
+reconstrução**.
 
 ::: {.callout-important}
-## Limitações que valem declarar no método
+## Limitações que são importantes a serem destacadas
 
 - a saída do SEN2SR é 2,5 m e foi reamostrada para 2 m;
-- a textura da área preenchida é **reconstruída** pelo modelo, não observada;
+- a textura da área preenchida é **reconstruída** pelo modelo;
 - os pixels de Sentinel-2 vêm de outra data — `delta_days` diz de quantos dias;
-- a zona de transição substitui parcialmente pixels de CBERS válidos, por construção;
+- a zona de transição substitui parcialmente pixels de CBERS válidos;
 - a harmonização é empírica (global ou por anel), não uma correção física entre sensores.
 :::
+
+## Considerações Finais
+
+Espero que essa sequência de aulas tenha contribuído para difundir o uso das imagens de alta resolução CBERS-4A/WPM, a partir da apresentação de uma solução prática para conciliar a presença de nuvens e o alto período de revisita do satélite. O SEN2SR é um modelo de super-resolução extremamente recente e considerado estado-da-arte para a reconstrução de imagens, tendo em vista que mantém características espectrais e reconstrói texturas com menos alucinações que outros modelos. A metodologia apresentada aqui buscou ser de fácil implementação e pode ser adaptada para outras regiões do Brasil. Essa iniciativa teve como objetivo ampliar a utilização de imagens obtidas por esse satélite nacional pela comunidade acadêmica e profissional.
 
 ## Erros comuns nesta aula
 

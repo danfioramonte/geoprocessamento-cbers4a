@@ -254,10 +254,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modulenotfounderror-no-module-named-cubo-no-colab" id="toc-modulenotfounderror-no-module-named-cubo-no-colab" class="nav-link" data-scroll-target="#modulenotfounderror-no-module-named-cubo-no-colab"><code>ModuleNotFoundError: No module named 'cubo'</code> (no Colab)</a></li>
   <li><a href="#o-download-do-modelo-do-sen2sr-trava-no-meio" id="toc-o-download-do-modelo-do-sen2sr-trava-no-meio" class="nav-link" data-scroll-target="#o-download-do-modelo-do-sen2sr-trava-no-meio">O download do modelo do SEN2SR trava no meio</a></li>
   </ul></li>
-  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a>
-  <ul class="collapse">
-  <li><a href="#unable-to-locate-an-installed-version-of-python-3" id="toc-unable-to-locate-an-installed-version-of-python-3" class="nav-link" data-scroll-target="#unable-to-locate-an-installed-version-of-python-3"><code>Unable to locate an installed version of Python 3</code></a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -267,7 +263,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../aulas/99-erros-comuns.html">Apoio</a></li><li class="breadcrumb-item"><a href="../aulas/99-erros-comuns.html">Erros comuns</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Erros comuns</h1>
-<p class="subtitle lead">Antes de abrir uma issue, procure o seu erro aqui</p>
 </div>
 
 
@@ -284,8 +279,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Esta página cresce conforme os problemas aparecem. Se o seu não estiver aqui, <a href="https://github.com/danfioramonte/geoprocessamento-cbers4a/issues">abra uma issue</a> informando o sistema operacional, a saída completa de <code>pixi run check</code> e a mensagem de erro inteira.</p>
-<p>Não use os comentários do YouTube para pedir ajuda: não há como formatar código lá, e a resposta se perde para quem vier depois.</p>
 <section id="instalação" class="level2">
 <h2 class="anchored" data-anchor-id="instalação">Instalação</h2>
 <section id="pixi-não-é-reconhecido-como-um-comando" class="level3">
@@ -365,18 +358,6 @@ Aviso
 <section id="o-download-do-modelo-do-sen2sr-trava-no-meio" class="level3">
 <h3 class="anchored" data-anchor-id="o-download-do-modelo-do-sen2sr-trava-no-meio">O download do modelo do SEN2SR trava no meio</h3>
 <p>Rode a célula de novo. O <code>mlstac</code> retoma de onde parou.</p>
-</section>
-</section>
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<section id="unable-to-locate-an-installed-version-of-python-3" class="level3">
-<h3 class="anchored" data-anchor-id="unable-to-locate-an-installed-version-of-python-3"><code>Unable to locate an installed version of Python 3</code></h3>
-<p>O Quarto foi chamado fora do ambiente do projeto. Chame-o <strong>através do pixi</strong>, que coloca o Python certo no caminho:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">pixi</span> run preview      <span class="co"># ou:  pixi run render</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se quiser conferir manualmente qual Python o Quarto enxerga:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">pixi</span> run python <span class="at">-c</span> <span class="st">"import sys; print(sys.executable)"</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="ex">pixi</span> run quarto check jupyter</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>O caminho impresso deve apontar para dentro da pasta <code>.pixi</code> do projeto. Se aparecer <code>WindowsApps</code> no meio, é o atalho falso do Windows — veja o item “Python não foi encontrado” acima.</p>
 
 
 </section>

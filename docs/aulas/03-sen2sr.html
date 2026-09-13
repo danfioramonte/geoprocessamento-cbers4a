@@ -295,10 +295,10 @@ window.Quarto = {
   <li><a href="#montando-o-mosaico-sentinel-2" id="toc-montando-o-mosaico-sentinel-2" class="nav-link" data-scroll-target="#montando-o-mosaico-sentinel-2">1. Montando o mosaico Sentinel-2</a>
   <ul class="collapse">
   <li><a href="#composição-por-data-mais-próxima" id="toc-composição-por-data-mais-próxima" class="nav-link" data-scroll-target="#composição-por-data-mais-próxima">1.1 Composição por data mais próxima</a></li>
-  <li><a href="#vendo-as-candidatas-antes-de-escolher" id="toc-vendo-as-candidatas-antes-de-escolher" class="nav-link" data-scroll-target="#vendo-as-candidatas-antes-de-escolher">1.2 Vendo as candidatas antes de escolher</a></li>
+  <li><a href="#vendo-as-cenas-candidatas-antes-de-escolher" id="toc-vendo-as-cenas-candidatas-antes-de-escolher" class="nav-link" data-scroll-target="#vendo-as-cenas-candidatas-antes-de-escolher">1.2 Vendo as cenas candidatas antes de escolher</a></li>
   <li><a href="#escolhendo-as-cenas" id="toc-escolhendo-as-cenas" class="nav-link" data-scroll-target="#escolhendo-as-cenas">1.3 Escolhendo as cenas</a></li>
   <li><a href="#a-máscara-de-nuvem" id="toc-a-máscara-de-nuvem" class="nav-link" data-scroll-target="#a-máscara-de-nuvem">1.4 A máscara de nuvem</a></li>
-  <li><a href="#a-escolha-final-pixel-a-pixel" id="toc-a-escolha-final-pixel-a-pixel" class="nav-link" data-scroll-target="#a-escolha-final-pixel-a-pixel">1.5 A escolha final, pixel a pixel</a></li>
+  <li><a href="#a-escolha-final" id="toc-a-escolha-final" class="nav-link" data-scroll-target="#a-escolha-final">1.5 A escolha final</a></li>
   </ul></li>
   <li><a href="#super-resolução-com-o-sen2sr" id="toc-super-resolução-com-o-sen2sr" class="nav-link" data-scroll-target="#super-resolução-com-o-sen2sr">2. Super-resolução com o SEN2SR</a></li>
   <li><a href="#reamostragem-para-2-m-e-coregistro-com-o-arosics" id="toc-reamostragem-para-2-m-e-coregistro-com-o-arosics" class="nav-link" data-scroll-target="#reamostragem-para-2-m-e-coregistro-com-o-arosics">3. Reamostragem para 2 m e coregistro com o AROSICS</a></li>
@@ -310,6 +310,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#a-emenda-ficou-boa" id="toc-a-emenda-ficou-boa" class="nav-link" data-scroll-target="#a-emenda-ficou-boa">5. A emenda ficou boa?</a></li>
   <li><a href="#o-que-ficou-pronto" id="toc-o-que-ficou-pronto" class="nav-link" data-scroll-target="#o-que-ficou-pronto">O que ficou pronto</a></li>
+  <li><a href="#considerações-finais" id="toc-considerações-finais" class="nav-link" data-scroll-target="#considerações-finais">Considerações Finais</a></li>
   <li><a href="#erros-comuns-nesta-aula" id="toc-erros-comuns-nesta-aula" class="nav-link" data-scroll-target="#erros-comuns-nesta-aula">Erros comuns nesta aula</a></li>
   <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a>
   <ul class="collapse">
@@ -395,7 +396,7 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>O SEN2SR <span class="citation" data-cites="aybar_radiometrically_2026">(<a href="#ref-aybar_radiometrically_2026" role="doc-biblioref">Aybar et al., 2026</a>)</span> resolve a escala levando o Sentinel-2 de 10 m para 2,5 m antes da substituição. Não é mágica: o modelo não inventa informação que não existe, ele aprende como cenas de alta resolução costumam se parecer e usa isso para reconstruir os detalhes de forma plausível.</p>
+<p>O SEN2SR <span class="citation" data-cites="aybar_radiometrically_2026">(<a href="#ref-aybar_radiometrically_2026" role="doc-biblioref">Aybar et al., 2026</a>)</span> resolve a escala levando o Sentinel-2 de 10 m para 2,5 m antes da substituição. O modelo não inventa informação que não existe, ele aprende como cenas de alta resolução costumam se parecer e usa isso para reconstruir os detalhes de maneira plausível.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -433,7 +434,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Esta é a aula que cobra a disciplina das anteriores. Todo o curso trabalha na mesma janela e, do passo 3 em diante, na mesma grade de 2 m do CBERS. É isso que faz o AROSICS ter o que casar. Se você mudou o bbox em alguma aula, volte e acerte antes de continuar.</p>
+<p>Esta é a aula que usa os mesmos parâmetros das aulas anteriores. Todo o curso trabalha na mesma janela e, do passo 3 em diante, na mesma grade de 2 m do CBERS. É isso que possibilita o AROSICS funcionar. Se você mudou o bbox em alguma aula, volte e acerte antes de continuar.</p>
 </div>
 </div>
 </section>
@@ -453,13 +454,13 @@ window.Quarto = {
 <p>Clique no botão do Colab no topo da página. <strong>Ative a GPU antes de começar</strong>:</p>
 <p><strong>Ambiente de execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU</strong></p>
 <p>Aqui a instalação passa obrigatoriamente pelo conda: o <strong>AROSICS depende do GDAL do conda-forge</strong> e não instala de forma confiável só com <code>pip</code>.</p>
-<div id="b8600587" class="cell">
+<div id="f7556cb2" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># célula 1 — instala o conda na sessão; o ambiente REINICIA aqui</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="op">!</span>pip install <span class="op">-</span>q condacolab</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="im">import</span> condacolab</span>
 <span id="cb2-4"><a href="#cb2-4"></a>condacolab.install()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="5bf058ea" class="cell">
+<div id="3afbf20c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># célula 2 — rode DEPOIS do reinício (leva alguns minutos)</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj arosics scikit<span class="op">-</span>image <span class="op">\</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>    pystac<span class="op">-</span>client planetary<span class="op">-</span>computer py6s sixs requests</span>
@@ -487,7 +488,7 @@ Aviso
 </section>
 <section id="montando-o-mosaico-sentinel-2" class="level2">
 <h2 class="anchored" data-anchor-id="montando-o-mosaico-sentinel-2">1. Montando o mosaico Sentinel-2</h2>
-<p>O script original desta etapa consumia um export do Google Earth Engine — com conta, fila e espera. Aqui a gente monta o mosaico direto do <strong>STAC do Microsoft Planetary Computer</strong>: sem conta, sem autenticação, sem export.</p>
+<p>O script original desta etapa fazia a montagem do mosaico via Google Earth Engine. Aqui a gente monta o mosaico direto do <strong>STAC do Microsoft Planetary Computer</strong>: é uma maneira mais dinâmica, onde você consegue baixar as imagens sem conta, sem autenticação e sem esperar export.</p>
 <p><strong>A grade é definida pelo CBERS</strong>, não pelo Sentinel-2: mesmo CRS, mesma origem, resolução de 10 m, e uma margem de alguns pixels além da AOI.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -499,21 +500,20 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Duas razões. O coregistro <strong>desloca</strong> a imagem alvo — sem folga, a borda ficaria sem dado depois do deslocamento. E o AROSICS precisa de contexto <strong>além</strong> do buraco para achar pontos de amarração: se o mosaico terminasse exatamente na borda da AOI, os pontos das extremidades não teriam par.</p>
-<p>O padrão de 240 m equivale a 24 pixels de 10 m. É barato.</p>
+<p>O coregistro <strong>desloca</strong> a imagem alvo — sem folga, a borda ficaria sem dado depois do deslocamento. E o AROSICS precisa de contexto <strong>além</strong> do buraco para achar pontos de amarração: se o mosaico terminasse exatamente na borda da AOI, os pontos das extremidades não teriam par.</p>
 </div>
 </div>
 <section id="composição-por-data-mais-próxima" class="level3">
 <h3 class="anchored" data-anchor-id="composição-por-data-mais-próxima">1.1 Composição por data mais próxima</h3>
 <p>Para cada pixel, pegamos a cena Sentinel-2 <strong>mais próxima em data</strong> que esteja limpa <strong>ali</strong>, segundo a banda <code>SCL</code> do produto L2A. Isso é melhor que uma mediana temporal: preserva a textura real de uma data, em vez de misturar datas num borrão.</p>
-<p>O preço é que pixels vizinhos podem vir de datas diferentes. Por isso gravamos a banda <strong><code>delta_days</code></strong>, que registra de quantos dias de distância veio cada pixel. É procedência, não decoração — sem ela você não consegue responder de quando é o dado que preencheu cada buraco.</p>
+<p>Atenção: pixels vizinhos podem vir de datas diferentes. Por isso gravamos a banda <strong><code>delta_days</code></strong>, que registra de quantos dias de distância veio cada pixel.</p>
 </section>
-<section id="vendo-as-candidatas-antes-de-escolher" class="level3">
-<h3 class="anchored" data-anchor-id="vendo-as-candidatas-antes-de-escolher">1.2 Vendo as candidatas antes de escolher</h3>
-<p>A coluna <code>nuvem_cena_%</code> que vem do STAC é da <strong>cena inteira</strong>, uns 110 km de lado. A sua AOI tem 10 km: uma cena com 40% de nuvem pode estar perfeitamente limpa em cima de você, e uma com 3% pode ter justamente aquela nuvem no seu pedaço. Julgar por esse número é chute.</p>
-<p>Então a gente lê uma versão bem reduzida de cada candidata <strong>só na AOI</strong>. Sai barato: os arquivos do Planetary Computer são COG, e o GDAL pega a visão reduzida já pronta em vez do dado inteiro. Para cada candidata aparece a cor natural na sua área, quanto dela a cena <strong>cobre</strong>, e a fração limpa <strong>medida ali</strong>.</p>
-<p>É o mesmo espírito da escolha de cena da Aula 00: o número ajuda, o olho decide.</p>
-<div id="54ed217b" class="cell">
+<section id="vendo-as-cenas-candidatas-antes-de-escolher" class="level3">
+<h3 class="anchored" data-anchor-id="vendo-as-cenas-candidatas-antes-de-escolher">1.2 Vendo as cenas candidatas antes de escolher</h3>
+<p>A coluna <code>nuvem_cena_%</code>, para o satélite Sentinel-2 apresenta resultados, só que é referente a <strong>cena inteira</strong>. A nossa AOI é um recorte disso. Uma cena com 40% de nuvem pode estar perfeitamente limpa em cima de você, e uma com 3% pode ter justamente aquela nuvem no seu pedaço.</p>
+<p>Por isso, vamos ler uma versão bem reduzida de cada candidata <strong>só na AOI</strong>. Para cada imagem, aparece a cor natural na sua área, quanto dela a cena <strong>cobre</strong>, e a fração limpa <strong>medida ali</strong>.</p>
+<p>É a mesma ideia da escolha de cena da Aula 00.</p>
+<div id="d721959d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>MAX_PREVIA <span class="op">=</span> <span class="dv">8</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a>fator_p <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, <span class="bu">int</span>(np.ceil(<span class="bu">max</span>(H_S2, W_S2) <span class="op">/</span> <span class="dv">280</span>)))</span>
@@ -532,14 +532,14 @@ Aviso
 </div>
 <p>Na área do curso, as candidatas saem assim:</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-previas-s2" class="cell" data-execution_count="10">
+<div id="cell-fig-previas-s2" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  91.2% | 23KKR
-[2] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  95.0% | 22KHA
-[5] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  44.6% | 23KKR
-[6] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  44.9% | 22KHA
-[7] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  87.4% | 23KKR
-[8] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  87.3% | 22KHA
+<pre><code>[1] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  94.6% | 23KKR
+[2] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  97.0% | 22KHA
+[5] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  52.6% | 23KKR
+[6] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  52.7% | 22KHA
+[7] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  88.7% | 23KKR
+[8] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  88.6% | 22KHA
 [9] 2026-03-14  Δ +13 d | cobre 100.0% da AOI | limpo (SCL) 100.0% | 23KKR
 [10] 2026-03-14  Δ +13 d | cobre 100.0% da AOI | limpo (SCL) 100.0% | 22KHA</code></pre>
 </div>
@@ -560,9 +560,9 @@ Figura&nbsp;1: Prévia das candidatas Sentinel-2 na AOI: cobertura e fração li
 </section>
 <section id="escolhendo-as-cenas" class="level3">
 <h3 class="anchored" data-anchor-id="escolhendo-as-cenas">1.3 Escolhendo as cenas</h3>
-<p><code>ESCOLHA_S2 = None</code> deixa no automático — as <code>MAX_CENAS</code> mais próximas em data. Uma <strong>lista de <code>idx</code></strong> assume o controle, e a ordem é a sua <strong>ordem de preferência</strong>: a primeira preenche o que puder, a segunda preenche o que sobrou, e assim por diante.</p>
-<div id="343b7a9e" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ESCOLHA_S2 <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>]      <span class="co"># ou None para automático</span></span>
+<p><code>ESCOLHA_S2 = None</code> deixa no automático — as <code>MAX_CENAS</code> mais próximas em data. Uma <strong>lista de <code>idx</code></strong> define as imagens a serem utilizadas e a ordem é a nossa <strong>ordem de preferência</strong>: a primeira preenche o que puder, a segunda preenche o que sobrou, e assim por diante. Por isso, vamos usar as imagens nessa ordem: 1, 2, 9 e 10. A 1 e a 2 estão praticamente perfeitas, foram capturadas 3 dias depois da nossa imagem CBERS e vão preencher a maior parte da lacuna. Iremos usar a 9 e a 10 para preencher uma parte de névoa que está presente na parte sudoeste da imagem.</p>
+<div id="c1b22eb4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ESCOLHA_S2 <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">10</span>]      <span class="co"># ou None para automático</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a></span>
 <span id="cb7-3"><a href="#cb7-3"></a>selecionadas <span class="op">=</span> [itens[i] <span class="cf">for</span> i <span class="kw">in</span> ESCOLHA_S2] <span class="cf">if</span> ESCOLHA_S2 <span class="cf">else</span> itens[:MAX_CENAS]</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -596,9 +596,9 @@ Nota
 </section>
 <section id="a-máscara-de-nuvem" class="level3">
 <h3 class="anchored" data-anchor-id="a-máscara-de-nuvem">1.4 A máscara de nuvem</h3>
-<p>Uma só, e simples: o <strong>SCL</strong> do próprio produto L2A, mascarando <strong>apenas o que ele chama de nuvem</strong> — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).</p>
+<p>O satélite Sentinel-2 conta com uma máscara própria, chamada de <strong>SCL</strong>. Nessa máscara, estamos interessados em marcar <strong>apenas o que ele chama de </strong>nuvem** — 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros).</p>
 <p>Nada além disso. Você escolheu as cenas olhando a prévia; se elas estão limpas, não há o que remover, e qualquer camada a mais só tem como errar para o lado de tirar pixel bom.</p>
-<div id="1af0e70d" class="cell">
+<div id="aa5928ab" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>MASCARA_SCL <span class="op">=</span> <span class="va">True</span>            <span class="co"># False = usa a cena inteira, sem máscara nenhuma</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>CLASSES_NUVEM <span class="op">=</span> (<span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)    <span class="co"># nuvem prob. média, nuvem prob. alta, cirros</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a>DILATA_NUVEM_PX <span class="op">=</span> <span class="dv">0</span>           <span class="co"># buffer em torno da nuvem, em px de 10 m</span></span>
@@ -614,12 +614,12 @@ Nota
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Se a sua cena tiver nuvem, e o preço de mascarar a sombra
+<span class="screen-reader-only">Importante</span>Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>Acrescente a classe <strong>3 (sombra de nuvem)</strong> em <code>CLASSES_NUVEM</code>. Mas saiba o que vem junto: o SCL chama <strong>água escura de sombra</strong> com muita frequência, e o resultado é um buraco em cima de represa e rio, que aparece branco no mosaico.</p>
-<p>Não existe escolha certa aqui — existe a sua cena. Se ela está limpa, deixe a 3 de fora; se tem nuvem sobre área seca, coloque; se tem nuvem <strong>e</strong> água, coloque e depois confira a represa.</p>
+<p>Se sua cena está limpa, deixe a 3 de fora; se tem nuvem sobre área seca, coloque; se tem nuvem <strong>e</strong> água, coloque e depois confira a represa.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -637,10 +637,10 @@ Nota
 </div>
 </div>
 </section>
-<section id="a-escolha-final-pixel-a-pixel" class="level3">
-<h3 class="anchored" data-anchor-id="a-escolha-final-pixel-a-pixel">1.5 A escolha final, pixel a pixel</h3>
-<p>Entre as candidatas com dado limpo, vence <strong>a primeira da ordem</strong> — a mais próxima em data no automático, ou a que você pôs primeiro em <code>ESCOLHA_S2</code>. Só isso.</p>
-<div id="5638e396" class="cell">
+<section id="a-escolha-final" class="level3">
+<h3 class="anchored" data-anchor-id="a-escolha-final">1.5 A escolha final</h3>
+<p>Entre as candidatas com dado limpo, vence <strong>a primeira da ordem</strong> — a mais próxima em data no automático, ou a que você pôs primeiro em <code>ESCOLHA_S2</code>.</p>
+<div id="1c2fd877" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>escolha <span class="op">=</span> np.full((H_S2, W_S2), <span class="op">-</span><span class="dv">1</span>, dtype<span class="op">=</span><span class="st">"int16"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="cf">for</span> i, c <span class="kw">in</span> <span class="bu">enumerate</span>(candidatas):</span>
 <span id="cb10-3"><a href="#cb10-3"></a>    falta <span class="op">=</span> (escolha <span class="op">&lt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> c[<span class="st">"limpo"</span>]</span>
@@ -648,7 +648,7 @@ Nota
 </div>
 <p>O relatório por cena, e o mosaico que sai dele:</p>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-cenas-s2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<div id="tbl-cenas-s2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="11">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-cenas-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
@@ -656,13 +656,13 @@ Tabela&nbsp;1
 <div aria-describedby="tbl-cenas-s2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-stdout">
 <pre><code>cena                                          delta   cobre   limpo
-S2B_MSIL2A_20260304T132229_R038_T23KKR_20260     +3 100.0%  91.2%
-S2B_MSIL2A_20260304T132229_R038_T22KHA_20260     +3 100.0%  95.0%
+S2B_MSIL2A_20260304T132229_R038_T23KKR_20260     +3 100.0%  94.5%
+S2B_MSIL2A_20260304T132229_R038_T22KHA_20260     +3 100.0%  97.0%
 S2B_MSIL2A_20260314T132229_R038_T23KKR_20260    +13 100.0% 100.0%
 S2B_MSIL2A_20260314T132229_R038_T22KHA_20260    +13 100.0% 100.0%
-S2B_MSIL2A_20260304T132229_R038_T23KKR_20260 -&gt; 1,081,050 px usados
-S2B_MSIL2A_20260304T132229_R038_T22KHA_20260 -&gt; 45,777 px usados
-S2B_MSIL2A_20260314T132229_R038_T23KKR_20260 -&gt; 58,973 px usados
+S2B_MSIL2A_20260304T132229_R038_T23KKR_20260 -&gt; 1,826,028 px usados
+S2B_MSIL2A_20260304T132229_R038_T22KHA_20260 -&gt; 47,447 px usados
+S2B_MSIL2A_20260314T132229_R038_T23KKR_20260 -&gt; 58,805 px usados
 
 cobertura final do mosaico: 100.00% (3 cenas contribuíram)</code></pre>
 </div>
@@ -671,7 +671,7 @@ cobertura final do mosaico: 100.00% (3 cenas contribuíram)</code></pre>
 </div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-mosaico-s2" class="cell" data-execution_count="16">
+<div id="cell-fig-mosaico-s2" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div id="fig-mosaico-s2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -697,20 +697,6 @@ Aviso
 </div>
 <div class="callout-body-container callout-body">
 <p>Ler <code>MAX_CENAS</code> cenas inteiras de uma vez custa memória: são <code>n × 4 × altura × largura</code> em <code>float32</code>. Para a AOI do curso, com 8 candidatas, dá uns 150 MB — tranquilo. Numa AOI bem maior, baixe <code>MAX_CENAS</code>.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>O deslocamento da baseline 04.00
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Desde 25/01/2022 os produtos Sentinel-2 L2A trazem um offset de <strong>−1000</strong> na reflectância: o valor físico é <code>(DN − 1000) / 10000</code>, e <strong>não</strong> <code>DN / 10000</code>.</p>
-<p>Esquecer isso desloca a reflectância inteira em 0,1. O detalhe cruel é que a harmonização empírica da etapa 4 <strong>absorve boa parte desse deslocamento</strong> — então nada quebra, nada avisa, e o erro reaparece depois como um viés que você não consegue explicar. O notebook lê a <code>s2:processing_baseline</code> de cada item e aplica o offset quando é o caso.</p>
 </div>
 </div>
 <p>A saída é um GeoTIFF de <strong>6 bandas</strong> em <code>int16</code>, exatamente no formato que as etapas seguintes esperam:</p>
@@ -741,13 +727,8 @@ Aviso
 <section id="super-resolução-com-o-sen2sr" class="level2">
 <h2 class="anchored" data-anchor-id="super-resolução-com-o-sen2sr">2. Super-resolução com o SEN2SR</h2>
 <p>O modelo leva o Sentinel-2 de 10 m para 2,5 m. Vale repetir: a textura da área preenchida é <strong>reconstruída</strong>, não observada. É plausível, é suficiente para a emenda não gritar, e é honesto declarar isso no método.</p>
-<p>O código baixa os pesos com o <code>mlstac</code> e roda a inferência em blocos. Três detalhes de implementação que não são cosméticos:</p>
-<ul>
-<li><strong>o janelamento é nosso, não do <code>predict_large</code>.</strong> A função pronta entrega blocos de borda truncados ao modelo, e o módulo <code>hard_constraint</code> do SEN2SR quebra, porque a máscara FFT dele é de tamanho fixo. Aqui todo bloco tem exatamente 128×128;</li>
-<li><strong>preenchimento por vizinho mais próximo antes da inferência.</strong> O campo receptivo da rede propagaria zeros para dentro dos pixels bons se deixássemos buraco na entrada. O conteúdo desses pixels é descartado no fim;</li>
-<li><strong>acolchoamento por reflexão e mistura com rampa.</strong> As bordas dos blocos recebem peso crescente, então a costura entre blocos vizinhos some. A rampa começa em 0,001 e não em zero, porque na borda externa da cena não há bloco vizinho somando peso — e zero puro daria divisão por zero.</li>
-</ul>
-<div id="63825342" class="cell">
+<p>O código baixa os pesos com o <code>mlstac</code> e roda a inferência em blocos.</p>
+<div id="d0460900" class="cell">
 <details class="code-fold">
 <summary>Inferência em blocos, com acumuladores em memmap</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>TILE, FATOR, OVERLAP <span class="op">=</span> <span class="dv">128</span>, <span class="dv">4</span>, <span class="dv">32</span></span>
@@ -780,7 +761,7 @@ Aviso
 </details>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-sen2sr-zoom" class="cell" data-execution_count="20">
+<div id="cell-fig-sen2sr-zoom" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display">
 <div id="fig-sen2sr-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -798,7 +779,7 @@ Figura&nbsp;3: O mesmo trecho em 10 m e depois da super-resolução, em 2,5 m.
 </section>
 <section id="reamostragem-para-2-m-e-coregistro-com-o-arosics" class="level2">
 <h2 class="anchored" data-anchor-id="reamostragem-para-2-m-e-coregistro-com-o-arosics">3. Reamostragem para 2 m e coregistro com o AROSICS</h2>
-<p>Duas imagens de satélites diferentes nunca caem exatamente uma sobre a outra: ortorretificação, modelo de elevação e efeito de paralaxe do relevo produzem deslocamentos de um a alguns pixels. Em 2 m isso é visível — e numa emenda é o que faz uma estrada aparecer cortada.</p>
+<p>Duas imagens de satélites diferentes não estão posicionadas geograficamente exatamente uma sobre a outra: ortorretificação, modelo de elevação e efeito de paralaxe do relevo produzem deslocamentos de um a alguns pixels.</p>
 <p>O <strong>AROSICS</strong> <span class="citation" data-cites="scheffler_arosics_2017">(<a href="#ref-scheffler_arosics_2017" role="doc-biblioref">Scheffler et al., 2017</a>)</span> resolve por correlação de fase: acha pontos de amarração numa malha regular, mede o deslocamento local em cada um, filtra os não confiáveis e deforma a imagem alvo.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -813,10 +794,10 @@ Figura&nbsp;3: O mesmo trecho em 10 m e depois da super-resolução, em 2,5 m.
 <p>A correlação de fase é insensível a diferença radiométrica <strong>linear</strong>. Ou seja: não importa que as duas imagens tenham brilho diferente, o casamento funciona igual. Harmonizar antes não ajudaria em nada — e, pior, harmonizar usando pixels desalinhados ajustaria os coeficientes contra o alvo errado.</p>
 </div>
 </div>
-<p>Dois cuidados que valem código:</p>
+<p>Dois cuidados importantes:</p>
 <p><strong>Máscaras de dado ruim.</strong> O AROSICS só acha ponto onde as duas imagens têm dado válido. Passamos explicitamente o que ignorar: no CBERS, os buracos de nuvem e o nodata; no Sentinel-2, o que ficou fora do mosaico. Tentar correlacionar dentro do buraco seria correlacionar ruído.</p>
 <p><strong>A banda de validade viaja junto.</strong> Ela entra como banda extra da imagem alvo, para sofrer exatamente a mesma deformação da imagem. Na volta, o limiar de 0,99 devolve o caráter binário, erodindo cerca de um pixel na borda — conservador de propósito.</p>
-<div id="f07a5fb1" class="cell">
+<div id="908cdf00" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> arosics <span class="im">import</span> COREG_LOCAL</span>
 <span id="cb13-2"><a href="#cb13-2"></a></span>
 <span id="cb13-3"><a href="#cb13-3"></a>CR <span class="op">=</span> COREG_LOCAL(<span class="bu">str</span>(ref_tmp), <span class="bu">str</span>(tgt_tmp),</span>
@@ -830,7 +811,7 @@ Figura&nbsp;3: O mesmo trecho em 10 m e depois da super-resolução, em 2,5 m.
 <span id="cb13-11"><a href="#cb13-11"></a>CR.correct_shifts()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-coregistro" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="24">
+<div id="tbl-coregistro" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="21">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-coregistro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;2
@@ -841,30 +822,30 @@ Tabela&nbsp;2
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bounding box of calculated footprint for reference image:
-    (232788.0, 7513110.0, 243076.0, 7523622.0)
+    (229780.0, 7513022.0, 242692.0, 7526958.0)
 Calculating footprint polygon and actual data corner coordinates for image to be shifted...
 Bounding box of calculated footprint for image to be shifted:
-    (232788.0, 7513110.0, 243076.0, 7523622.0)
-Matching window position (X,Y): 237963.4417975617/7518391.642822992
+    (229780.0, 7513022.0, 242692.0, 7526958.0)
+Matching window position (X,Y): 236272.51709761505/7520013.7271285085
 Initializing tie points grid...
-With respect to the provided bad data mask(s) 79 points of initially 690 have been excluded.
-Calculating tie point grid (611 points) using 4 CPU cores...</code></pre>
+With respect to the provided bad data mask(s) 121 points of initially 1143 have been excluded.
+Calculating tie point grid (1022 points) using 4 CPU cores...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Found 409 matches.
+<pre><code>Found 704 matches.
 Performing validity checks...
-148 tie points flagged by level 1 filtering (reliability).
-124 tie points flagged by level 2 filtering (SSIM).
-6 tie points flagged by level 3 filtering (RANSAC)
-191 valid tie points remain after filtering.
+218 tie points flagged by level 1 filtering (reliability).
+230 tie points flagged by level 2 filtering (SSIM).
+18 tie points flagged by level 3 filtering (RANSAC)
+327 valid tie points remain after filtering.
 Correcting geometric shifts...</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Writing GeoArray of size (5256, 5144, 5) to C:\geo\geoprocessamento-cbers4a\colab\data\interim\coreg_tmp_20260301\s2sr_2m_coreg.tif.
+<pre><code>Writing GeoArray of size (6968, 6456, 5) to C:\geo\geoprocessamento-cbers4a\colab\data\interim\coreg_tmp_20260301\s2sr_2m_coreg.tif.
 
-pontos confiáveis   : 191 de 611
-deslocamento mediano: 12.721 m (6.361 px)
-deslocamento p90    : 15.419 m</code></pre>
+pontos confiáveis   : 327 de 1022
+deslocamento mediano: 12.011 m (6.006 px)
+deslocamento p90    : 15.383 m</code></pre>
 </div>
 </div>
 </figure>
@@ -872,7 +853,7 @@ deslocamento p90    : 15.419 m</code></pre>
 </div>
 <p>O notebook imprime quantos pontos confiáveis saíram, o deslocamento mediano e o p90, e grava os pontos de amarração num GeoPackage — dá para abrir no QGIS e ver onde o casamento foi bem e onde não foi. <strong>Menos de 20 pontos confiáveis é sinal de alerta</strong>: cena com pouca textura, ou lacuna grande demais em relação à AOI.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -881,7 +862,7 @@ deslocamento p90    : 15.419 m</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Se o AROSICS não estiver disponível ou falhar, o notebook cai automaticamente para um deslocamento <strong>global</strong> estimado por <code>phase_cross_correlation</code> do scikit-image. Não corrige deformação local, mas resolve o caso comum de um deslocamento constante — e é muito melhor que seguir sem coregistro nenhum. O <code>.params.json</code> registra qual dos dois foi usado.</p>
 </div>
@@ -890,7 +871,6 @@ deslocamento p90    : 15.419 m</code></pre>
 </section>
 <section id="harmonização-e-substituição" class="level2">
 <h2 class="anchored" data-anchor-id="harmonização-e-substituição">4. Harmonização e substituição</h2>
-<p>Faltam duas decisões, e as duas mudam o resultado visível.</p>
 <section id="em-que-escala-fica-o-produto-final" class="level3">
 <h3 class="anchored" data-anchor-id="em-que-escala-fica-o-produto-final">4.1 Em que escala fica o produto final</h3>
 <p>O Sentinel-2 é convertido para a escala do CBERS, e <strong>não</strong> o contrário. Assim o mosaico continua comparável com as outras cenas CBERS da sua série temporal, sem precisar reprocessar nenhuma delas.</p>
@@ -945,11 +925,10 @@ deslocamento p90    : 15.419 m</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <p>Com <code>ANEL_LACUNA &gt; 0</code>, o ajuste é calculado só numa faixa de N pixels em torno das lacunas, e não na cena toda. Serve para quando a área que estava sob nuvem é sistematicamente diferente do resto — mais úmida, mais vegetada — e a relação entre os sensores ali não é a média da cena.</p>
-<p>Sintoma de que você precisa disso: viés grande e <strong>do mesmo sinal em todas as bandas</strong> no relatório da seção 5. Tente <code>ANEL_LACUNA = 200</code>.</p>
 </div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-harmonizacao" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="27">
+<div id="tbl-harmonizacao" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="24">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-harmonizacao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;3
@@ -959,10 +938,10 @@ Tabela&nbsp;3
 <pre><code>HARMONIZAÇÃO — Sentinel-2 para a escala do CBERS, método 'momentos'
 
 banda              a            b     média S2   média CBERS          n
-red          8327.78       211.22       0.0764         847.6    463,560
-green        8229.74       191.34       0.0682         752.3    463,817
-blue         8178.09       143.41       0.0472         529.1    463,673
-nir          9222.86       249.81       0.2438        2498.4    464,186
+red          8407.19       213.57       0.0751         845.1    463,727
+green        8263.44       192.30       0.0707         776.5    464,082
+blue         8204.99       143.97       0.0473         532.0    463,779
+nir          8202.96       493.25       0.2643        2661.4    464,603
 
 O coeficiente 'a' perto de 10.000 é esperado: o S2-SR está em reflectância 0-1 e o
 CBERS em reflectância x10.000. O que importa é o desvio em torno disso.</code></pre>
@@ -971,12 +950,11 @@ CBERS em reflectância x10.000. O que importa é o desvio em torno disso.</code>
 </figure>
 </div>
 </div>
-<p>O coeficiente <code>a</code> vai sair perto de <strong>10.000</strong>, e isso é esperado: o S2 super-resolvido está em reflectância 0–1 e o CBERS em reflectância × 10.000. O que interessa é o desvio em torno disso.</p>
+<p>O coeficiente <code>a</code> vai sair perto de <strong>10.000</strong>, e isso é esperado: o S2 super-resolvido está em reflectância 0–1 e o CBERS em reflectância × 10.000.</p>
 </section>
 <section id="a-transição" class="level3">
 <h3 class="anchored" data-anchor-id="a-transição">4.3 A transição</h3>
-<p>Como a lacuna é um <strong>buraco</strong> no CBERS, não há com o que misturar dentro dela. A transição acontece do lado de fora, invadindo alguns pixels de CBERS válido ao redor.</p>
-<p>Ou seja: uma faixa estreita de dado nativo é parcialmente substituída. É o preço de uma emenda sem degrau — e a banda de procedência registra exatamente onde isso aconteceu.</p>
+<p>Como a lacuna é um buraco no CBERS, não há com o que misturar <em>dentro</em> dela. A transição acontece do lado de fora, invadindo alguns pixels de CBERS válido ao redor. Ou seja: uma faixa estreita de dado válido é parcialmente substituída para que o resultado fique natural e sem cortes abruptos.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1007,7 +985,7 @@ CBERS em reflectância x10.000. O que importa é o desvio em torno disso.</code>
 </tr>
 </tbody>
 </table>
-<div id="6fde19b9" class="cell">
+<div id="64c9cc47" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># peso do S2: 1 dentro da lacuna, decaindo até 0 ao longo de M px para fora dela</span></span>
 <span id="cb19-2"><a href="#cb19-2"></a>dist <span class="op">=</span> distance_transform_edt(<span class="op">~</span>buraco)</span>
 <span id="cb19-3"><a href="#cb19-3"></a>w <span class="op">=</span> np.clip(<span class="fl">1.0</span> <span class="op">-</span> dist <span class="op">/</span> <span class="bu">max</span>(M, <span class="dv">1</span>), <span class="fl">0.0</span>, <span class="fl">1.0</span>).astype(<span class="st">"float32"</span>)</span>
@@ -1027,7 +1005,7 @@ CBERS em reflectância x10.000. O que importa é o desvio em torno disso.</code>
 </div>
 <div class="callout-body-container callout-body">
 <p>A harmonização da seção 4.2 é uma reta <span class="math inline">\(a\,x + b\)</span>, e o <span class="math inline">\(b\)</span> sai <strong>negativo</strong> em algumas bandas. Isso quer dizer que ela consegue produzir valor abaixo de zero <em>mesmo partindo de um Sentinel-2 que já não tinha nenhum negativo</em> — o mosaico S2 é montado com piso em 0 lá na seção 1.5. Somado à cauda escura que vem da fusão da Aula 01, é isso que faz o mosaico final abrir no QGIS com mínimo negativo.</p>
-<p>O produto é gravado com o mesmo <code>PISO_REFLECTANCIA</code> da Aula 01, e o notebook reporta quantos pixels de cada banda foram ceifados — o número vai para o <code>.params.json</code>, em vez de sumir. Como o nodata é <code>-9999</code>, o pixel ceifado vale 0 e <strong>continua sendo dado válido</strong>.</p>
+<p>O produto é gravado com o mesmo <code>PISO_REFLECTANCIA</code> da Aula 01, e o notebook reporta quantos pixels de cada banda foram removidos — o número vai para o <code>.params.json</code>, em vez de sumir. Como o nodata é <code>-9999</code>, o pixel ceifado vale 0 e <strong>continua sendo dado válido</strong>.</p>
 </div>
 </div>
 </section>
@@ -1040,7 +1018,7 @@ CBERS em reflectância x10.000. O que importa é o desvio em torno disso.</code>
 <li><strong>razão de desvios</strong>: o desvio-padrão do S2 harmonizado dividido pelo do CBERS. Perto de 1 significa que a área preenchida tem variabilidade parecida com a do entorno.</li>
 </ul>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-emenda" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="29">
+<div id="tbl-emenda" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="26">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-emenda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;4
@@ -1048,10 +1026,10 @@ Tabela&nbsp;4
 <div aria-describedby="tbl-emenda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-stdout">
 <pre><code>banda              viés     razão de desvios
-red              +38.23                1.075
-green            +25.53                1.044
-blue              -8.38                1.093
-nir             +302.50                1.061
+red              +29.69                1.090
+green            +22.62                1.021
+blue             -12.49                1.042
+nir             +271.87                0.967
 
 Escrito: data\processed\mosaico_20260301_gapfilled.tif
 Escrito: data\processed\mosaico_20260301_proveniencia.tif
@@ -1093,7 +1071,7 @@ Params : mosaico_20260301_gapfilled.params.json</code></pre>
 </tbody>
 </table>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-mosaico-final" class="cell" data-execution_count="30">
+<div id="cell-fig-mosaico-final" class="cell" data-execution_count="27">
 <div class="cell-output cell-output-display">
 <div id="fig-mosaico-final" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1109,7 +1087,7 @@ Figura&nbsp;4: CBERS com as lacunas, mosaico preenchido e a procedência de cada
 </div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-lacuna-zoom" class="cell" data-execution_count="31">
+<div id="cell-fig-lacuna-zoom" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-display">
 <div id="fig-lacuna-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1132,26 +1110,30 @@ data/interim/S2_&lt;DATA&gt;_SR2p5m.tif              super-resolvido pelo SEN2SR
 data/interim/S2_&lt;DATA&gt;_2m_coreg.tif            reamostrado e coregistrado na grade do CBERS
 data/processed/mosaico_&lt;DATA&gt;_gapfilled.tif    mosaico final     &lt;- o produto do curso
 data/processed/mosaico_&lt;DATA&gt;_proveniencia.tif de onde veio cada pixel</code></pre>
-<p>Abra os dois últimos juntos no QGIS. A banda de procedência é o que permite responder, para qualquer análise feita em cima deste mosaico, <strong>quais pixels são observação e quais são reconstrução</strong> — e essa distinção precisa aparecer em qualquer resultado publicado.</p>
+<p>Abra os dois últimos juntos no QGIS. A banda de procedência é o que permite responder, para qualquer análise feita em cima deste mosaico, <strong>quais pixels são observação e quais são reconstrução</strong>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Limitações que valem declarar no método
+<span class="screen-reader-only">Importante</span>Limitações que são importantes a serem destacadas
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ul>
 <li>a saída do SEN2SR é 2,5 m e foi reamostrada para 2 m;</li>
-<li>a textura da área preenchida é <strong>reconstruída</strong> pelo modelo, não observada;</li>
+<li>a textura da área preenchida é <strong>reconstruída</strong> pelo modelo;</li>
 <li>os pixels de Sentinel-2 vêm de outra data — <code>delta_days</code> diz de quantos dias;</li>
-<li>a zona de transição substitui parcialmente pixels de CBERS válidos, por construção;</li>
+<li>a zona de transição substitui parcialmente pixels de CBERS válidos;</li>
 <li>a harmonização é empírica (global ou por anel), não uma correção física entre sensores.</li>
 </ul>
 </div>
 </div>
+</section>
+<section id="considerações-finais" class="level2">
+<h2 class="anchored" data-anchor-id="considerações-finais">Considerações Finais</h2>
+<p>Espero que essa sequência de aulas tenha contribuído para difundir o uso das imagens de alta resolução CBERS-4A/WPM, a partir da apresentação de uma solução prática para conciliar a presença de nuvens e o alto período de revisita do satélite. O SEN2SR é um modelo de super-resolução extremamente recente e considerado estado-da-arte para a reconstrução de imagens, tendo em vista que mantém características espectrais e reconstrói texturas com menos alucinações que outros modelos. A metodologia apresentada aqui buscou ser de fácil implementação e pode ser adaptada para outras regiões do Brasil. Essa iniciativa teve como objetivo ampliar a utilização de imagens obtidas por esse satélite nacional pela comunidade acadêmica e profissional.</p>
 </section>
 <section id="erros-comuns-nesta-aula" class="level2">
 <h2 class="anchored" data-anchor-id="erros-comuns-nesta-aula">Erros comuns nesta aula</h2>

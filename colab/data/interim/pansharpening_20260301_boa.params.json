@@ -1,14 +1,14 @@
 {
-  "gerado_em": "2026-09-10T21:01:48",
+  "gerado_em": "2026-09-13T18:40:03",
   "aula": "01",
   "cena": "CBERS_4A_WPM_20260301_203_141_L4",
   "data_cena": "2026-03-01",
   "nivel": "boa",
   "bbox_4326": [
-    -47.596712,
-    -22.467523,
-    -47.495068,
-    -22.374216
+    -47.625969,
+    -22.467835,
+    -47.498227,
+    -22.344048
   ],
   "convencao_coeficiente": "L = DN * absoluteCalibrationCoefficient (offset zero)",
   "coeficientes_calibracao": {
@@ -31,35 +31,35 @@
   "coeficientes_6s": {
     "azul": {
       "xa": 0.00243,
-      "xb": 0.08332,
-      "xc": 0.13887
+      "xb": 0.08321,
+      "xc": 0.1387
     },
     "verde": {
       "xa": 0.00248,
-      "xb": 0.04635,
-      "xc": 0.09512
+      "xb": 0.04626,
+      "xc": 0.09489
     },
     "vermelho": {
       "xa": 0.0028,
-      "xb": 0.02333,
-      "xc": 0.05998
+      "xb": 0.02325,
+      "xc": 0.05971
     },
     "nir": {
       "xa": 0.00391,
-      "xb": 0.01082,
-      "xc": 0.03453
+      "xb": 0.01077,
+      "xc": 0.03428
     }
   },
   "atmosfera": {
     "_fonte": "AOD: MCD19A2 (MAIAC). Vapor e ozonio: MERRA-2 slv. Altitude: NASADEM.",
     "_data": "2026-03-01",
     "_hora_utc": 13,
-    "_nota_aerossol": "Queimada em 2023-08-01. Perfil BiomassBurning e mais adequado que Continental quando o AOD esta elevado.",
-    "aot550": 0.0897,
-    "aot550_desvio": 0.0326,
+    "_nota_aerossol": "AOD550 obtido a partir do produto MCD19A2 (MAIAC) da NASA. O valor de AOD550 é uma média espacial de 3x3 pixels (1 km/pixel) centrada na coordenada do alvo. O desvio padrão é calculado a partir dos 9 pixels.",
+    "aot550": 0.0882,
+    "aot550_desvio": 0.0313,
     "vapor_agua_gcm2": 2.0007,
     "ozonio_cmatm": 0.2533,
-    "altitude_alvo_km": 0.6106,
+    "altitude_alvo_km": 0.6024,
     "altitude_min_m": 529,
     "altitude_max_m": 745,
     "angulo_visada": 0,
@@ -88,54 +88,54 @@
       ]
     }
   },
-  "aod_ajustado_por_alvo_escuro": true,
+  "aod_ajustado_por_alvo_escuro": false,
   "faixa_reflectancia": [
     0.0,
     1.6
   ],
   "negativos_por_banda": {
     "azul": {
-      "frac": 1.7739964058832816e-06,
-      "p1": 0.02059406414628029,
-      "mediana": 0.043726883828639984,
-      "min": -0.006938259582966566
+      "frac": 1.4218243641690307e-06,
+      "p1": 0.02140667848289013,
+      "mediana": 0.04243815690279007,
+      "min": -0.006828040815889835
     },
     "verde": {
-      "frac": 1.1826642705888545e-06,
-      "p1": 0.029644381254911423,
-      "mediana": 0.06915594637393951,
-      "min": -0.002771951723843813
+      "frac": 7.109121820845153e-07,
+      "p1": 0.030468491837382317,
+      "mediana": 0.06851686537265778,
+      "min": -0.0026819040067493916
     },
     "vermelho": {
-      "frac": 5.913321352944272e-07,
-      "p1": 0.024807855486869812,
-      "mediana": 0.06689108908176422,
-      "min": -0.007709294557571411
+      "frac": 7.109121820845153e-07,
+      "p1": 0.026185838505625725,
+      "mediana": 0.060511015355587006,
+      "min": -0.007629206404089928
     },
     "nir": {
       "frac": 0.0,
-      "p1": 0.08133281022310257,
-      "mediana": 0.253587543964386,
-      "min": 0.03183658421039581
+      "p1": 0.08903776109218597,
+      "mediana": 0.2735835909843445,
+      "min": 0.03188673034310341
     }
   },
   "ordem_bandas": "RGBN",
   "fator_escala": 10000,
   "nodata": -9999,
   "regra_nodata": "zero em QUALQUER banda MS",
-  "px_nodata": 21,
-  "frac_nodata": 1.2417820636998719e-05,
+  "px_nodata": 43,
+  "frac_nodata": 1.528437829902642e-05,
   "etapa": "pansharpening",
   "metodo": "Gram-Schmidt (GSA)",
   "intensidade": "regressao multivariada da PAN degradada sobre as bandas MS",
   "intensidade_coeficientes": {
-    "red": 0.054706235834118745,
-    "green": 0.03846403161507443,
-    "blue": 0.013867260773712212,
-    "nir": 0.05684632579517765,
-    "const": 49.34187670514377
+    "red": 0.05217371149069587,
+    "green": 0.04796439122637999,
+    "blue": 0.0067596389671817705,
+    "nir": 0.05606934302407264,
+    "const": 49.60567030715975
   },
-  "intensidade_r2": 0.9422736204341293,
+  "intensidade_r2": 0.9444780752442936,
   "pesos_gs_classico_nao_usados": {
     "red": 0.166,
     "green": 0.167,
@@ -143,22 +143,22 @@
     "nir": 0.5
   },
   "ganhos": {
-    "red": 6.782463454793643,
-    "green": 5.601707301882222,
-    "blue": 4.952690232939627,
-    "nir": 6.065694508041713
+    "red": 6.479307212174189,
+    "green": 5.496731983057752,
+    "blue": 4.845540862186424,
+    "nir": 6.519586875078087
   },
   "negativos_apos_fusao": {
-    "red": 0.0050341180787349385,
-    "green": 0.0003978839689415998,
-    "blue": 0.003534128435480435,
-    "nir": 0.0
+    "red": 0.003793906700395815,
+    "green": 0.00024082615308442437,
+    "blue": 0.0028273341618600734,
+    "nir": 4.446158092576837e-08
   },
   "px_ceifados_no_piso": {
-    "red": 136100,
-    "green": 10757,
-    "blue": 95547,
-    "nir": 0
+    "red": 170660,
+    "green": 10833,
+    "blue": 127181,
+    "nir": 2
   },
   "entrada_ms": "data\\interim\\rgbcomp_20260301_boa.tif",
   "entrada_pan": "data\\raw\\rio_claro_CBERS_4A_WPM_20260301_203_141_L4_BAND0.tif",
