@@ -6,6 +6,7 @@ date: "2026-09-03"
 ---
 
 {{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb){target="_blank"}
 
 ## O que vamos aprender
 
@@ -129,7 +130,7 @@ Toda vez que for trabalhar, abra o terminal, entre na pasta do projeto e use:
 
 ## Passo 3 - Baixando a imagem CBERS-4A via API STAC
 
-O STAC (*SpatioTemporal Asset Catalog*, ou Catálogo de Ativos Espaço-Temporais) é um site que organiza imagens de satélite de diversos provedores, incluindo o [Brazil Data Cube](https://data.inpe.br/bdc/explorer/explore) (BDC - do INPE) que fornece as imagens CBERS-4A. Graças ao STAC, você pode "pré-processar" a imagem antes de baixá-la, como iremos fazer nesse tutorial.
+O STAC (*SpatioTemporal Asset Catalog*, ou Catálogo de Ativos Espaço-Temporais) (@stac2021specification) é um site que organiza imagens de satélite de diversos provedores, incluindo o [Brazil Data Cube](https://data.inpe.br/bdc/explorer/explore) (BDC - do INPE) que fornece as imagens CBERS-4A. Graças ao STAC, você pode "pré-processar" a imagem antes de baixá-la, como iremos fazer nesse tutorial.
 
 ::: {.callout-tip}
 ## O que vamos fazer?

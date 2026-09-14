@@ -1,13 +1,13 @@
 # Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2
 
-[![Site](https://img.shields.io/badge/site-danfioramonte.github.io-blue)](https://danfioramonte.github.io/geoprocessamento-cbers4a/){target="_blank"}
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX){target="_blank"}
-[![Licença: MIT](https://img.shields.io/badge/licença-MIT-green.svg)](LICENSE){target="_blank"}
+[![Site](https://img.shields.io/badge/site-danfioramonte.github.io-blue)](https://danfioramonte.github.io/geoprocessamento-cbers4a/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![Licença: MIT](https://img.shields.io/badge/licença-MIT-green.svg)](LICENSE)
 
 Material didático aberto sobre o processamento de imagens **CBERS-4A/WPM**, da
 correção atmosférica à substituição de pixels contaminados por nuvem usando
 **Sentinel-2 super-resolvido**. O conteúdo nasceu de uma etapa da pesquisa de
-mestrado em Sensoriamento Remoto do autor e está sendo apresentado pelo grupo de estudo
+mestrado em Sensoriamento Remoto do autor e está sendo apresentado pelo grupo de pesquisa
 **MAPEAR** (UNESP — Instituto de Geociências e Ciências Exatas, Rio Claro/SP).
 
 > **Site do curso:** <https://danfioramonte.github.io/geoprocessamento-cbers4a/>
@@ -26,13 +26,13 @@ Os arquivos Jupyter Notebook que deverão ser rodados no JupyterLab via pixi est
 
 | Aula | Assunto | Colab |
 |------|---------|-------|
-| [00](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/00-ambiente.html) | Instalando o `pixi` e adquirindo a imagem CBERS-4A via API STAC | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb){target="_blank"} |
-| [01](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/01-toa-boa.html) | De DN para reflectância TOA e BOA (6S) e fusão com a pancromática | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/01_toa_boa.ipynb){target="_blank"} |
-| [02](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/02-omnicloudmask.html) | Detecção de nuvem e sombra com OmniCloudMask | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/02_nuvens_omnicloudmask.ipynb){target="_blank"} |
-| [03](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/03-sen2sr.html) | Substituindo pixels com nuvem usando SEN2SR e Sentinel-2 | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/03_sen2sr.ipynb){target="_blank"} |
+| [00](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/00-ambiente.html) | Instalando o `pixi` e adquirindo a imagem CBERS-4A via API STAC | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb) |
+| [01](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/01-toa-boa.html) | De DN para reflectância TOA e BOA (6S) e fusão com a pancromática | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/01_toa_boa.ipynb) |
+| [02](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/02-omnicloudmask.html) | Detecção de nuvem e sombra com OmniCloudMask | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/02_nuvens_omnicloudmask.ipynb) |
+| [03](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/03-sen2sr.html) | Substituindo pixels com nuvem usando SEN2SR e Sentinel-2 | [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/03_sen2sr.ipynb) |
 
 Travou em algum ponto? Veja a página de
-[erros comuns](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/99-erros-comuns.html){target="_blank"}.
+[erros comuns](https://danfioramonte.github.io/geoprocessamento-cbers4a/aulas/99-erros-comuns.html).
 
 ---
 
@@ -119,7 +119,7 @@ Se este material foi útil na sua pesquisa, aula ou relatório, cite-o assim
 
 > FIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
 > imagens CBERS-4A/WPM e Sentinel-2**: da correção atmosférica à substituição de
-> pixels. Versão 1.0.0. Rio Claro: Grupo de estudo MAPEAR, UNESP, 2026. Material
+> pixels. Versão 1.0.0. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material
 > didático. DOI: 10.5281/zenodo.XXXXXXX. Disponível em:
 > https://danfioramonte.github.io/geoprocessamento-cbers4a/. Acesso em: <data>.
 
@@ -160,7 +160,7 @@ de cada aula.
 
 ## Licença
 
-Código e textos distribuídos sob a licença [MIT](LICENSE){target="_blank"}. As imagens de satélite
+Código e textos distribuídos sob a licença [MIT](LICENSE). As imagens de satélite
 utilizadas seguem as licenças de seus provedores (INPE/CBERS e ESA/Copernicus).
 
 ## Agradecimentos
