@@ -20,14 +20,14 @@ authors:
     given-names: Danilo Marques de
     affiliation: "Universidade Estadual Paulista (UNESP), Instituto de Geociências e Ciências Exatas, Rio Claro, SP, Brasil"
     orcid: "https://orcid.org/0000-0001-9306-4326"
-version: "1.0.0"
+version: "1.0.1"
 date-released: "2026-09-26"
 license:
   - MIT
   - CC-BY-4.0
 repository-code: "https://github.com/danfioramonte/geoprocessamento-cbers4a"
 url: "https://danfioramonte.github.io/geoprocessamento-cbers4a/"
-doi: "10.5281/zenodo.XXXXXXX"
+doi: "10.5281/zenodo.22970993"
 keywords:
   - sensoriamento remoto
   - CBERS-4A

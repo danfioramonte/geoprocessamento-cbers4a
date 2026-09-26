@@ -1,6 +1,6 @@
 {
   "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2: correção atmosférica, remoção de nuvens e substituição de pixels",
-  "upload_type": "software",
+  "upload_type": "lesson",
   "description": "Recurso Educacional Aberto desenvolvido como uma etapa de pré-processamento do projeto de Mestrado, com notebooks reproduzíveis (pixi) para conversão DN→TOA/BOA, remoção de nuvens com OmniCloudMask e substituição de pixels com super-resolução SEN2SR em imagens CBERS-4A/WPM.",
   "creators": [
     {

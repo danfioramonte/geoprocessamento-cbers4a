@@ -1,7 +1,7 @@
 # Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2: correção atmosférica, remoção de nuvens e substituição de pixels
 
 [![Site](https://img.shields.io/badge/site-danfioramonte.github.io-blue)](https://danfioramonte.github.io/geoprocessamento-cbers4a/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22970993.svg)](https://doi.org/10.5281/zenodo.22970993)
 [![Código: MIT](https://img.shields.io/badge/código-MIT-green.svg)](LICENSE)
 [![Conteúdo: CC BY 4.0](https://img.shields.io/badge/conteúdo-CC%20BY%204.0-lightgrey.svg)](LICENSE-CONTENT)
 
@@ -117,8 +117,8 @@ Se este material foi útil na sua pesquisa, aula ou relatório, cite-o assim
 
 > FIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
 > imagens CBERS-4A/WPM e Sentinel-2**: correção atmosférica, remoção de nuvens e substituição de pixels.
-> Versão 1.0.0. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material
-> didático. DOI: 10.5281/zenodo.XXXXXXX. Disponível em:
+> Versão 1.0.1. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material
+> didático. DOI: 10.5281/zenodo.22970993. Disponível em:
 > https://danfioramonte.github.io/geoprocessamento-cbers4a/. Acesso em: dia mês ano.
 
 <details>
@@ -130,9 +130,9 @@ Se este material foi útil na sua pesquisa, aula ou relatório, cite-o assim
   title        = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:
                   correção atmosférica, remoção de nuvens e substituição de pixels},
   year         = {2026},
-  version      = {1.0.0},
+  version      = {1.0.1},
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.XXXXXXX},
+  doi          = {10.5281/zenodo.22970993},
   url          = {https://danfioramonte.github.io/geoprocessamento-cbers4a/},
   note         = {Material didático}
 }
