@@ -1,0 +1,31 @@
+{
+  "_fonte": "CRESDA - Centro de Aplicacao de Satelites de Recursos da China. 'Irradiancia solar equivalente no topo da atmosfera dos sensores de satelites civis de observacao terrestre' (Anexo 4), rev. 2024-12-22. Tabela 1, linha CB04A_WPM. https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html",
+  "_unidade": "W m-2 um-1",
+  "_espectro_solar": "SMARTS_ChKur (curva de irradiancia solar exoatmosferica usada pela CRESDA)",
+  "_incerteza_espectro_solar": "A CRESDA declara os valores como referencia: RSIS de diferentes instituicoes e metodos de amostragem distintos levam a ESUN diferentes. Divergencia observada contra os valores de WFI/CBERS-4 (Pinto et al. 2016): 0.23% a 2.42%.",
+  "_metodo": "ESUN = integral(E(lambda)*S(lambda) dlambda) / integral(S(lambda) dlambda), onde E e a irradiancia solar exoatmosferica e S a FRE da banda. Valores derivados da FRE REAL do WPM pelo operador do sensor.",
+  "_convencao_radiometrica": {
+    "equacao": "L = G * DN   (offset = 0)",
+    "unidade_ganho": "(W/(m2 sr um))/DN",
+    "fonte": "CONFIRMADA POR DUAS FONTES INDEPENDENTES: (1) CRESDA, Anexo 1 (coeficientes de calibracao absoluta em orbita), nota 1: 'L = Gain*DN + Bias'; quando nao ha Bias anotado, Bias = 0. Nao ha Bias listado para CB04A_WPM. (2) Pinto et al. 2016 (Eq. 1, Tabela 8) para MUX/WFI, com todos os interceptos estatisticamente consistentes com zero.",
+    "offset_confirmado_zero": "CONFIRMADO. Pinto et al. ajustaram G e offset por regressao linear sobre dois pontos (Dunas de Algodones via metodo baseado em reflectancia + Libya-4 via calibracao cruzada com Landsat-8/OLI). Com intercepto livre, TODOS os interceptos resultaram consistentes com zero (incertezas de 95% a 850%), e o grau de liberdade do ajuste e zero (2 pontos, 2 parametros). Os ganhos publicados sao os de intercepto FORCADO em zero, com R2 entre 0.98 e 1.00 e incerteza de 2.8-3.5%. Validacao independente contra Landsat-7/ETM+: diferenca media de 2.2% com intercepto zero contra 3.3% com intercepto livre. Justificativa fisica: sem energia incidente na abertura, a resposta esperada e zero.",
+    "coerencia_wpm": "O XML L4 do WPM traz apenas absoluteCalibrationCoefficient, sem campo de offset - consistente com offset zero. Alem disso, os coeficientes do WPM (0.18-0.30) produzem Lmax de 183-305 W/(m2 sr um) em 10 bits, mesma faixa do WFI (359-510, tambem 10 bits) e do MUX (362-428, 8 bits). A hipotese divisiva daria reflectancia de ate 24 na saturacao, fisicamente impossivel.",
+    "nota_valores": "Usar SEMPRE os coeficientes do XML da cena WPM. Os ganhos de Pinto et al. sao do MUX/WFI e NAO se aplicam ao WPM - apenas a CONVENCAO e transferivel."
+  },
+  "_ordem": "Chaves seguem a numeracao NATIVA das bandas CBERS-4A/WPM.",
+  "_bandas_nativas": {
+    "0": "PAN  0.45-0.90 um",
+    "1": "AZUL 0.45-0.52 um",
+    "2": "VERDE 0.52-0.59 um",
+    "3": "VERMELHO 0.63-0.69 um",
+    "4": "NIR 0.77-0.89 um"
+  },
+  "esun": {
+    "0": 1418.75,
+    "1": 1939.89,
+    "2": 1847.82,
+    "3": 1535.15,
+    "4": 1071.41
+  },
+  "_nota_pan": "O curso nao converte a PAN (banda 0) em reflectancia: o Gram-Schmidt casa media e desvio da pancromatica com a componente GS1 antes de substituir, o que absorve qualquer escala multiplicativa. A ESUN da PAN fica registrada apenas por completude."
+}

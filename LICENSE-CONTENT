@@ -1,0 +1,21 @@
+Licença do conteúdo — Creative Commons Atribuição 4.0 Internacional (CC BY 4.0)
+
+Copyright (c) 2026 Danilo Roberto Fioramonte; Danilo Marques de Magalhães
+
+Os textos das aulas (arquivos .qmd e células de texto dos notebooks), as figuras,
+o site publicado em docs/ e os vídeos associados a este material estão licenciados
+sob a Creative Commons Atribuição 4.0 Internacional (CC BY 4.0).
+
+Você pode copiar, redistribuir, adaptar e usar este conteúdo para qualquer
+finalidade, inclusive comercial, desde que dê o crédito apropriado aos autores,
+indique a licença e informe se fez alterações.
+
+Resumo da licença:  https://creativecommons.org/licenses/by/4.0/deed.pt-br
+Texto legal:        https://creativecommons.org/licenses/by/4.0/legalcode.pt
+
+O código-fonte (colab/aulas_cbers.py, as células de código dos notebooks, os
+scripts e os arquivos de ambiente) é distribuído sob a licença MIT, descrita no
+arquivo LICENSE.
+
+As imagens de satélite usadas nas aulas não fazem parte deste material e seguem
+as licenças de seus provedores (INPE/CBERS e ESA/Copernicus).

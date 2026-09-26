@@ -1,0 +1,38 @@
+{
+  "_fonte": "AOD: MCD19A2 (MAIAC). Vapor e ozonio: MERRA-2 slv. Altitude: NASADEM.",
+  "_data": "2026-03-01",
+  "_hora_utc": 13,
+  "_nota_aerossol": "AOD550 obtido a partir do produto MCD19A2 (MAIAC) da NASA. O valor de AOD550 é uma média espacial de 3x3 pixels (1 km/pixel) centrada na coordenada do alvo. O desvio padrão é calculado a partir dos 9 pixels.",
+  "aot550": 0.0882,
+  "aot550_desvio": 0.0313,
+  "vapor_agua_gcm2": 2.0007,
+  "ozonio_cmatm": 0.2533,
+  "altitude_alvo_km": 0.6024,
+  "altitude_min_m": 529,
+  "altitude_max_m": 745,
+  "angulo_visada": 0,
+  "azimute_visada": 0,
+  "perfil_aerossol": "Continental",
+  "faixas_espectrais": {
+    "0": [
+      0.45,
+      0.9
+    ],
+    "1": [
+      0.45,
+      0.52
+    ],
+    "2": [
+      0.52,
+      0.59
+    ],
+    "3": [
+      0.63,
+      0.69
+    ],
+    "4": [
+      0.77,
+      0.89
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+project:
+  type: website
+  output-dir: docs          # publica pelo GitHub Pages a partir da pasta docs/
+  resources:
+    # POR QUE O .nojekyll E OBRIGATORIO AQUI
+    # O GitHub Pages roda o Jekyll por padrao, e o Jekyll DESCARTA todo arquivo
+    # cujo nome comeca com ponto. As figuras que vem do shortcode {{< embed >}}
+    # recebem nome derivado do caminho relativo do notebook, e esse caminho
+    # comeca com "../" -- viram, por exemplo:
+    #
+    #   docs/aulas/01-toa-boa_files/figure-html/
+    #       ..-colab-01_toa_boa-fig-fusao-output-1.png
+    #
+    # Localmente abre; publicado da 404 e a figura aparece com o icone de
+    # imagem quebrada. O arquivo .nojekyll desliga o Jekyll e faz o Pages
+    # servir a pasta exatamente como ela esta. Fica listado como "resource"
+    # para o Quarto recopia-lo em docs/ a cada render (ele limpa a saida).
+    - .nojekyll
+  render:
+    - "*.qmd"
+    - "aulas/*.qmd"
+
+# Este site NAO executa codigo ao renderizar. Desligar a execucao evita
+# iniciar um kernel Python (a causa dos erros de "Python nao encontrado" e
+# de conexao no preview) e deixa o build do GitHub Pages independente do
+# ambiente pesado.
+#
+# COMO AS SAIDAS APARECEM NO SITE, ENTAO?
+# Os blocos ```{python} das aulas sao so demonstracao (#| eval: false). As
+# figuras e tabelas de verdade vem dos notebooks JA EXECUTADOS, pelo
+# shortcode de embed:
+#
+#     {{< embed ../colab/01_toa_boa.ipynb#fig-fusao >}}
+#
+# Para isso a celula do notebook precisa de um rotulo na primeira linha:
+#
+#     #| label: fig-fusao
+#     #| fig-cap: "Legenda da figura"
+#
+# O ciclo de trabalho e:
+#   1. rodar o notebook no Jupyter Lab (pixi run lab) e SALVAR
+#   2. pixi run render
+#   3. commitar o .ipynb (com as saidas) E a pasta docs/
+#
+# O Quarto ainda gera uma previa navegavel de cada notebook em docs/colab/,
+# ligada por um "Source" ao lado de cada figura. Para desligar essas
+# previas (e cortar pela metade o peso de docs/), acrescente aqui:
+#   website:
+#     notebook-links: false
+execute:
+  enabled: false
+
+lang: pt
+
+# Bibliografia e estilo ABNT, validos para TODAS as paginas do site.
+# ATENCAO: estes arquivos ficam FORA de docs/. A pasta docs/ e a saida do
+# Quarto: ele limpa e regenera o site_libs/ a cada render, e apaga qualquer
+# coisa que voce guardar la dentro. Fonte fica no repositorio, nunca na saida.
+bibliography: "referencias/Bibliotecas Python.bib"
+csl: "referencias/associacao-brasileira-de-normas-tecnicas.csl"
+
+website:
+  title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2"
+  description: "Correção atmosférica, remoção de nuvens e substituição de pixels"
+  site-url: "https://danfioramonte.github.io/geoprocessamento-cbers4a/"
+  repo-url: "https://github.com/danfioramonte/geoprocessamento-cbers4a"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Início
+      - href: aulas/00-ambiente.qmd
+        text: Comece aqui
+    right:
+      - icon: github
+        href: https://github.com/danfioramonte/geoprocessamento-cbers4a
+        target: _blank
+      - icon: youtube
+        href: https://www.youtube.com/@MapearUnesp
+        target: _blank
+
+  sidebar:
+    style: docked
+    contents:
+      - href: index.qmd
+        text: Visão geral
+      - section: "Aulas"
+        contents:
+          - aulas/00-ambiente.qmd
+          - aulas/01-toa-boa.qmd
+          - aulas/02-omnicloudmask.qmd
+          - aulas/03-sen2sr.qmd
+      - section: "Apoio"
+        contents:
+          - aulas/99-erros-comuns.qmd
+
+  page-footer:
+    center: "Código sob licença MIT; textos, figuras e vídeos sob CC BY 4.0. Grupo de pesquisa MAPEAR."
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-title: "Nesta página"
+    code-copy: true
+    code-overflow: wrap
+    code-line-numbers: true
+    highlight-style: github

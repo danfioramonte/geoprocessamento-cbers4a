@@ -1,0 +1,500 @@
+---
+title: "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+subtitle: "Super-resolução do Sentinel-2 para preencher lacunas do CBERS-4A"
+author:
+  - "Danilo Roberto Fioramonte"
+  - "Danilo Marques de Magalhães"
+date: "2026-09-26"
+---
+
+[![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/03_sen2sr.ipynb){target="_blank"}
+
+<!--{{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}-->
+
+## O que vamos aprender
+
+Na aula anterior identificamos os pixels cobertos por nuvem e sombra na cena CBERS-4A. Agora
+vamos preencher essas lacunas com imagens de outro satélite, o Sentinel-2, tendo em vista que a
+revisita do CBERS-4A/WPM é de 31 dias e nem sempre existe outra cena CBERS próxima e limpa. Se no
+seu estudo a diferença de datas não trouxer mudanças significativas no uso e cobertura da terra,
+vale a pena tentar primeiro a substituição com imagens do mesmo sensor.
+
+O problema é de escala: o CBERS-4A/WPM tem 2 m e o Sentinel-2 tem 10 m. Colar um pedaço de
+Sentinel-2 direto no CBERS deixaria uma mancha borrada, com a emenda bem visível. Por isso, o
+processo tem quatro etapas:
+
+| etapa | problema que resolve | ferramenta |
+|---|---|---|
+| 1. mosaico Sentinel-2 | achar dado limpo perto da data do CBERS | STAC do Planetary Computer |
+| 2. super-resolução | aproximar a resolução do Sentinel-2 à do CBERS | SEN2SR (10 m → 2,5 m) |
+| 3. corregistro | as duas imagens não estão exatamente alinhadas | AROSICS |
+| 4. harmonização e emenda | sensores diferentes têm brilho e resposta diferentes | normalização radiométrica relativa (média-desvio padrão) |
+
+O SEN2SR [@aybar_radiometrically_2026] leva o Sentinel-2 de 10 m para 2,5 m antes da
+substituição. O modelo não inventa informação: ele aprendeu como imagens de alta resolução
+costumam ser e usa isso para reconstruir os detalhes de maneira plausível. Como a saída é de 2,5 m
+e a grade do CBERS é de 2 m, ainda vamos precisar reamostrar, o que introduz um erro pequeno, mas
+que deve ser mencionado quando você for escrever sobre o método.
+
+O SEN2SR tem duas versões. A completa depende do pacote `mamba-ssm`, que só funciona com GPU
+NVIDIA (CUDA 12 ou superior) e, na prática, exige Linux. Neste curso usamos a versão **Lite**, que
+roda em qualquer computador, inclusive sem placa de vídeo. A diferença de qualidade existe, mas é
+pequena diante do ganho em acessibilidade.
+
+## Antes de começar
+
+Esta aula usa dois arquivos da [Aula 02](02-omnicloudmask.qmd): a cena mascarada
+(`*_masked.tif`) e a máscara de classes em 2 m (`*_cloudmask_native.tif`). Se você está começando
+por aqui, o notebook refaz tudo com `ac.preparar_aula_03()`.
+
+::: {.callout-warning}
+Todas as aulas trabalham na **mesma bounding box** e, a partir do corregistro, na mesma grade de
+2 m do CBERS. É isso que permite o AROSICS funcionar. Se você mudou o bbox em alguma aula, volte e
+corrija em `colab/aulas_cbers.py` antes de continuar.
+:::
+
+::: {.panel-tabset}
+
+### Localmente (pixi - recomendado)
+
+Se você está começando por essa aula, o pixi é a linha de execução recomendada.
+
+::: {.callout-note collapse="true"}
+## Ainda não instalou o pixi? Clique aqui
+
+Baixe os arquivos do repositório na pasta `C:\geo\geoprocessamento-cbers4a`. Depois, abra o
+**PowerShell** (menu Iniciar → digite "PowerShell" → executar como Administrador) e cole:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
+```
+
+**Feche e reabra** o terminal e confira com `pixi --version`. Se aparecer um número de versão,
+está pronto. O passo a passo completo está na [Aula 00](00-ambiente.qmd).
+:::
+
+Com o pixi instalado, abra o PowerShell na pasta do projeto e rode o Jupyter Lab:
+
+```powershell
+cd C:\geo\geoprocessamento-cbers4a
+pixi run lab
+```
+
+Abra `colab/03_sen2sr.ipynb`. O ambiente já tem `sen2sr`, `mlstac`, `arosics`,
+`planetary-computer` e o PyTorch. Se faltar alguma biblioteca, `pixi run check` mostra o que falta.
+
+### Google Colab
+
+Clique no botão do Colab no topo da página e **ative a GPU antes de começar**: **Ambiente de
+execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU**.
+
+Aqui não há conda nem reinício de sessão: uma célula instala tudo pelo `pip`. O Colab já traz o
+GDAL de que o AROSICS precisa, e o PyTorch continua sendo o do próprio Colab. A célula só acrescenta
+o `torchvision` da mesma versão e variante (CPU ou GPU) dele, como na Aula 02:
+
+```{python}
+#| eval: false
+!pip install -q "torchvision==<par do torch do Colab>" --extra-index-url https://download.pytorch.org/whl/<cpu|cu126|...>
+!pip install -q omnicloudmask sen2sr mlstac rasterio pyproj arosics scikit-image \
+    pystac-client planetary-computer requests
+```
+
+A aula parte dos arquivos das Aulas 01 e 02 que estão no seu Drive, então não precisa do 6S. Se
+você começar por aqui sem eles, o atalho refaz as aulas anteriores em **TOA** e avisa.
+
+O Colab apaga tudo quando a sessão encerra. Por isso, no Colab, a célula de configuração monta o
+seu Google Drive e lê e grava tudo em `MyDrive/geoprocessamento-cbers4a/data`, a mesma pasta das
+outras aulas (os pesos do SEN2SR também ficam no Drive, em `geoprocessamento-cbers4a/model`):
+
+```python
+USAR_DRIVE = True        # False = grava em /content/data, apagado ao fim da sessão
+if USAR_DRIVE:
+    ac.usar_drive()
+P = ac.pastas()
+```
+
+:::
+
+Na configuração, o notebook reúne todos os parâmetros da aula (janela de busca do Sentinel-2,
+máscara de nuvem, modelo, corregistro e método de harmonização), confere se os arquivos da Aula 02
+existem e mostra um mapa interativo com a cena CBERS mascarada, em que as lacunas aparecem em
+preto.
+
+## 1. Montando o mosaico Sentinel-2
+
+No script original, essa etapa era feita pelo Google Earth Engine. Aqui vamos montar o mosaico
+direto do **STAC do Microsoft Planetary Computer**, uma maneira mais dinâmica, em que você baixa as
+imagens sem conta, sem autenticação e sem esperar exportação.
+
+**A grade é definida pelo CBERS**, e não pelo Sentinel-2: mesmo CRS, mesma origem, resolução de
+10 m e uma margem de 240 m além da AOI. Essa margem é necessária porque o corregistro desloca a
+imagem, e sem folga a borda ficaria sem dado; além disso, o AROSICS precisa de contexto em volta
+das lacunas para encontrar pontos de amarração.
+
+A busca retorna as cenas Sentinel-2 L2A com até 80% de nuvem (`NUVEM_MAX`) numa janela de 45 dias
+antes e depois da data do CBERS (`JANELA_DIAS`), ordenadas pela proximidade de data. Duas funções
+de apoio cuidam da leitura: `offset_da_baseline` corrige o deslocamento de −1000 que a ESA passou a
+aplicar na reflectância a partir da *processing baseline* 04.00, e `ler_para_grade` lê cada banda
+já reprojetada para a grade do CBERS.
+
+### 1.1 Composição por data mais próxima
+
+Para cada pixel, usamos a cena Sentinel-2 **mais próxima em data** que esteja limpa **naquele
+pixel**, segundo a banda `SCL` do produto L2A. Isso é melhor que uma mediana temporal, pois
+preserva a textura real de uma data, em vez de misturar várias datas. Como pixels vizinhos podem
+vir de datas diferentes, gravamos também a banda **`delta_days`**, que registra a diferença em dias
+de cada pixel em relação à data do CBERS.
+
+### 1.2 Vendo as cenas candidatas antes de escolher
+
+A coluna `nuvem_cena_%` da tabela é referente à **cena inteira** do Sentinel-2 (cerca de
+110 km), e a nossa AOI é só um recorte dela. Uma cena com 40% de nuvem pode estar limpa em cima da
+sua área, e uma com 3% pode ter justamente aquela nuvem no seu recorte.
+
+Por isso, o notebook lê uma versão reduzida de cada candidata **só na AOI** e mostra, para cada
+uma, a cor natural, quanto da AOI a cena **cobre** e a fração limpa **medida ali**. É a mesma ideia
+da escolha de cena da Aula 00. Só aparecem na prévia as candidatas com até 60% de nuvem na cena,
+por isso alguns `idx` da tabela não aparecem.
+
+{{< embed ../colab/03_sen2sr.ipynb#fig-previas-s2 >}}
+
+### 1.3 Escolhendo as cenas
+
+`ESCOLHA_S2 = None` deixa a escolha no automático (as `MAX_CENAS` mais próximas em data). Uma
+**lista de `idx`** define as imagens que serão utilizadas, e a ordem da lista é a **ordem de
+preferência**: a primeira preenche o que puder, a segunda preenche o que sobrou, e assim por diante.
+
+Na cena do curso, vamos usar as imagens 1, 2, 9 e 10. A 1 e a 2 são a mesma data (04/03/2026,
+3 dias depois da nossa imagem CBERS) em dois *tiles* do Sentinel-2 (23KKR e 22KHA), porque a nossa
+AOI cai na emenda entre eles; as duas estão praticamente limpas e vão preencher a maior parte das
+lacunas. A 9 e a 10 são o mesmo caso, com data de 14/03/2026, e servem para preencher uma área de
+névoa na parte sudoeste da imagem. Sempre que a mesma data aparecer duas vezes na tabela com
+`tile` diferente, coloque as duas na lista: elas se completam.
+
+```{python}
+#| eval: false
+ESCOLHA_S2 = [1, 2, 9, 10]      # ou None para automático
+
+selecionadas = [itens[i] for i in ESCOLHA_S2] if ESCOLHA_S2 else itens[:MAX_CENAS]
+```
+
+### 1.4 A máscara de nuvem
+
+O Sentinel-2 conta com uma máscara própria, a **SCL**. Nela, marcamos apenas o que é classificado
+como **nuvem**: 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros). Como escolhemos as
+cenas olhando a prévia, qualquer camada a mais só aumentaria o risco de remover pixels bons.
+
+```{python}
+#| eval: false
+MASCARA_SCL = True            # False = usa a cena inteira, sem máscara nenhuma
+CLASSES_NUVEM = (8, 9, 10)    # nuvem prob. média, nuvem prob. alta, cirros
+DILATA_NUVEM_PX = 0           # buffer em torno da nuvem, em px de 10 m
+
+nuvem = np.isin(scl, CLASSES_NUVEM)
+if DILATA_NUVEM_PX:
+    nuvem = binary_dilation(nuvem, iterations=DILATA_NUVEM_PX)
+limpo = dentro & ~nuvem
+```
+
+Caso você perceba sombras de nuvem que não foram mascaradas na imagem escolhida, acrescente a
+classe **3 (sombra de nuvem)** em `CLASSES_NUVEM`. Mas saiba que o SCL confunde **água escura com
+sombra** com frequência, e o resultado pode ser um buraco em represas e rios. Se a sua cena está
+praticamente limpa, deixe a classe 3 de fora; se colocar, avalie visualmente se a máscara não está
+removendo pixels bons.
+
+### 1.5 A escolha final
+
+Entre as candidatas com dado limpo em cada pixel, vence **a primeira da ordem** (a mais próxima em
+data, no automático, ou a que colocamos primeiro em `ESCOLHA_S2`).
+
+```{python}
+#| eval: false
+escolha = np.full((H_S2, W_S2), -1, dtype="int16")
+for i, c in enumerate(candidatas):
+    falta = (escolha < 0) & c["limpo"]
+    escolha[falta] = i
+```
+
+O relatório por cena e o mosaico resultante:
+
+{{< embed ../colab/03_sen2sr.ipynb#tbl-cenas-s2 >}}
+
+{{< embed ../colab/03_sen2sr.ipynb#fig-mosaico-s2 >}}
+
+O terceiro painel mostra **quantas candidatas tinham dado limpo em cada pixel**. Onde for 0, o
+mosaico ficou vazio: ou nenhuma cena cobre aquele ponto, ou o SCL marcou nuvem em todas. Se a
+prévia mostra a imagem limpa ali, é o SCL errando; ajuste `CLASSES_NUVEM` ou use
+`MASCARA_SCL = False`.
+
+O mosaico é gravado como um GeoTIFF de **6 bandas** em `int16`:
+
+| banda | conteúdo |
+|---|---|
+| 1–4 | vermelho, verde, azul, NIR (reflectância × 10.000) |
+| 5 | `delta_days`, a diferença em dias até a data do CBERS |
+| 6 | `valid`, 1 onde o mosaico tem dado |
+
+## 2. Super-resolução com o SEN2SR
+
+O notebook baixa os pesos do modelo com o `mlstac` (só na primeira vez) e roda a super-resolução
+em blocos de 128 × 128 pixels, com sobreposição de 32 pixels entre eles. Nas sobreposições, os
+resultados são combinados com pesos que diminuem em direção à borda do bloco, para não aparecerem
+emendas. Antes disso, as eventuais lacunas do mosaico são preenchidas temporariamente com o pixel
+válido mais próximo, porque o modelo não aceita valores vazios. O resultado é gravado em
+reflectância 0–1, com 2,5 m de resolução.
+
+{{< embed ../colab/03_sen2sr.ipynb#fig-sen2sr-zoom >}}
+
+## 3. Reamostragem para 2 m e corregistro com o AROSICS
+
+Duas imagens de satélites diferentes nunca estão perfeitamente sobrepostas: diferenças de
+ortorretificação, do modelo de elevação usado e do relevo produzem deslocamentos de um a alguns
+pixels. Primeiro, o Sentinel-2 super-resolvido é reamostrado de 2,5 m para a grade exata de 2 m do
+CBERS (convolução cúbica). Em seguida, o **AROSICS** [@scheffler_arosics_2017] faz o corregistro por
+correlação de fase: encontra pontos de amarração numa malha regular, mede o deslocamento em cada
+um, descarta os não confiáveis e ajusta a imagem.
+
+Três cuidados importantes nessa etapa:
+
+- **o corregistro vem antes da harmonização.** A correlação de fase não é afetada por diferenças
+  lineares de brilho entre as imagens, e ajustar a radiometria com pixels desalinhados levaria a
+  coeficientes errados;
+- **máscaras de dado ruim.** O AROSICS só procura pontos onde as duas imagens têm dado válido.
+  Por isso, informamos o que ignorar: no CBERS, as lacunas de nuvem e o nodata; no Sentinel-2, o que
+  ficou fora do mosaico;
+- **a banda de validade vai junto.** Ela entra como banda extra da imagem ajustada, para sofrer
+  exatamente o mesmo deslocamento. No final, os pixels com validade abaixo de 0,99 são descartados.
+
+```{python}
+#| eval: false
+from arosics import COREG_LOCAL
+
+CR = COREG_LOCAL(str(ref_tmp), str(tgt_tmp),
+                 grid_res=GRID_RES, window_size=(JANELA_COREG, JANELA_COREG),
+                 min_reliability=MIN_RELIAB, tieP_filter_level=3,
+                 r_b4match=4, s_b4match=4,           # NIR: mais textura, menos efeito atmosférico
+                 max_shift=MAX_SHIFT, nodata=(NODATA_TMP, NODATA_TMP),
+                 mask_baddata_ref=str(mask_ref_p), mask_baddata_tgt=str(mask_tgt_p),
+                 path_out=str(sr_coreg), fmt_out="GTiff",
+                 projectDir=str(trab), CPUs=CPUS, q=False)
+CR.correct_shifts()
+```
+
+{{< embed ../colab/03_sen2sr.ipynb#tbl-coregistro >}}
+
+Na cena do curso, sobraram 327 pontos confiáveis e o deslocamento mediano foi de cerca de 12 m
+(6 pixels de 2 m), o que mostra por que essa etapa é necessária. Os pontos de amarração são gravados
+num GeoPackage (`tiepoints.gpkg`), que você pode abrir no QGIS para ver onde o ajuste foi bom e
+onde não foi. **Menos de 20 pontos confiáveis é sinal de alerta**: cena com pouca textura, ou lacuna
+grande demais em relação à AOI. Se o AROSICS falhar, o notebook usa automaticamente um plano B,
+que estima um deslocamento único para a imagem inteira (correlação de fase do scikit-image).
+
+Por fim, o notebook grava o Sentinel-2 corregistrado em 2 m e a banda `delta_days` na mesma grade.
+
+## 4. Harmonização e substituição
+
+### 4.1 Em que escala fica o produto final
+
+O Sentinel-2 é convertido para a escala do CBERS, e **não** o contrário. Assim, o mosaico continua
+comparável com as outras cenas CBERS da sua série temporal, sem precisar reprocessar nenhuma
+delas.
+
+### 4.2 Normalização radiométrica relativa
+
+As duas imagens já estão em reflectância de superfície (BOA): o CBERS foi corrigido com o 6S na
+Aula 01, e o Sentinel-2 L2A já é distribuído assim pela ESA, corrigido pelo Sen2Cor. A maior parte
+da correção física (atmosfera, iluminação e calibração de cada sensor) já foi feita, e a
+normalização não substitui a correção atmosférica. Ela ajusta as diferenças que restam entre os
+dois produtos: os algoritmos de correção atmosférica (6S e Sen2Cor), a diferença de data, a
+geometria de aquisição e as funções de resposta espectral das bandas. É a mesma lógica do HLS
+[@claverie_harmonized_2018], que harmoniza Landsat-8 e Sentinel-2 com um ajuste linear por banda
+aplicado sobre a reflectância de superfície.
+
+Para esse ajuste, usamos a **normalização radiométrica relativa** (RRN, *relative radiometric
+normalization*) [@yuan_comparison_1996]: uma transformação empírica, banda a banda, que leva a
+imagem a ser ajustada (o Sentinel-2, $x$) para a escala da imagem de referência (o CBERS, $y$). Nos
+métodos lineares, ela é uma reta $x' = a\,x + b$. Antes do ajuste, o S2 super-resolvido, que sai
+do SEN2SR em reflectância 0–1, é **multiplicado por 10.000** para ficar na mesma unidade do CBERS
+(reflectância × 10.000). Assim, $a$ e $b$ medem só a diferença de radiometria entre os dois
+sensores. Os coeficientes são estimados em janelas amostradas pela cena, só nos pixels em que as
+duas imagens têm dado, e descartando 1% de cada extremo. Quatro métodos estão disponíveis em
+`METODO_HARM`:
+
+| método | o que faz | quando usar |
+|---|---|---|
+| `media_desvio` (padrão) | normalização média-desvio padrão: $a = s_y/s_x$, $b = \bar{y} - a\,\bar{x}$ | o S2 passa a ter a mesma média e o mesmo desvio-padrão do CBERS, então a **textura** da área preenchida combina com a do entorno |
+| `regressao` | regressão linear simples por mínimos quadrados: $a = r\,s_y/s_x$ | **reduz a variância** para $\lvert r\rvert\,s_y$: o preenchimento sai mais liso que a vizinhança |
+| `histograma` | casamento de histograma, pela distribuição inteira por quantis | acomoda relação não linear entre os sensores, mas não produz coeficientes para reportar |
+| `minmax` | normalização mínimo-máximo: ajusta os extremos | variante robusta, com os percentis 0,5 e 99,5 no lugar do mínimo e do máximo |
+
+A RRN foi proposta para séries multitemporais de um mesmo sensor [@yuan_comparison_1996], mas
+transformações lineares banda a banda também têm sido usadas entre sensores com bandas
+equivalentes, como o MSI e o OLI [@chen_radiometric_2023]. Aqui ela é aplicada entre o MSI e o
+WPM, cujas bandas ocupam intervalos próximos, mas não idênticos. Por isso ela corrige diferenças de
+ganho e de offset, mas **não** a diferença entre as funções de resposta espectral das bandas, o que
+exigiria um fator de ajuste de banda espectral (SBAF) [@pinto_first_2016].
+
+Se a área que estava sob nuvem for muito diferente do
+resto da cena (mais úmida ou mais vegetada, por exemplo), use `ANEL_LACUNA > 0` para calcular o
+ajuste só numa faixa em torno das lacunas.
+
+A tabela abaixo está toda em reflectância × 10.000 e tem duas partes. **Antes da normalização**
+traz as médias do S2 e do CBERS nos mesmos pixels, a diferença entre elas (em valor e em % da média
+do CBERS) e a razão de contraste (desvio-padrão do S2 ÷ desvio-padrão do CBERS). **Coeficientes**
+traz o ganho $a$ e o deslocamento $b$ da reta.
+
+{{< embed ../colab/03_sen2sr.ipynb#tbl-harmonizacao >}}
+
+Na cena do curso, antes do ajuste, o S2 estava de 9% a 11% mais escuro que o CBERS no visível (no
+NIR, as médias já eram quase iguais) e tinha cerca de 20% mais contraste em todas as bandas. O
+ganho $a$ entre 0,82 e 0,84 reduz esse contraste, e o $b$ devolve o brilho. Nos pixels usados para
+calcular a reta, a média-desvio padrão deixa as médias e os desvios **iguais por construção**, então
+o resultado da normalização é avaliado na emenda (seção 5).
+
+### 4.3 A transição
+
+Como a lacuna é um buraco no CBERS, não há o que misturar *dentro* dela. A transição acontece do
+lado de fora: uma faixa de 50 m (`LARGURA_TRANSICAO` = 25 pixels) de CBERS válido em volta de cada
+lacuna é parcialmente substituída, com o peso do Sentinel-2 diminuindo gradualmente, para que o
+resultado fique natural e sem cortes abruptos. Cada pixel do mosaico recebe um código de
+procedência:
+
+| código | procedência |
+|---|---|
+| 0 | sem dado |
+| 1 | CBERS nativo |
+| 3 | Sentinel-2 super-resolvido |
+| 5 | zona de transição CBERS ↔ S2 |
+
+```{python}
+#| eval: false
+# peso do S2: 1 dentro da lacuna, diminuindo até 0 ao longo de M px para fora dela
+dist = distance_transform_edt(~buraco)
+w = np.clip(1.0 - dist / max(M, 1), 0.0, 1.0).astype("float32")
+w[~s2_ok] = 0.0
+w[buraco] = 1.0
+
+saida = np.nan_to_num(cb, nan=0.0) * (1 - w) + np.nan_to_num(sh, nan=0.0) * w
+```
+
+O mosaico final é gravado com o mesmo piso de reflectância da Aula 01 (valores abaixo de zero
+viram 0). Como a normalização é uma reta $a\,x + b$, um $b$ negativo poderia gerar valores abaixo
+de zero; o notebook reporta quantos pixels foram ajustados (na cena do curso, nenhum).
+
+## 5. A emenda ficou boa?
+
+Para avaliar a emenda, o notebook calcula duas medidas num anel de 3 pixels em volta de cada
+lacuna, onde as duas imagens existem e podem ser comparadas. Cada uma aparece **antes** (o S2 só
+multiplicado por 10.000, sem a reta) e **depois** da normalização:
+
+- **viés**: a diferença média entre o S2 e o CBERS. Perto de zero significa que não há diferença
+  de brilho na emenda. A coluna "em refl." traz o viés depois da normalização em reflectância 0–1;
+- **razão de desvios**: o desvio-padrão do S2 dividido pelo do CBERS. Perto de 1 significa que a
+  área preenchida tem variabilidade parecida com a do entorno.
+
+{{< embed ../colab/03_sen2sr.ipynb#tbl-emenda >}}
+
+Como ler:
+
+| o que você vê | o que significa |
+|---|---|
+| viés ≈ 0 e razão ≈ 1 | emenda boa |
+| viés e razão melhoram de "antes" para "depois" | a normalização corrigiu a diferença entre os sensores |
+| razão bem abaixo de 1 | preenchimento mais liso que o entorno: esperado com `regressao`, sinal de problema com `media_desvio` |
+| viés grande, mesmo sinal em todas as bandas | o ajuste global não descreve a área das lacunas; use `ANEL_LACUNA` |
+| viés grande com sinais diferentes por banda | provável troca de bandas entre as duas fontes; confira os rótulos dos arquivos |
+
+Na cena do curso, antes da normalização, o S2 era mais escuro que o CBERS na emenda nas bandas do
+visível (viés entre −37 e −66) e, em todas as bandas, tinha de 18% a 30% mais variabilidade (razão
+de desvios entre 1,18 e 1,30). Depois, o viés do visível ficou entre −12 e +30 (no máximo 0,003 de
+reflectância), e a razão de desvios ficou próxima de 1 em todas as bandas. O NIR é a exceção: o viés já era de cerca
+de +313 antes do ajuste e ficou em +272 depois (cerca de 0,03 de reflectância). Como ele já
+existia antes, trata-se de uma diferença local entre as duas imagens em volta das nuvens, e não de
+um efeito da normalização. É o caso em que vale testar `ANEL_LACUNA`. Todos os parâmetros e
+resultados ficam registrados no `.params.json` do mosaico.
+
+{{< embed ../colab/03_sen2sr.ipynb#fig-mosaico-final >}}
+
+Abaixo da figura, a tabela mostra a composição do mosaico: quantos pixels são do CBERS-4A
+original, quantos foram preenchidos com o Sentinel-2 e quantos estão na borda (a zona de
+transição), com a porcentagem e a área de cada um. As contagens são feitas na resolução total de
+2 m, e não na figura, que é reduzida.
+
+{{< embed ../colab/03_sen2sr.ipynb#fig-lacuna-zoom >}}
+
+## O que ficou pronto
+
+```
+data/interim/S2_<DATA>_10m.tif                 mosaico S2 (RGBN + delta_days + validade)
+data/interim/S2_<DATA>_SR2p5m.tif              super-resolvido pelo SEN2SR
+data/interim/S2_<DATA>_2m_coreg.tif             reamostrado e corregistrado na grade do CBERS
+data/processed/mosaico_<DATA>_gapfilled.tif    mosaico final     <- o produto do curso
+data/processed/mosaico_<DATA>_proveniencia.tif de onde veio cada pixel
+```
+
+Abra os dois últimos juntos no QGIS. A banda de procedência permite saber, para qualquer análise
+feita sobre este mosaico, **quais pixels são observação e quais são reconstrução**.
+
+::: {.callout-important}
+## Limitações que devem ser destacadas
+
+- a saída do SEN2SR é de 2,5 m e foi reamostrada para 2 m;
+- a textura da área preenchida é **reconstruída** pelo modelo;
+- os pixels de Sentinel-2 vêm de outra data (`delta_days` indica de quantos dias);
+- a zona de transição substitui parcialmente pixels de CBERS válidos;
+- a normalização radiométrica relativa é empírica (global ou por anel), e não uma correção física
+  entre sensores: não compensa a diferença entre as funções de resposta espectral das bandas.
+:::
+
+## Considerações finais
+
+A qualidade da reconstrução feita pelo SEN2SR é bastante satisfatória, tendo em vista o tamanho
+do esforço de levar uma imagem de 10 metros de resolução espacial para 2,5 metros. Entretanto, é
+visível que a reconstrução não é perfeita se comparada a uma imagem obtida nativamente em 2 metros.
+Dessa forma, busque priorizar a substituição de pixels com nuvem por imagens de mesma resolução
+espacial. Para representações qualitativas em baixa escala, a reconstrução pode não satisfazer, mas para análises
+quantitativas e classificações de uso e cobertura da terra a sua utilização é válida, já que
+possibilita a identificação de informações que seriam perdidas em uma cena não processada, com a presença de
+nuvens.
+
+Espero que essa sequência de aulas tenha contribuído para expandir as aplicações das imagens de alta
+resolução CBERS-4A/WPM, a partir da apresentação de uma solução prática para lidar com a presença
+de nuvens e com o longo período de revisita do satélite. O SEN2SR é um modelo de super-resolução
+recente e considerado estado da arte na reconstrução de imagens, tendo em vista que mantém
+as características espectrais e reconstrói texturas com menos alucinações que outros modelos. A
+metodologia apresentada aqui buscou ser de fácil implementação e pode ser adaptada para outras
+regiões do Brasil. 
+
+## Erros comuns nesta aula
+
+| O que aparece na tela | O que fazer |
+|---|---|
+| `CUDA out of memory` | Reduza a AOI ou processe em blocos menores. Em último caso, force CPU: é mais lento, mas funciona. |
+| Download do modelo travado | Rode a célula de novo. O `mlstac` retoma de onde parou. |
+| `ModuleNotFoundError: arosics` (no Colab) | Rode a célula de instalação do topo do notebook antes das demais. |
+| `ImportError` citando `mamba` ou `causal_conv1d` | Você pediu `MODELO = "full"`. Use `"lite"`. |
+| Resultado com faixas coloridas | A normalização de entrada está errada. O modelo espera reflectância 0–1: confira o divisor de escala e o offset da baseline 04.00. |
+| `sobreposição válida insuficiente para corregistrar` | A lacuna cobre quase toda a AOI, ou o mosaico S2 ficou vazio. Aumente `JANELA_DIAS`/`NUVEM_MAX`. |
+| Poucos pontos confiáveis no AROSICS | Cena com pouca textura. Aumente `JANELA_COREG`, diminua `GRID_RES`, ou aceite o plano B global. |
+| `a máscara de nuvem não está na grade do CBERS` | A Aula 02 foi rodada sobre outro arquivo. Refaça sobre o mesmo pansharpening. |
+| `AVISO: sobrou buraco no mosaico S2` | Não havia Sentinel-2 limpo suficiente na janela. Aumente `JANELA_DIAS`, `NUVEM_MAX` ou `MAX_CENAS`. |
+| Mancha azulada/esbranquiçada no mosaico S2 | Névoa que o SCL não marcou numa das cenas. Olhe a prévia da seção 1.2, identifique a candidata contaminada e tire o `idx` dela de `ESCOLHA_S2`. |
+| `nenhuma cena Sentinel-2 utilizável` | Nenhuma candidata sobrou depois da máscara. Reveja `ESCOLHA_S2`, amplie `JANELA_DIAS` ou desligue `MASCARA_SCL`. |
+| A etapa do mosaico ficou lenta demais | São leituras pela internet. Diminua `MAX_CENAS` e `MAX_PREVIA`, ou escolha as cenas à mão em `ESCOLHA_S2`. |
+| Buracos brancos no mosaico onde a imagem está visivelmente limpa | Falso positivo do SCL. Se você acrescentou a classe 3 em `CLASSES_NUVEM`, retire (ela pega água escura). Se `DILATA_NUVEM_PX` estiver acima de 0, volte para 0. Em último caso, `MASCARA_SCL = False`. |
+| Metade do mosaico ficou vazia com escolha manual | A cena que você escolheu cobre só parte da AOI (emenda de tiles). Veja a coluna `cobre` na prévia e acrescente o outro tile da mesma data. |
+| `IndexError` na célula de escolha | Algum `idx` de `ESCOLHA_S2` não existe na tabela. Os índices vêm da tabela ordenada por proximidade de data e mudam se você alterar `JANELA_DIAS`. |
+| Emenda visível mesmo com viés ≈ 0 | Provavelmente é corregistro, não radiometria. Olhe o deslocamento mediano da seção 3. |
+
+## Referências
+
+::: {#refs}
+:::
+
+### Documentação e software
+
+- [SEN2SR / tacofoundation no Hugging Face](https://huggingface.co/tacofoundation/sen2sr)
+- [Sentinel-2 L2A no Planetary Computer](https://planetarycomputer.microsoft.com/dataset/sentinel-2-l2a)
+- ESA. *Sentinel-2 processing baseline 04.00*: o deslocamento de −1000 na reflectância e a
+  definição das classes do SCL. [SentiWiki](https://sentiwiki.copernicus.eu/web/s2-processing)
+- [AROSICS na documentação do GFZ](https://danschef.git-pages.gfz-potsdam.de/arosics/doc/)

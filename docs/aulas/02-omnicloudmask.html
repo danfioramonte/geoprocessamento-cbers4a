@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Danilo Roberto Fioramonte">
+<meta name="author" content="Danilo Marques de Magalhães">
+
+<title>Aula 02 — Detecção de nuvem e sombra com OmniCloudMask – Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 1em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fb5670f5af5b608e6ffea10bfbc97ea6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Procurar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Alternar de navegação" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Início</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../aulas/00-ambiente.html"> 
+<span class="menu-text">Comece aqui</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/danfioramonte/geoprocessamento-cbers4a" target="_blank"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@MapearUnesp" target="_blank"> <i class="bi bi-youtube" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../aulas/00-ambiente.html">Aulas</a></li><li class="breadcrumb-item"><a href="../aulas/02-omnicloudmask.html">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Visão geral</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Aulas</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../aulas/00-ambiente.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../aulas/01-toa-boa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 01 — De DN para reflectância (TOA e BOA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../aulas/02-omnicloudmask.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../aulas/03-sen2sr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aula 03 — Substituindo pixels com nuvem usando SEN2SR</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Apoio</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../aulas/99-erros-comuns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Erros comuns</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#o-que-vamos-aprender" id="toc-o-que-vamos-aprender" class="nav-link active" data-scroll-target="#o-que-vamos-aprender">O que vamos aprender</a></li>
+  <li><a href="#antes-de-começar" id="toc-antes-de-começar" class="nav-link" data-scroll-target="#antes-de-começar">Antes de começar</a></li>
+  <li><a href="#por-que-detectar-em-10-m-e-não-nos-2-m" id="toc-por-que-detectar-em-10-m-e-não-nos-2-m" class="nav-link" data-scroll-target="#por-que-detectar-em-10-m-e-não-nos-2-m">1. Por que detectar em 10 m e não nos 2 m?</a></li>
+  <li><a href="#rodando-o-omnicloudmask" id="toc-rodando-o-omnicloudmask" class="nav-link" data-scroll-target="#rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</a></li>
+  <li><a href="#verificando-antes-de-continuar" id="toc-verificando-antes-de-continuar" class="nav-link" data-scroll-target="#verificando-antes-de-continuar">3. Verificando antes de continuar</a></li>
+  <li><a href="#as-três-máscaras" id="toc-as-três-máscaras" class="nav-link" data-scroll-target="#as-três-máscaras">4. As três máscaras</a></li>
+  <li><a href="#aplicando-a-máscara-na-imagem" id="toc-aplicando-a-máscara-na-imagem" class="nav-link" data-scroll-target="#aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</a></li>
+  <li><a href="#vale-a-pena-preencher" id="toc-vale-a-pena-preencher" class="nav-link" data-scroll-target="#vale-a-pena-preencher">6. Vale a pena preencher?</a></li>
+  <li><a href="#o-que-ficou-pronto" id="toc-o-que-ficou-pronto" class="nav-link" data-scroll-target="#o-que-ficou-pronto">O que ficou pronto</a></li>
+  <li><a href="#erros-comuns-nesta-aula" id="toc-erros-comuns-nesta-aula" class="nav-link" data-scroll-target="#erros-comuns-nesta-aula">Erros comuns nesta aula</a></li>
+  <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a>
+  <ul class="collapse">
+  <li><a href="#documentação-e-software" id="toc-documentação-e-software" class="nav-link" data-scroll-target="#documentação-e-software">Documentação e software</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="..\colab\02_nuvens_omnicloudmask-preview.html"><i class="bi bi-journal-code"></i>Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../aulas/00-ambiente.html">Aulas</a></li><li class="breadcrumb-item"><a href="../aulas/02-omnicloudmask.html">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</h1>
+<p class="subtitle lead">Modelo de aprendizado profundo para detecção de nuvens</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autores</div>
+    <div class="quarto-title-meta-contents">
+             <p>Danilo Roberto Fioramonte </p>
+             <p>Danilo Marques de Magalhães </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Data de Publicação</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">26 de setembro de 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/02_nuvens_omnicloudmask.ipynb" target="_blank"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid"></a></p>
+<!---->
+<section id="o-que-vamos-aprender" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-vamos-aprender">O que vamos aprender</h2>
+<p>Nessa aula, vamos utilizar o <strong>OmniCloudMask</strong> para detectar nuvens e sombras na cena de 2 m que geramos na Aula 01. O resultado é uma <strong>máscara georreferenciada</strong> que indica quais pixels estão cobertos por nuvem ou sombra, e é ela que a Aula 03 vai usar para saber quais pixels precisam ser substituídos.</p>
+<p>O <strong>OmniCloudMask</strong> (OCM) <span class="citation" data-cites="wright_training_2025">(<a href="#ref-wright_training_2025" role="doc-biblioref">Wright et al., 2025</a>)</span> é uma rede neural convolucional treinada com cenas de vários sensores para separar quatro classes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>valor</th>
+<th>classe</th>
+<th>o que é</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>clear</code></td>
+<td>céu limpo, pixel utilizável</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>thick_cloud</code></td>
+<td>nuvem espessa, opaca</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>thin_cloud</code></td>
+<td>nuvem fina (cirros), que deixa passar parte do sinal da superfície</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>cloud_shadow</code></td>
+<td>sombra projetada pela nuvem</td>
+</tr>
+</tbody>
+</table>
+<p>Ele usa só três bandas (<strong>vermelho, verde e infravermelho próximo</strong>) e é <strong>agnóstico ao sensor</strong>: não foi treinado com o CBERS-4A e mesmo assim funciona, porque aprendeu as características espectrais e a textura das nuvens, e não as particularidades de um satélite. Isso é possível porque o OCM foi treinado com um conjunto de dados enorme, com imagens de vários sensores e resoluções e de todo o mundo (para mais detalhes, consulte <span class="citation" data-cites="wright_training_2025">Wright et al. (<a href="#ref-wright_training_2025" role="doc-biblioref">2025</a>)</span>). Apesar de ser bastante robusto, o modelo ainda erra: algumas sombras podem passar despercebidas e algumas nuvens finas podem ser confundidas com alvos claros.</p>
+<p>A sombra conta tanto quanto a nuvem. Um pixel sombreado mostra a superfície, mas com a radiância errada, porque recebeu só a luz difusa do céu. Se ele entrar numa classificação de uso e cobertura da terra, vai gerar erros que muitas vezes passam na inspeção visual, mas aparecem na matriz de confusão. Por isso, a classe <code>cloud_shadow</code> também é tratada como lacuna na Aula 03.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>O OCM não detecta neblina nem fumaça
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Uma cena com neblina generalizada, ou com fumaça de queimada, pode sair quase toda como <code>clear</code>, já que ali não existe a borda de uma nuvem, e sim uma perda gradual de contraste. O modelo pode identificar, mas não é garantido. Verifique com atenção o resultado na sua cena.</p>
+</div>
+</div>
+</section>
+<section id="antes-de-começar" class="level2">
+<h2 class="anchored" data-anchor-id="antes-de-começar">Antes de começar</h2>
+<p>Esta aula usa o <code>data/interim/pansharpening_&lt;DATA&gt;_boa.tif</code>, produto da <a href="../aulas/01-toa-boa.html">Aula 01</a>. Se você está começando o curso por aqui, o notebook refaz sozinho as etapas anteriores com <code>ac.preparar_aula_02()</code>, baixando a cena e convertendo para reflectância.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Localmente (pixi - recomendado)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Google Colab</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Se você está começando por essa aula, o pixi é a linha de execução recomendada.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Ainda não instalou o pixi? Clique aqui
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Baixe os arquivos do repositório na pasta <code>C:\geo\geoprocessamento-cbers4a</code>. Depois, abra o <strong>PowerShell</strong> (menu Iniciar → digite “PowerShell” → executar como Administrador) e cole:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1"></a>powershell <span class="op">-</span>ExecutionPolicy ByPass <span class="op">-</span>c <span class="st">"irm -useb https://pixi.sh/install.ps1 | iex"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Feche e reabra</strong> o terminal e confira com <code>pixi --version</code>. Se aparecer um número de versão, está pronto. O passo a passo completo está na <a href="../aulas/00-ambiente.html">Aula 00</a>.</p>
+</div>
+</div>
+</div>
+<p>Com o pixi instalado, abra o PowerShell na pasta do projeto e rode o Jupyter Lab:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource powershell number-lines code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">cd</span> C<span class="op">:</span>\geo\geoprocessamento-cbers4a</span>
+<span id="cb2-2"><a href="#cb2-2"></a>pixi run lab</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Abra <code>colab/02_nuvens_omnicloudmask.ipynb</code> e pode iniciar as células.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Clique no botão do Colab no topo da página. Aqui <strong>não</strong> há conda nem reinício de sessão: a primeira célula instala o OmniCloudMask pelo <code>pip</code> e mantém o PyTorch que já vem no Colab, acrescentando só o <code>torchvision</code> da mesma versão e variante (CPU ou GPU) dele. Misturar o PyTorch do Colab com um <code>torchvision</code> de outra compilação derruba o OCM com o erro <code>operator torchvision::nms does not exist</code>.</p>
+<p>A aula parte do <code>pansharpening_*.tif</code> que a Aula 01 gravou no seu Drive. Se você começar por aqui sem ele, o atalho refaz as aulas anteriores em <strong>TOA</strong>, porque o 6S só chega pelo conda (ver <a href="../aulas/01-toa-boa.html">Aula 01</a>); a detecção de nuvem funciona nos dois níveis.</p>
+</div>
+</div>
+</div>
+<p>Depois da instalação, o notebook traz o <code>aulas_cbers.py</code> do repositório e define os parâmetros da aula. O mais importante é o <code>DETECT_RES</code>, a resolução em que a detecção acontece:</p>
+<div id="a20feaf3" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO</span>
+<span id="cb3-2"><a href="#cb3-2"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                 <span class="co"># tem que ser o mesmo que você gerou na Aula 01</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>DETECT_RES <span class="op">=</span> <span class="fl">10.0</span>             <span class="co"># resolução (m) em que a detecção acontece</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>BANDA_RED, BANDA_GREEN, BANDA_NIR <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>     <span class="co"># ordem RGBN do produto da Aula 01</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># tamanho dos blocos e sobreposição usados pelo OCM</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="por-que-detectar-em-10-m-e-não-nos-2-m" class="level2">
+<h2 class="anchored" data-anchor-id="por-que-detectar-em-10-m-e-não-nos-2-m">1. Por que detectar em 10 m e não nos 2 m?</h2>
+<p>Por três motivos:</p>
+<ol type="1">
+<li><strong>O OCM foi validado na faixa de 10 a 50 m.</strong> Fora dela o desempenho cai: a rede aprendeu a reconhecer a nuvem numa determinada escala de textura, e em 2 m ela vê detalhe demais;</li>
+<li><strong>A nuvem é um objeto grande.</strong> A borda de uma nuvem não é nítida em nenhuma escala, existe uma faixa de transição de dezenas de metros. Detectar em 2 m não deixa a borda mais correta, só mais ruidosa;</li>
+<li><strong>Custo.</strong> São 16 vezes menos pixels para a rede processar.</li>
+</ol>
+<p>A cena é lida já reduzida para 10 m, pela média dos pixels, e os pixels sem dado são marcados para o OCM ignorar. Depois, a máscara volta para a grade de 2 m por <strong>vizinho mais próximo</strong>, que é o único método de reamostragem adequado para dados categóricos.</p>
+<div id="71a6dba2" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    escala <span class="op">=</span> src.res[<span class="dv">0</span>] <span class="op">/</span> DETECT_RES</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    h, w <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(src.height <span class="op">*</span> escala)), <span class="bu">int</span>(<span class="bu">round</span>(src.width <span class="op">*</span> escala))</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="co"># bandas na ordem exigida pelo OCM: Red, Green, NIR</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    det <span class="op">=</span> src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape<span class="op">=</span>(<span class="dv">3</span>, h, w),</span>
+<span id="cb4-7"><a href="#cb4-7"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    mascara <span class="op">=</span> src.read_masks(<span class="dv">1</span>, out_shape<span class="op">=</span>(h, w), resampling<span class="op">=</span>Resampling.average)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    t_det <span class="op">=</span> src.transform <span class="op">*</span> Affine.scale(src.width <span class="op">/</span> w, src.height <span class="op">/</span> h)</span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a>valido <span class="op">=</span> (mascara <span class="op">&gt;=</span> <span class="dv">255</span>) <span class="op">&amp;</span> np.<span class="bu">all</span>(det <span class="op">&gt;</span> <span class="op">-</span><span class="dv">5000</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-12"><a href="#cb4-12"></a>det[:, <span class="op">~</span>valido] <span class="op">=</span> <span class="fl">0.0</span>     <span class="co"># o OCM ignora estes pixels (no_data_value=0)</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="rodando-o-omnicloudmask" class="level2">
+<h2 class="anchored" data-anchor-id="rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</h2>
+<p>Na primeira execução, o OCM baixa os pesos do modelo pelo Hugging Face. Ele processa a imagem em blocos de <code>PATCH</code> pixels, com <code>OVERLAP</code> de sobreposição, e faz a média nas emendas. Roda em CPU ou GPU.</p>
+<div id="69a75d14" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> omnicloudmask <span class="im">import</span> predict_from_array</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>mask <span class="op">=</span> predict_from_array(</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    det,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    patch_size<span class="op">=</span>PATCH,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    patch_overlap<span class="op">=</span>OVERLAP,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    no_data_value<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    apply_no_data_mask<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    model_download_source<span class="op">=</span><span class="st">"hugging_face"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a>mask <span class="op">=</span> np.squeeze(np.asarray(mask)).astype(<span class="st">"uint8"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Ao final, o notebook mostra quantos pixels caíram em cada classe. Na cena do curso, cerca de 11% da AOI ficou marcada como contaminada: quase 7% de nuvem espessa e 4% de sombra.</p>
+<div class="quarto-embed-nb-cell">
+<div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code>dispositivo: CPU
+
+--- composição da cena (pixels válidos, grade de detecção) ---
+  0 clear        :  1,597,022  ( 88.7 %)
+  1 thick_cloud  :    123,299  (  6.9 %)
+  2 thin_cloud   :          0  (  0.0 %)
+  3 cloud_shadow :     79,316  (  4.4 %)
+  -&gt; nuvem + sombra:    202,615  ( 11.3 %)
+  -&gt; utilizável    :  1,597,022  ( 88.7 %)</code></pre>
+</div>
+</div>
+</figure>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="..\colab\02_nuvens_omnicloudmask-preview.html#cell-tbl-ocm-classes">Fonte: Aula 02 — Detecção de nuvem e sombra com OmniCloudMask</a></div>
+</section>
+<section id="verificando-antes-de-continuar" class="level2">
+<h2 class="anchored" data-anchor-id="verificando-antes-de-continuar">3. Verificando antes de continuar</h2>
+<p>Nenhuma máscara de nuvem é perfeita, e a hora de encontrar os erros é agora. O notebook mostra a falsa cor e a máscara lado a lado, e depois um zoom na maior mancha de nuvem. O que conferir:</p>
+<ul>
+<li><strong>sombra deslocada</strong>: a sombra fica do lado oposto ao Sol em relação à nuvem. Se a classe 3 aparecer do lado errado, alguma banda está trocada na entrada;</li>
+<li><strong>nuvem fina confundida com alvo claro</strong>: telhado metálico, areia e pátio de concreto às vezes entram como classe 2, o que é mais comum em áreas urbanas;</li>
+<li><strong>borda</strong>: uma faixa de classe 2 em volta da nuvem espessa é <strong>esperada</strong>, pois é a transição real, e é melhor que ela entre na máscara do que fique de fora;</li>
+<li><strong>água</strong>: corpos d’água escuros às vezes são classificados como sombra. Se a sua AOI tem represa, olhe com atenção.</li>
+</ul>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-ocm-mascara" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div id="fig-ocm-mascara" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ocm-mascara-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-omnicloudmask_files/figure-html/..-colab-02_nuvens_omnicloudmask-fig-ocm-mascara-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ocm-mascara-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Falsa cor e a máscara do OmniCloudMask, lado a lado.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-ocm-zoom" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div id="fig-ocm-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ocm-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-omnicloudmask_files/figure-html/..-colab-02_nuvens_omnicloudmask-fig-ocm-zoom-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ocm-zoom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="as-três-máscaras" class="level2">
+<h2 class="anchored" data-anchor-id="as-três-máscaras">4. As três máscaras</h2>
+<p>A máscara é gravada em três arquivos, cada um com um papel:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>arquivo</th>
+<th>grade</th>
+<th>para que serve</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>*_cloudmask_10m.tif</code></td>
+<td>10 m</td>
+<td>a máscara na grade em que a rede decidiu, útil para conferir o resultado</td>
+</tr>
+<tr class="even">
+<td><code>*_cloudmask_native.tif</code></td>
+<td>2 m</td>
+<td>a que a Aula 03 usa; <strong>precisa</strong> estar exatamente na grade do CBERS</td>
+</tr>
+<tr class="odd">
+<td><code>*_clearmask_native.tif</code></td>
+<td>2 m</td>
+<td>versão binária (1 = utilizável), prática para multiplicar por outros rasters</td>
+</tr>
+</tbody>
+</table>
+<div id="cc400630" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), <span class="dv">255</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb7-4"><a href="#cb7-4"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb7-5"><a href="#cb7-5"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># dado categórico: vizinho mais próximo</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="aplicando-a-máscara-na-imagem" class="level2">
+<h2 class="anchored" data-anchor-id="aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</h2>
+<p>Agora gravamos uma cópia da cena em que os pixels de nuvem e de sombra viram <strong>nodata</strong> (e não zero). Um pixel zerado entraria nas estatísticas puxando a média para baixo; como nodata, ele é ignorado pelo rasterio, pelo QGIS e pelo AROSICS, que não vai tentar achar pontos de amarração dentro da área removida. A gravação é feita em faixas de linhas, para não ocupar muita memória.</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div id="fig-ocm-antes-depois" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ocm-antes-depois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-omnicloudmask_files/figure-html/..-colab-02_nuvens_omnicloudmask-fig-ocm-antes-depois-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ocm-antes-depois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: A cena antes e depois de nuvem e sombra virarem nodata.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="vale-a-pena-preencher" class="level2">
+<h2 class="anchored" data-anchor-id="vale-a-pena-preencher">6. Vale a pena preencher?</h2>
+<p>Se a nuvem cobre 1% da AOI, muitas vezes compensa descartar esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área, e aí a substituição com Sentinel-2 super-resolvido compensa o trabalho. Não existe um limiar universal: a decisão é sua, e o notebook grava no <code>.params.json</code>, ao lado da máscara, a fração contaminada, a área em hectares e a composição por classe, para que ela fique registrada.</p>
+<p>Vale lembrar que, entre descartar e preencher com outro sensor, o cenário ideal é <strong>compor com outra data do próprio CBERS</strong>, se você tiver uma cena próxima e limpa naquela área. Assim, a radiometria e a resolução continuam as mesmas, sem precisar de super-resolução.</p>
+</section>
+<section id="o-que-ficou-pronto" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-ficou-pronto">O que ficou pronto</h2>
+<pre><code>data/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_10m.tif      máscara na grade de detecção
+data/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_native.tif   máscara em 2 m   &lt;- p/ Aula 03
+data/interim/pansharpening_&lt;DATA&gt;_boa_clearmask_native.tif   binária, 1 = utilizável
+data/interim/pansharpening_&lt;DATA&gt;_boa_masked.tif             cena com lacunas &lt;- p/ Aula 03</code></pre>
+<p>Na <a href="../aulas/03-sen2sr.html">Aula 03</a>, essas lacunas são preenchidas com Sentinel-2 levado de 10 m para 2,5 m pelo SEN2SR, corregistrado com o CBERS pelo AROSICS e ajustado radiometricamente antes da substituição.</p>
+</section>
+<section id="erros-comuns-nesta-aula" class="level2">
+<h2 class="anchored" data-anchor-id="erros-comuns-nesta-aula">Erros comuns nesta aula</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>O que aparece na tela</th>
+<th>O que fazer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ResamplingAlgorithmError: &lt;Resampling.min: 9&gt; can be used for warp operations but not for reads and writes</code></td>
+<td><code>min</code>, <code>max</code>, <code>med</code>, <code>q1</code>, <code>q3</code> e <code>sum</code> só valem em reprojeção, não em leitura. Para leitura reduzida use <code>average</code>, <code>bilinear</code>, <code>cubic</code> ou <code>nearest</code> e, para saber onde há nodata, <code>read_masks()</code> com <code>average</code>.</td>
+</tr>
+<tr class="even">
+<td>O download dos pesos trava ou dá erro de rede</td>
+<td>Troque <code>model_download_source="hugging_face"</code> por <code>"google_drive"</code>.</td>
+</tr>
+<tr class="odd">
+<td>A máscara sai vazia (100% <code>clear</code>)</td>
+<td>Confira a ordem das bandas: o OCM espera <strong>Red, Green, NIR</strong> nessa ordem. Com o produto da Aula 01 (RGBN), são os índices 1, 2 e 4.</td>
+</tr>
+<tr class="even">
+<td>A máscara marca a cena inteira como nuvem</td>
+<td>Provavelmente a entrada está em escala errada (DN misturado com reflectância) ou o nodata não foi declarado no arquivo.</td>
+</tr>
+<tr class="odd">
+<td>Sombra aparece do lado errado da nuvem</td>
+<td>Bandas trocadas na leitura. Verifique <code>src.descriptions</code> do arquivo de entrada.</td>
+</tr>
+<tr class="even">
+<td><code>MemoryError</code> em CPU</td>
+<td>Reduza <code>PATCH</code> para 500 e <code>OVERLAP</code> para 150, ou aumente <code>DETECT_RES</code> para 20 m.</td>
+</tr>
+<tr class="odd">
+<td>A máscara em 2 m não bate com a grade do CBERS na Aula 03</td>
+<td>Você rodou a Aula 02 sobre um pansharpening diferente do que a Aula 03 está lendo. Refaça sobre o mesmo arquivo.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="referências" class="level2">
+<h2 class="anchored" data-anchor-id="referências">Referências</h2>
+<div id="refs" class="references csl-bib-body" data-entry-spacing="1" role="list">
+<div id="ref-wright_training_2025" class="csl-entry" role="listitem">
+WRIGHT, Nicholas <em>et al.</em> <a href="https://doi.org/10.1016/j.rse.2025.114694">Training sensor-agnostic deep learning models for remote sensing: <span>Achieving</span> state-of-the-art cloud and cloud shadow identification with <span>OmniCloudMask</span></a>. <strong>Remote Sensing of Environment</strong>, v. 322, p. 114694, 2025.
+</div>
+</div>
+<section id="documentação-e-software" class="level3">
+<h3 class="anchored" data-anchor-id="documentação-e-software">Documentação e software</h3>
+<ul>
+<li><a href="https://github.com/DPIRD-DMA/OmniCloudMask">OmniCloudMask no GitHub</a></li>
+<li><a href="https://rasterio.readthedocs.io/en/stable/topics/resampling.html">rasterio — reamostragem na leitura</a></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiada");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiada");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/danfioramonte\.github\.io\/geoprocessamento-cbers4a\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Código sob licença MIT; textos, figuras e vídeos sob CC BY 4.0. Grupo de pesquisa MAPEAR.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

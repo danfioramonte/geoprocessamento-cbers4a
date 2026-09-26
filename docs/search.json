@@ -1,0 +1,550 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
+    "section": "",
+    "text": "O presente material é um Recurso Educacional Aberto elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Geografia, na área de Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (Digital Number) para reflectância de topo de atmosfera (top-of-atmosphere) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca OmniCloudMask) (Wright et al., 2025); e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2,5 metros de resolução espacial utilizando o modelo SEN2SR + interpolação bicúbica para 2 metros) (Aybar et al., 2026).\nCada aula contém vídeo (em breve), código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - Recomendado) e Google Colab para quem prefere rodar em ambiente nuvem.\nNão é preciso ter experiência com Python, pixi ou GitHub. A Aula 00 começa do zero absoluto.",
+    "crumbs": [
+      "Início",
+      "Visão geral"
+    ]
+  },
+  {
+    "objectID": "index.html#cronograma-de-aulas",
+    "href": "index.html#cronograma-de-aulas",
+    "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
+    "section": "Cronograma de aulas",
+    "text": "Cronograma de aulas\n\n\n\nAula\nAssunto\n\n\n\n\n00\nInstalando o pixi e adquirindo a imagem CBERS-4A via STAC\n\n\n01\nConvertendo DN do CBERS-4A para reflectância TOA e BOA\n\n\n02\nDetectando e removendo pixels de nuvens com OmniCloudMask\n\n\n03\nSubstituindo pixels usando SEN2SR e Sentinel-2\n\n\n\nTravou em algum ponto? Veja a página de erros comuns.",
+    "crumbs": [
+      "Início",
+      "Visão geral"
+    ]
+  },
+  {
+    "objectID": "index.html#como-citar",
+    "href": "index.html#como-citar",
+    "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
+    "section": "Como citar",
+    "text": "Como citar\nEste material tem DOI próprio e pode ser citado como obra. Se ele foi útil na sua pesquisa, aula ou relatório técnico, use a referência abaixo (ABNT NBR 6023):\n\nFIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2: correção atmosférica, remoção de nuvens e substituição de pixels. Versão 1.0.0. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material didático. DOI: 10.5281/zenodo.XXXXXXX. Disponível em: https://danfioramonte.github.io/geoprocessamento-cbers4a/. Acesso em: dia mês ano.\n\n\n\n\n\n\n\nDicaEm BibTeX\n\n\n\n\n\n@misc{fioramonte_magalhaes_geoprocessamento_2026,\n  author    = {Fioramonte, Danilo Roberto and Magalhães, Danilo Marques de},\n  title     = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:\n               correção atmosférica, remoção de nuvens e substituição de pixels},\n  year      = {2026},\n  version   = {1.0.0},\n  publisher = {Zenodo},\n  doi       = {10.5281/zenodo.XXXXXXX},\n  url       = {https://danfioramonte.github.io/geoprocessamento-cbers4a/},\n  note      = {Material didático}\n}\n\n\n\n\n\n\n\n\n\nImportanteCite também os métodos que você usar\n\n\n\nEste material organiza e explica ferramentas de terceiros. Ao empregar os métodos das aulas, cite os trabalhos originais junto com esta obra: STAC (Radiant Earth Foundation, 2021) para aquisição de imagens via API; Brazil Data Cube (Ferreira et al., 2020) para as imagens CBERS-4A; SEN2SR (Aybar et al., 2026) para a super-resolução; OmniCloudMask (Wright et al., 2025) para a detecção de nuvens; o 6S (Vermote et al., 1997) para a correção atmosférica; o AROSICS (Scheffler et al., 2017) para o corregistro; e o Gram-Schmidt (Aiazzi; Baronti; Selva, 2007; Laben; Brower, 2000) para a fusão com a pancromática.",
+    "crumbs": [
+      "Início",
+      "Visão geral"
+    ]
+  },
+  {
+    "objectID": "index.html#referências",
+    "href": "index.html#referências",
+    "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
+    "section": "Referências",
+    "text": "Referências\n\n\nAIAZZI, B.; BARONTI, S.; SELVA, M. Improving Component Substitution Pansharpening Through Multivariate Regression of MS+Pan Data. IEEE Transactions on Geoscience and Remote Sensing, v. 45, n. 10, p. 3230–3239, 2007.\n\n\nAYBAR, Cesar et al. A radiometrically and spatially consistent super-resolution framework for Sentinel-2. Remote Sensing of Environment, v. 334, p. 115222, mar. 2026.\n\n\nFERREIRA, Karine R. et al. Earth Observation Data Cubes for Brazil: Requirements, Methodology and Products. Remote Sensing, v. 12, n. 24, p. 4033, 2020.\n\n\nLABEN, Craig A.; BROWER, Bernard V. Process for enhancing the spatial resolution of multispectral imagery using pan-sharpening., 2000. Disponível em: &lt;https://patents.google.com/patent/US6011875A/en&gt;\n\n\nRADIANT EARTH FOUNDATION. SpatioTemporal Asset Catalog (STAC) Specification. Radiant Earth Foundation, 2021. Disponível em: &lt;https://stacspec.org&gt;\n\n\nSCHEFFLER, Daniel et al. AROSICS: An Automated and Robust Open-Source Image Co-Registration Software for Multi-Sensor Satellite Data. Remote Sensing, v. 9, n. 7, p. 676, 2017.\n\n\nVERMOTE, E. F. et al. Second Simulation of the Satellite Signal in the Solar Spectrum, 6S: an overview. IEEE Transactions on Geoscience and Remote Sensing, v. 35, n. 3, p. 675–686, 1997.\n\n\nWRIGHT, Nicholas et al. Training sensor-agnostic deep learning models for remote sensing: Achieving state-of-the-art cloud and cloud shadow identification with OmniCloudMask. Remote Sensing of Environment, v. 322, p. 114694, 2025.",
+    "crumbs": [
+      "Início",
+      "Visão geral"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#o-que-vamos-aprender",
+    "href": "aulas/03-sen2sr.html#o-que-vamos-aprender",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "O que vamos aprender",
+    "text": "O que vamos aprender\nNa aula anterior identificamos os pixels cobertos por nuvem e sombra na cena CBERS-4A. Agora vamos preencher essas lacunas com imagens de outro satélite, o Sentinel-2, tendo em vista que a revisita do CBERS-4A/WPM é de 31 dias e nem sempre existe outra cena CBERS próxima e limpa. Se no seu estudo a diferença de datas não trouxer mudanças significativas no uso e cobertura da terra, vale a pena tentar primeiro a substituição com imagens do mesmo sensor.\nO problema é de escala: o CBERS-4A/WPM tem 2 m e o Sentinel-2 tem 10 m. Colar um pedaço de Sentinel-2 direto no CBERS deixaria uma mancha borrada, com a emenda bem visível. Por isso, o processo tem quatro etapas:\n\n\n\n\n\n\n\n\netapa\nproblema que resolve\nferramenta\n\n\n\n\n1. mosaico Sentinel-2\nachar dado limpo perto da data do CBERS\nSTAC do Planetary Computer\n\n\n2. super-resolução\naproximar a resolução do Sentinel-2 à do CBERS\nSEN2SR (10 m → 2,5 m)\n\n\n3. corregistro\nas duas imagens não estão exatamente alinhadas\nAROSICS\n\n\n4. harmonização e emenda\nsensores diferentes têm brilho e resposta diferentes\nnormalização radiométrica relativa (média-desvio padrão)\n\n\n\nO SEN2SR (Aybar et al., 2026) leva o Sentinel-2 de 10 m para 2,5 m antes da substituição. O modelo não inventa informação: ele aprendeu como imagens de alta resolução costumam ser e usa isso para reconstruir os detalhes de maneira plausível. Como a saída é de 2,5 m e a grade do CBERS é de 2 m, ainda vamos precisar reamostrar, o que introduz um erro pequeno, mas que deve ser mencionado quando você for escrever sobre o método.\nO SEN2SR tem duas versões. A completa depende do pacote mamba-ssm, que só funciona com GPU NVIDIA (CUDA 12 ou superior) e, na prática, exige Linux. Neste curso usamos a versão Lite, que roda em qualquer computador, inclusive sem placa de vídeo. A diferença de qualidade existe, mas é pequena diante do ganho em acessibilidade.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#antes-de-começar",
+    "href": "aulas/03-sen2sr.html#antes-de-começar",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "Antes de começar",
+    "text": "Antes de começar\nEsta aula usa dois arquivos da Aula 02: a cena mascarada (*_masked.tif) e a máscara de classes em 2 m (*_cloudmask_native.tif). Se você está começando por aqui, o notebook refaz tudo com ac.preparar_aula_03().\n\n\n\n\n\n\nAviso\n\n\n\nTodas as aulas trabalham na mesma bounding box e, a partir do corregistro, na mesma grade de 2 m do CBERS. É isso que permite o AROSICS funcionar. Se você mudou o bbox em alguma aula, volte e corrija em colab/aulas_cbers.py antes de continuar.\n\n\n\nLocalmente (pixi - recomendado)Google Colab\n\n\nSe você está começando por essa aula, o pixi é a linha de execução recomendada.\n\n\n\n\n\n\nNotaAinda não instalou o pixi? Clique aqui\n\n\n\n\n\nBaixe os arquivos do repositório na pasta C:\\geo\\geoprocessamento-cbers4a. Depois, abra o PowerShell (menu Iniciar → digite “PowerShell” → executar como Administrador) e cole:\npowershell -ExecutionPolicy ByPass -c \"irm -useb https://pixi.sh/install.ps1 | iex\"\nFeche e reabra o terminal e confira com pixi --version. Se aparecer um número de versão, está pronto. O passo a passo completo está na Aula 00.\n\n\n\nCom o pixi instalado, abra o PowerShell na pasta do projeto e rode o Jupyter Lab:\ncd C:\\geo\\geoprocessamento-cbers4a\npixi run lab\nAbra colab/03_sen2sr.ipynb. O ambiente já tem sen2sr, mlstac, arosics, planetary-computer e o PyTorch. Se faltar alguma biblioteca, pixi run check mostra o que falta.\n\n\nClique no botão do Colab no topo da página e ative a GPU antes de começar: Ambiente de execução → Alterar o tipo de ambiente de execução → Acelerador de hardware: T4 GPU.\nAqui não há conda nem reinício de sessão: uma célula instala tudo pelo pip. O Colab já traz o GDAL de que o AROSICS precisa, e o PyTorch continua sendo o do próprio Colab. A célula só acrescenta o torchvision da mesma versão e variante (CPU ou GPU) dele, como na Aula 02:\n\n!pip install -q \"torchvision==&lt;par do torch do Colab&gt;\" --extra-index-url https://download.pytorch.org/whl/&lt;cpu|cu126|...&gt;\n!pip install -q omnicloudmask sen2sr mlstac rasterio pyproj arosics scikit-image \\\n    pystac-client planetary-computer requests\n\nA aula parte dos arquivos das Aulas 01 e 02 que estão no seu Drive, então não precisa do 6S. Se você começar por aqui sem eles, o atalho refaz as aulas anteriores em TOA e avisa.\nO Colab apaga tudo quando a sessão encerra. Por isso, no Colab, a célula de configuração monta o seu Google Drive e lê e grava tudo em MyDrive/geoprocessamento-cbers4a/data, a mesma pasta das outras aulas (os pesos do SEN2SR também ficam no Drive, em geoprocessamento-cbers4a/model):\nUSAR_DRIVE = True        # False = grava em /content/data, apagado ao fim da sessão\nif USAR_DRIVE:\n    ac.usar_drive()\nP = ac.pastas()\n\n\n\nNa configuração, o notebook reúne todos os parâmetros da aula (janela de busca do Sentinel-2, máscara de nuvem, modelo, corregistro e método de harmonização), confere se os arquivos da Aula 02 existem e mostra um mapa interativo com a cena CBERS mascarada, em que as lacunas aparecem em preto.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#montando-o-mosaico-sentinel-2",
+    "href": "aulas/03-sen2sr.html#montando-o-mosaico-sentinel-2",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "1. Montando o mosaico Sentinel-2",
+    "text": "1. Montando o mosaico Sentinel-2\nNo script original, essa etapa era feita pelo Google Earth Engine. Aqui vamos montar o mosaico direto do STAC do Microsoft Planetary Computer, uma maneira mais dinâmica, em que você baixa as imagens sem conta, sem autenticação e sem esperar exportação.\nA grade é definida pelo CBERS, e não pelo Sentinel-2: mesmo CRS, mesma origem, resolução de 10 m e uma margem de 240 m além da AOI. Essa margem é necessária porque o corregistro desloca a imagem, e sem folga a borda ficaria sem dado; além disso, o AROSICS precisa de contexto em volta das lacunas para encontrar pontos de amarração.\nA busca retorna as cenas Sentinel-2 L2A com até 80% de nuvem (NUVEM_MAX) numa janela de 45 dias antes e depois da data do CBERS (JANELA_DIAS), ordenadas pela proximidade de data. Duas funções de apoio cuidam da leitura: offset_da_baseline corrige o deslocamento de −1000 que a ESA passou a aplicar na reflectância a partir da processing baseline 04.00, e ler_para_grade lê cada banda já reprojetada para a grade do CBERS.\n\n1.1 Composição por data mais próxima\nPara cada pixel, usamos a cena Sentinel-2 mais próxima em data que esteja limpa naquele pixel, segundo a banda SCL do produto L2A. Isso é melhor que uma mediana temporal, pois preserva a textura real de uma data, em vez de misturar várias datas. Como pixels vizinhos podem vir de datas diferentes, gravamos também a banda delta_days, que registra a diferença em dias de cada pixel em relação à data do CBERS.\n\n\n1.2 Vendo as cenas candidatas antes de escolher\nA coluna nuvem_cena_% da tabela é referente à cena inteira do Sentinel-2 (cerca de 110 km), e a nossa AOI é só um recorte dela. Uma cena com 40% de nuvem pode estar limpa em cima da sua área, e uma com 3% pode ter justamente aquela nuvem no seu recorte.\nPor isso, o notebook lê uma versão reduzida de cada candidata só na AOI e mostra, para cada uma, a cor natural, quanto da AOI a cena cobre e a fração limpa medida ali. É a mesma ideia da escolha de cena da Aula 00. Só aparecem na prévia as candidatas com até 60% de nuvem na cena, por isso alguns idx da tabela não aparecem.\n\n\n\n[1] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  94.6% | 23KKR\n[2] 2026-03-04  Δ  +3 d | cobre 100.0% da AOI | limpo (SCL)  97.0% | 22KHA\n[5] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  52.6% | 23KKR\n[6] 2026-02-22  Δ  -7 d | cobre 100.0% da AOI | limpo (SCL)  52.7% | 22KHA\n[7] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  88.7% | 23KKR\n[8] 2026-02-17  Δ -12 d | cobre 100.0% da AOI | limpo (SCL)  88.6% | 22KHA\n[9] 2026-03-14  Δ +13 d | cobre 100.0% da AOI | limpo (SCL) 100.0% | 23KKR\n[10] 2026-03-14  Δ +13 d | cobre 100.0% da AOI | limpo (SCL) 100.0% | 22KHA\n\n\n\n\n\n\n\n\nFigura 1: Prévia das candidatas Sentinel-2 na AOI: cobertura e fração limpa medidas ali.\n\n\n\n\n\nFonte: Aula 03 — Preenchendo as lacunas de nuvem com Sentinel-2 super-resolvido\n\n\n1.3 Escolhendo as cenas\nESCOLHA_S2 = None deixa a escolha no automático (as MAX_CENAS mais próximas em data). Uma lista de idx define as imagens que serão utilizadas, e a ordem da lista é a ordem de preferência: a primeira preenche o que puder, a segunda preenche o que sobrou, e assim por diante.\nNa cena do curso, vamos usar as imagens 1, 2, 9 e 10. A 1 e a 2 são a mesma data (04/03/2026, 3 dias depois da nossa imagem CBERS) em dois tiles do Sentinel-2 (23KKR e 22KHA), porque a nossa AOI cai na emenda entre eles; as duas estão praticamente limpas e vão preencher a maior parte das lacunas. A 9 e a 10 são o mesmo caso, com data de 14/03/2026, e servem para preencher uma área de névoa na parte sudoeste da imagem. Sempre que a mesma data aparecer duas vezes na tabela com tile diferente, coloque as duas na lista: elas se completam.\n\nESCOLHA_S2 = [1, 2, 9, 10]      # ou None para automático\n\nselecionadas = [itens[i] for i in ESCOLHA_S2] if ESCOLHA_S2 else itens[:MAX_CENAS]\n\n\n\n1.4 A máscara de nuvem\nO Sentinel-2 conta com uma máscara própria, a SCL. Nela, marcamos apenas o que é classificado como nuvem: 8 (probabilidade média), 9 (probabilidade alta) e 10 (cirros). Como escolhemos as cenas olhando a prévia, qualquer camada a mais só aumentaria o risco de remover pixels bons.\n\nMASCARA_SCL = True            # False = usa a cena inteira, sem máscara nenhuma\nCLASSES_NUVEM = (8, 9, 10)    # nuvem prob. média, nuvem prob. alta, cirros\nDILATA_NUVEM_PX = 0           # buffer em torno da nuvem, em px de 10 m\n\nnuvem = np.isin(scl, CLASSES_NUVEM)\nif DILATA_NUVEM_PX:\n    nuvem = binary_dilation(nuvem, iterations=DILATA_NUVEM_PX)\nlimpo = dentro & ~nuvem\n\nCaso você perceba sombras de nuvem que não foram mascaradas na imagem escolhida, acrescente a classe 3 (sombra de nuvem) em CLASSES_NUVEM. Mas saiba que o SCL confunde água escura com sombra com frequência, e o resultado pode ser um buraco em represas e rios. Se a sua cena está praticamente limpa, deixe a classe 3 de fora; se colocar, avalie visualmente se a máscara não está removendo pixels bons.\n\n\n1.5 A escolha final\nEntre as candidatas com dado limpo em cada pixel, vence a primeira da ordem (a mais próxima em data, no automático, ou a que colocamos primeiro em ESCOLHA_S2).\n\nescolha = np.full((H_S2, W_S2), -1, dtype=\"int16\")\nfor i, c in enumerate(candidatas):\n    falta = (escolha &lt; 0) & c[\"limpo\"]\n    escolha[falta] = i\n\nO relatório por cena e o mosaico resultante:\n\n\n\n\nTabela 1\n\n\n\ncena                                          delta   cobre   limpo\nS2B_MSIL2A_20260304T132229_R038_T23KKR_20260     +3 100.0%  94.5%\nS2B_MSIL2A_20260304T132229_R038_T22KHA_20260     +3 100.0%  97.0%\nS2B_MSIL2A_20260314T132229_R038_T23KKR_20260    +13 100.0% 100.0%\nS2B_MSIL2A_20260314T132229_R038_T22KHA_20260    +13 100.0% 100.0%\nS2B_MSIL2A_20260304T132229_R038_T23KKR_20260 -&gt; 1,826,028 px usados\nS2B_MSIL2A_20260304T132229_R038_T22KHA_20260 -&gt; 47,447 px usados\nS2B_MSIL2A_20260314T132229_R038_T23KKR_20260 -&gt; 58,805 px usados\n\ncobertura final do mosaico: 100.00% (3 cenas contribuíram)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 2: Mosaico Sentinel-2 de 10 m, procedência temporal e candidatas limpas por pixel.\n\n\n\n\n\n\nO terceiro painel mostra quantas candidatas tinham dado limpo em cada pixel. Onde for 0, o mosaico ficou vazio: ou nenhuma cena cobre aquele ponto, ou o SCL marcou nuvem em todas. Se a prévia mostra a imagem limpa ali, é o SCL errando; ajuste CLASSES_NUVEM ou use MASCARA_SCL = False.\nO mosaico é gravado como um GeoTIFF de 6 bandas em int16:\n\n\n\nbanda\nconteúdo\n\n\n\n\n1–4\nvermelho, verde, azul, NIR (reflectância × 10.000)\n\n\n5\ndelta_days, a diferença em dias até a data do CBERS\n\n\n6\nvalid, 1 onde o mosaico tem dado",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#super-resolução-com-o-sen2sr",
+    "href": "aulas/03-sen2sr.html#super-resolução-com-o-sen2sr",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "2. Super-resolução com o SEN2SR",
+    "text": "2. Super-resolução com o SEN2SR\nO notebook baixa os pesos do modelo com o mlstac (só na primeira vez) e roda a super-resolução em blocos de 128 × 128 pixels, com sobreposição de 32 pixels entre eles. Nas sobreposições, os resultados são combinados com pesos que diminuem em direção à borda do bloco, para não aparecerem emendas. Antes disso, as eventuais lacunas do mosaico são preenchidas temporariamente com o pixel válido mais próximo, porque o modelo não aceita valores vazios. O resultado é gravado em reflectância 0–1, com 2,5 m de resolução.\n\n\n\n\n\n\n\n\n\nFigura 3: O mesmo trecho em 10 m e depois da super-resolução, em 2,5 m.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#reamostragem-para-2-m-e-corregistro-com-o-arosics",
+    "href": "aulas/03-sen2sr.html#reamostragem-para-2-m-e-corregistro-com-o-arosics",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "3. Reamostragem para 2 m e corregistro com o AROSICS",
+    "text": "3. Reamostragem para 2 m e corregistro com o AROSICS\nDuas imagens de satélites diferentes nunca estão perfeitamente sobrepostas: diferenças de ortorretificação, do modelo de elevação usado e do relevo produzem deslocamentos de um a alguns pixels. Primeiro, o Sentinel-2 super-resolvido é reamostrado de 2,5 m para a grade exata de 2 m do CBERS (convolução cúbica). Em seguida, o AROSICS (Scheffler et al., 2017) faz o corregistro por correlação de fase: encontra pontos de amarração numa malha regular, mede o deslocamento em cada um, descarta os não confiáveis e ajusta a imagem.\nTrês cuidados importantes nessa etapa:\n\no corregistro vem antes da harmonização. A correlação de fase não é afetada por diferenças lineares de brilho entre as imagens, e ajustar a radiometria com pixels desalinhados levaria a coeficientes errados;\nmáscaras de dado ruim. O AROSICS só procura pontos onde as duas imagens têm dado válido. Por isso, informamos o que ignorar: no CBERS, as lacunas de nuvem e o nodata; no Sentinel-2, o que ficou fora do mosaico;\na banda de validade vai junto. Ela entra como banda extra da imagem ajustada, para sofrer exatamente o mesmo deslocamento. No final, os pixels com validade abaixo de 0,99 são descartados.\n\n\nfrom arosics import COREG_LOCAL\n\nCR = COREG_LOCAL(str(ref_tmp), str(tgt_tmp),\n                 grid_res=GRID_RES, window_size=(JANELA_COREG, JANELA_COREG),\n                 min_reliability=MIN_RELIAB, tieP_filter_level=3,\n                 r_b4match=4, s_b4match=4,           # NIR: mais textura, menos efeito atmosférico\n                 max_shift=MAX_SHIFT, nodata=(NODATA_TMP, NODATA_TMP),\n                 mask_baddata_ref=str(mask_ref_p), mask_baddata_tgt=str(mask_tgt_p),\n                 path_out=str(sr_coreg), fmt_out=\"GTiff\",\n                 projectDir=str(trab), CPUs=CPUS, q=False)\nCR.correct_shifts()\n\n\n\n\n\nTabela 2\n\n\n\nCalculating footprint polygon and actual data corner coordinates for reference image...\n\n\nBounding box of calculated footprint for reference image:\n    (229780.0, 7513022.0, 242692.0, 7526958.0)\nCalculating footprint polygon and actual data corner coordinates for image to be shifted...\nBounding box of calculated footprint for image to be shifted:\n    (229780.0, 7513022.0, 242692.0, 7526958.0)\nMatching window position (X,Y): 236272.51709761505/7520013.7271285085\nInitializing tie points grid...\nWith respect to the provided bad data mask(s) 121 points of initially 1143 have been excluded.\nCalculating tie point grid (1022 points) using 4 CPU cores...\n\n\nFound 704 matches.\nPerforming validity checks...\n218 tie points flagged by level 1 filtering (reliability).\n230 tie points flagged by level 2 filtering (SSIM).\n18 tie points flagged by level 3 filtering (RANSAC)\n327 valid tie points remain after filtering.\nCorrecting geometric shifts...\n\n\nWriting GeoArray of size (6968, 6456, 5) to &lt;projeto&gt;/colab/data/interim/coreg_tmp_20260301/s2sr_2m_coreg.tif.\n\npontos confiáveis   : 327 de 1022\ndeslocamento mediano: 12.011 m (6.006 px)\ndeslocamento p90    : 15.383 m\n\n\n\n\n\nNa cena do curso, sobraram 327 pontos confiáveis e o deslocamento mediano foi de cerca de 12 m (6 pixels de 2 m), o que mostra por que essa etapa é necessária. Os pontos de amarração são gravados num GeoPackage (tiepoints.gpkg), que você pode abrir no QGIS para ver onde o ajuste foi bom e onde não foi. Menos de 20 pontos confiáveis é sinal de alerta: cena com pouca textura, ou lacuna grande demais em relação à AOI. Se o AROSICS falhar, o notebook usa automaticamente um plano B, que estima um deslocamento único para a imagem inteira (correlação de fase do scikit-image).\nPor fim, o notebook grava o Sentinel-2 corregistrado em 2 m e a banda delta_days na mesma grade.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#harmonização-e-substituição",
+    "href": "aulas/03-sen2sr.html#harmonização-e-substituição",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "4. Harmonização e substituição",
+    "text": "4. Harmonização e substituição\n\n4.1 Em que escala fica o produto final\nO Sentinel-2 é convertido para a escala do CBERS, e não o contrário. Assim, o mosaico continua comparável com as outras cenas CBERS da sua série temporal, sem precisar reprocessar nenhuma delas.\n\n\n4.2 Normalização radiométrica relativa\nAs duas imagens já estão em reflectância de superfície (BOA): o CBERS foi corrigido com o 6S na Aula 01, e o Sentinel-2 L2A já é distribuído assim pela ESA, corrigido pelo Sen2Cor. A maior parte da correção física (atmosfera, iluminação e calibração de cada sensor) já foi feita, e a normalização não substitui a correção atmosférica. Ela ajusta as diferenças que restam entre os dois produtos: os algoritmos de correção atmosférica (6S e Sen2Cor), a diferença de data, a geometria de aquisição e as funções de resposta espectral das bandas. É a mesma lógica do HLS (Claverie et al., 2018), que harmoniza Landsat-8 e Sentinel-2 com um ajuste linear por banda aplicado sobre a reflectância de superfície.\nPara esse ajuste, usamos a normalização radiométrica relativa (RRN, relative radiometric normalization) (Yuan; Elvidge, 1996): uma transformação empírica, banda a banda, que leva a imagem a ser ajustada (o Sentinel-2, \\(x\\)) para a escala da imagem de referência (o CBERS, \\(y\\)). Nos métodos lineares, ela é uma reta \\(x' = a\\,x + b\\). Antes do ajuste, o S2 super-resolvido, que sai do SEN2SR em reflectância 0–1, é multiplicado por 10.000 para ficar na mesma unidade do CBERS (reflectância × 10.000). Assim, \\(a\\) e \\(b\\) medem só a diferença de radiometria entre os dois sensores. Os coeficientes são estimados em janelas amostradas pela cena, só nos pixels em que as duas imagens têm dado, e descartando 1% de cada extremo. Quatro métodos estão disponíveis em METODO_HARM:\n\n\n\n\n\n\n\n\nmétodo\no que faz\nquando usar\n\n\n\n\nmedia_desvio (padrão)\nnormalização média-desvio padrão: \\(a = s_y/s_x\\), \\(b = \\bar{y} - a\\,\\bar{x}\\)\no S2 passa a ter a mesma média e o mesmo desvio-padrão do CBERS, então a textura da área preenchida combina com a do entorno\n\n\nregressao\nregressão linear simples por mínimos quadrados: \\(a = r\\,s_y/s_x\\)\nreduz a variância para \\(\\lvert r\\rvert\\,s_y\\): o preenchimento sai mais liso que a vizinhança\n\n\nhistograma\ncasamento de histograma, pela distribuição inteira por quantis\nacomoda relação não linear entre os sensores, mas não produz coeficientes para reportar\n\n\nminmax\nnormalização mínimo-máximo: ajusta os extremos\nvariante robusta, com os percentis 0,5 e 99,5 no lugar do mínimo e do máximo\n\n\n\nA RRN foi proposta para séries multitemporais de um mesmo sensor (Yuan; Elvidge, 1996), mas transformações lineares banda a banda também têm sido usadas entre sensores com bandas equivalentes, como o MSI e o OLI (Chen et al., 2023). Aqui ela é aplicada entre o MSI e o WPM, cujas bandas ocupam intervalos próximos, mas não idênticos. Por isso ela corrige diferenças de ganho e de offset, mas não a diferença entre as funções de resposta espectral das bandas, o que exigiria um fator de ajuste de banda espectral (SBAF) (Pinto et al., 2016).\nSe a área que estava sob nuvem for muito diferente do resto da cena (mais úmida ou mais vegetada, por exemplo), use ANEL_LACUNA &gt; 0 para calcular o ajuste só numa faixa em torno das lacunas.\nA tabela abaixo está toda em reflectância × 10.000 e tem duas partes. Antes da normalização traz as médias do S2 e do CBERS nos mesmos pixels, a diferença entre elas (em valor e em % da média do CBERS) e a razão de contraste (desvio-padrão do S2 ÷ desvio-padrão do CBERS). Coeficientes traz o ganho \\(a\\) e o deslocamento \\(b\\) da reta.\n\n\n\n\nTabela 3\n\n\n\nNORMALIZAÇÃO RADIOMÉTRICA RELATIVA — Sentinel-2 para a escala do CBERS, método 'media_desvio'\nEscala: reflectância x 10,000 (o SEN2SR, que sai em 0-1, foi multiplicado por 10,000)\n\n        ------------------- ANTES DA NORMALIZAÇÃO -------------------  -------- COEFICIENTES --------\nbanda     média S2  média CBERS  dif. S2-CB   dif. %  contraste S2/CB         a          b          n\nred          751.2        845.1       -93.9   -11.1%             1.19     0.841     +213.6    463,727\ngreen        707.0        776.5       -69.5    -9.0%             1.21     0.826     +192.3    464,082\nblue         472.9        532.0       -59.1   -11.1%             1.22     0.820     +144.0    463,779\nnir         2643.1       2661.4       -18.3    -0.7%             1.22     0.820     +493.2    464,603\n\nReta aplicada: S2 normalizado = a x S2 + b   (a = desvio CBERS / desvio S2)\ndif. S2-CB &lt; 0: o S2 é mais escuro que o CBERS | contraste S2/CB &gt; 1: o S2 tem mais contraste\n\n\n\n\n\nNa cena do curso, antes do ajuste, o S2 estava de 9% a 11% mais escuro que o CBERS no visível (no NIR, as médias já eram quase iguais) e tinha cerca de 20% mais contraste em todas as bandas. O ganho \\(a\\) entre 0,82 e 0,84 reduz esse contraste, e o \\(b\\) devolve o brilho. Nos pixels usados para calcular a reta, a média-desvio padrão deixa as médias e os desvios iguais por construção, então o resultado da normalização é avaliado na emenda (seção 5).\n\n\n4.3 A transição\nComo a lacuna é um buraco no CBERS, não há o que misturar dentro dela. A transição acontece do lado de fora: uma faixa de 50 m (LARGURA_TRANSICAO = 25 pixels) de CBERS válido em volta de cada lacuna é parcialmente substituída, com o peso do Sentinel-2 diminuindo gradualmente, para que o resultado fique natural e sem cortes abruptos. Cada pixel do mosaico recebe um código de procedência:\n\n\n\ncódigo\nprocedência\n\n\n\n\n0\nsem dado\n\n\n1\nCBERS nativo\n\n\n3\nSentinel-2 super-resolvido\n\n\n5\nzona de transição CBERS ↔︎ S2\n\n\n\n\n# peso do S2: 1 dentro da lacuna, diminuindo até 0 ao longo de M px para fora dela\ndist = distance_transform_edt(~buraco)\nw = np.clip(1.0 - dist / max(M, 1), 0.0, 1.0).astype(\"float32\")\nw[~s2_ok] = 0.0\nw[buraco] = 1.0\n\nsaida = np.nan_to_num(cb, nan=0.0) * (1 - w) + np.nan_to_num(sh, nan=0.0) * w\n\nO mosaico final é gravado com o mesmo piso de reflectância da Aula 01 (valores abaixo de zero viram 0). Como a normalização é uma reta \\(a\\,x + b\\), um \\(b\\) negativo poderia gerar valores abaixo de zero; o notebook reporta quantos pixels foram ajustados (na cena do curso, nenhum).",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#a-emenda-ficou-boa",
+    "href": "aulas/03-sen2sr.html#a-emenda-ficou-boa",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "5. A emenda ficou boa?",
+    "text": "5. A emenda ficou boa?\nPara avaliar a emenda, o notebook calcula duas medidas num anel de 3 pixels em volta de cada lacuna, onde as duas imagens existem e podem ser comparadas. Cada uma aparece antes (o S2 só multiplicado por 10.000, sem a reta) e depois da normalização:\n\nviés: a diferença média entre o S2 e o CBERS. Perto de zero significa que não há diferença de brilho na emenda. A coluna “em refl.” traz o viés depois da normalização em reflectância 0–1;\nrazão de desvios: o desvio-padrão do S2 dividido pelo do CBERS. Perto de 1 significa que a área preenchida tem variabilidade parecida com a do entorno.\n\n\n\n\n\nTabela 4\n\n\n\nAVALIAÇÃO DA EMENDA — anel de 3 px em volta das lacunas (reflectância x 10,000)\n\n        ---------- VIÉS (S2 - CBERS) -----------  - RAZÃO DE DESVIOS -\nbanda          antes      depois        em refl.       antes    depois\nred            -60.8       +29.7         +0.0030       1.297     1.090\ngreen          -37.1       +22.6         +0.0023       1.236     1.021\nblue           -65.9       -12.5         -0.0012       1.270     1.042\nnir           +312.7      +271.9         +0.0272       1.179     0.967\n\n'antes' = S2 só multiplicado por 10.000, sem a reta | 'depois' = S2 normalizado\nEmenda boa: viés perto de 0 e razão de desvios perto de 1.\n\nEscrito: data\\processed\\mosaico_20260301_gapfilled.tif\nEscrito: data\\processed\\mosaico_20260301_proveniencia.tif\nParams : mosaico_20260301_gapfilled.params.json\n\n\n\n\n\nComo ler:\n\n\n\n\n\n\n\no que você vê\no que significa\n\n\n\n\nviés ≈ 0 e razão ≈ 1\nemenda boa\n\n\nviés e razão melhoram de “antes” para “depois”\na normalização corrigiu a diferença entre os sensores\n\n\nrazão bem abaixo de 1\npreenchimento mais liso que o entorno: esperado com regressao, sinal de problema com media_desvio\n\n\nviés grande, mesmo sinal em todas as bandas\no ajuste global não descreve a área das lacunas; use ANEL_LACUNA\n\n\nviés grande com sinais diferentes por banda\nprovável troca de bandas entre as duas fontes; confira os rótulos dos arquivos\n\n\n\nNa cena do curso, antes da normalização, o S2 era mais escuro que o CBERS na emenda nas bandas do visível (viés entre −37 e −66) e, em todas as bandas, tinha de 18% a 30% mais variabilidade (razão de desvios entre 1,18 e 1,30). Depois, o viés do visível ficou entre −12 e +30 (no máximo 0,003 de reflectância), e a razão de desvios ficou próxima de 1 em todas as bandas. O NIR é a exceção: o viés já era de cerca de +313 antes do ajuste e ficou em +272 depois (cerca de 0,03 de reflectância). Como ele já existia antes, trata-se de uma diferença local entre as duas imagens em volta das nuvens, e não de um efeito da normalização. É o caso em que vale testar ANEL_LACUNA. Todos os parâmetros e resultados ficam registrados no .params.json do mosaico.\n\n\n\n\n\n\n\n\n\nFigura 4: CBERS com as lacunas, mosaico preenchido e a procedência de cada pixel.\n\n\n\n\n\nCOMPOSIÇÃO DO MOSAICO FINAL (6,456 x 6,968 px de 2 m)\n\nprocedência                           pixels         %   área (ha)\nCBERS-4A original                 36,651,755    81.47%    14,660.7\nSentinel-2 SR (lacunas)            5,067,071    11.26%     2,026.8\nborda (transição CBERS ↔ S2)       3,266,033     7.26%     1,306.4\nsem dado                                 549     0.00%         0.2\ntotal                             44,985,408   100.00%    17,994.2\n\n\n\nAbaixo da figura, a tabela mostra a composição do mosaico: quantos pixels são do CBERS-4A original, quantos foram preenchidos com o Sentinel-2 e quantos estão na borda (a zona de transição), com a porcentagem e a área de cada um. As contagens são feitas na resolução total de 2 m, e não na figura, que é reduzida.\n\n\n\nrecorte: linhas 3617–4117, colunas 2436–2936 | 54% preenchido com S2\n\n\n\n\n\n\n\n\nFigura 5: Zoom numa área com várias lacunas preenchidas, antes e depois.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#o-que-ficou-pronto",
+    "href": "aulas/03-sen2sr.html#o-que-ficou-pronto",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "O que ficou pronto",
+    "text": "O que ficou pronto\ndata/interim/S2_&lt;DATA&gt;_10m.tif                 mosaico S2 (RGBN + delta_days + validade)\ndata/interim/S2_&lt;DATA&gt;_SR2p5m.tif              super-resolvido pelo SEN2SR\ndata/interim/S2_&lt;DATA&gt;_2m_coreg.tif             reamostrado e corregistrado na grade do CBERS\ndata/processed/mosaico_&lt;DATA&gt;_gapfilled.tif    mosaico final     &lt;- o produto do curso\ndata/processed/mosaico_&lt;DATA&gt;_proveniencia.tif de onde veio cada pixel\nAbra os dois últimos juntos no QGIS. A banda de procedência permite saber, para qualquer análise feita sobre este mosaico, quais pixels são observação e quais são reconstrução.\n\n\n\n\n\n\nImportanteLimitações que devem ser destacadas\n\n\n\n\na saída do SEN2SR é de 2,5 m e foi reamostrada para 2 m;\na textura da área preenchida é reconstruída pelo modelo;\nos pixels de Sentinel-2 vêm de outra data (delta_days indica de quantos dias);\na zona de transição substitui parcialmente pixels de CBERS válidos;\na normalização radiométrica relativa é empírica (global ou por anel), e não uma correção física entre sensores: não compensa a diferença entre as funções de resposta espectral das bandas.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#considerações-finais",
+    "href": "aulas/03-sen2sr.html#considerações-finais",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "Considerações finais",
+    "text": "Considerações finais\nA qualidade da reconstrução feita pelo SEN2SR é bastante satisfatória, tendo em vista o tamanho do esforço de levar uma imagem de 10 metros de resolução espacial para 2,5 metros. Entretanto, é visível que a reconstrução não é perfeita se comparada a uma imagem obtida nativamente em 2 metros. Dessa forma, busque priorizar a substituição de pixels com nuvem por imagens de mesma resolução espacial. Para representações qualitativas em baixa escala, a reconstrução pode não satisfazer, mas para análises quantitativas e classificações de uso e cobertura da terra a sua utilização é válida, já que possibilita a identificação de informações que seriam perdidas em uma cena não processada, com a presença de nuvens.\nEspero que essa sequência de aulas tenha contribuído para expandir as aplicações das imagens de alta resolução CBERS-4A/WPM, a partir da apresentação de uma solução prática para lidar com a presença de nuvens e com o longo período de revisita do satélite. O SEN2SR é um modelo de super-resolução recente e considerado estado da arte na reconstrução de imagens, tendo em vista que mantém as características espectrais e reconstrói texturas com menos alucinações que outros modelos. A metodologia apresentada aqui buscou ser de fácil implementação e pode ser adaptada para outras regiões do Brasil.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#erros-comuns-nesta-aula",
+    "href": "aulas/03-sen2sr.html#erros-comuns-nesta-aula",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "Erros comuns nesta aula",
+    "text": "Erros comuns nesta aula\n\n\n\n\n\n\n\nO que aparece na tela\nO que fazer\n\n\n\n\nCUDA out of memory\nReduza a AOI ou processe em blocos menores. Em último caso, force CPU: é mais lento, mas funciona.\n\n\nDownload do modelo travado\nRode a célula de novo. O mlstac retoma de onde parou.\n\n\nModuleNotFoundError: arosics (no Colab)\nRode a célula de instalação do topo do notebook antes das demais.\n\n\nImportError citando mamba ou causal_conv1d\nVocê pediu MODELO = \"full\". Use \"lite\".\n\n\nResultado com faixas coloridas\nA normalização de entrada está errada. O modelo espera reflectância 0–1: confira o divisor de escala e o offset da baseline 04.00.\n\n\nsobreposição válida insuficiente para corregistrar\nA lacuna cobre quase toda a AOI, ou o mosaico S2 ficou vazio. Aumente JANELA_DIAS/NUVEM_MAX.\n\n\nPoucos pontos confiáveis no AROSICS\nCena com pouca textura. Aumente JANELA_COREG, diminua GRID_RES, ou aceite o plano B global.\n\n\na máscara de nuvem não está na grade do CBERS\nA Aula 02 foi rodada sobre outro arquivo. Refaça sobre o mesmo pansharpening.\n\n\nAVISO: sobrou buraco no mosaico S2\nNão havia Sentinel-2 limpo suficiente na janela. Aumente JANELA_DIAS, NUVEM_MAX ou MAX_CENAS.\n\n\nMancha azulada/esbranquiçada no mosaico S2\nNévoa que o SCL não marcou numa das cenas. Olhe a prévia da seção 1.2, identifique a candidata contaminada e tire o idx dela de ESCOLHA_S2.\n\n\nnenhuma cena Sentinel-2 utilizável\nNenhuma candidata sobrou depois da máscara. Reveja ESCOLHA_S2, amplie JANELA_DIAS ou desligue MASCARA_SCL.\n\n\nA etapa do mosaico ficou lenta demais\nSão leituras pela internet. Diminua MAX_CENAS e MAX_PREVIA, ou escolha as cenas à mão em ESCOLHA_S2.\n\n\nBuracos brancos no mosaico onde a imagem está visivelmente limpa\nFalso positivo do SCL. Se você acrescentou a classe 3 em CLASSES_NUVEM, retire (ela pega água escura). Se DILATA_NUVEM_PX estiver acima de 0, volte para 0. Em último caso, MASCARA_SCL = False.\n\n\nMetade do mosaico ficou vazia com escolha manual\nA cena que você escolheu cobre só parte da AOI (emenda de tiles). Veja a coluna cobre na prévia e acrescente o outro tile da mesma data.\n\n\nIndexError na célula de escolha\nAlgum idx de ESCOLHA_S2 não existe na tabela. Os índices vêm da tabela ordenada por proximidade de data e mudam se você alterar JANELA_DIAS.\n\n\nEmenda visível mesmo com viés ≈ 0\nProvavelmente é corregistro, não radiometria. Olhe o deslocamento mediano da seção 3.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/03-sen2sr.html#referências",
+    "href": "aulas/03-sen2sr.html#referências",
+    "title": "Aula 03 — Substituindo pixels com nuvem usando SEN2SR",
+    "section": "Referências",
+    "text": "Referências\n\n\nAYBAR, Cesar et al. A radiometrically and spatially consistent super-resolution framework for Sentinel-2. Remote Sensing of Environment, v. 334, p. 115222, mar. 2026.\n\n\nCHEN, Lei et al. Radiometric normalization using a pseudo-invariant polygon features-based algorithm with contemporaneous Sentinel-2A and Landsat-8 OLI imagery. Applied Sciences, v. 13, n. 4, p. 2525, 2023.\n\n\nCLAVERIE, Martin et al. The Harmonized Landsat and Sentinel-2 surface reflectance data set. Remote Sensing of Environment, v. 219, p. 145–161, 2018.\n\n\nPINTO, Cibele et al. First in-Flight Radiometric Calibration of MUX and WFI on-Board CBERS-4. Remote Sensing, v. 8, n. 5, p. 405, 2016.\n\n\nSCHEFFLER, Daniel et al. AROSICS: An Automated and Robust Open-Source Image Co-Registration Software for Multi-Sensor Satellite Data. Remote Sensing, v. 9, n. 7, p. 676, 2017.\n\n\nYUAN, Ding; ELVIDGE, Christopher D. Comparison of relative radiometric normalization techniques. ISPRS Journal of Photogrammetry and Remote Sensing, v. 51, n. 3, p. 117–126, 1996.\n\n\n\nDocumentação e software\n\nSEN2SR / tacofoundation no Hugging Face\nSentinel-2 L2A no Planetary Computer\nESA. Sentinel-2 processing baseline 04.00: o deslocamento de −1000 na reflectância e a definição das classes do SCL. SentiWiki\nAROSICS na documentação do GFZ",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 03 — Substituindo pixels com nuvem usando SEN2SR"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#o-que-vamos-aprender",
+    "href": "aulas/01-toa-boa.html#o-que-vamos-aprender",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "O que vamos aprender",
+    "text": "O que vamos aprender\nNessa aula, vamos converter a imagem CBERS-4A/WPM de números digitais (DN) para reflectância de superfície (BOA), passando por radiância e por reflectância no topo da atmosfera (TOA). Depois, vamos fundir as bandas multiespectrais com a pancromática, levando a resolução espacial de 8 m para 2 m.\nO número digital não é uma grandeza física: é o valor gravado pelo sensor, e depende do ganho da câmera, da posição do Sol no dia da passagem e do efeito da atmosfera sobre a luz. Por isso, duas cenas da mesma área em datas diferentes não são comparáveis em DN. O caminho que vamos fazer tem quatro etapas:\n\n\n\n\n\n\n\n\n\netapa\nde\npara\nonde acontece\n\n\n\n\ncalibração radiométrica\nDN\nradiância (W m⁻² sr⁻¹ µm⁻¹)\nbandas MS de 8 m\n\n\nreflectância TOA\nradiância\nρ no topo da atmosfera\nbandas MS de 8 m\n\n\ncorreção atmosférica (6S)\nρ TOA\nρ de superfície (BOA)\nbandas MS de 8 m\n\n\nfusão Gram-Schmidt\nMS 8 m + PAN 2 m\nRGBN de 2 m\ngrade da pancromática\n\n\n\nAo final, você terá o arquivo data/interim/pansharpening_&lt;DATA&gt;_boa.tif: quatro bandas em reflectância de superfície, com 2 m de resolução, prontas para a detecção de nuvens da Aula 02.\nRepare que a conversão é feita nas bandas multiespectrais nativas de 8 m, antes da fusão. A fusão redistribui valores entre as bandas e não preserva a linearidade radiométrica de cada banda, então aplicar os coeficientes de calibração depois dela seria uma aproximação. Cabe ressaltar que isso não torna a fusão radiometricamente rigorosa: apesar de preservar a média e o desvio das bandas, o Gram-Schmidt altera um pouco a resposta espectral.\nE por que ir até BOA e não parar no TOA? Na Aula 03 vamos substituir pixels com imagens Sentinel-2 L2A, que já estão em reflectância de superfície. Combinar duas imagens no mesmo nível radiométrico é o cenário correto para análises que dependem desses valores.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#antes-de-começar",
+    "href": "aulas/01-toa-boa.html#antes-de-começar",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "Antes de começar",
+    "text": "Antes de começar\n\nLocalmente (pixi - recomendado)Google Colab\n\n\nSe você está começando por essa aula, o pixi é a linha de execução recomendada.\n\n\n\n\n\n\nNotaAinda não instalou o pixi? Clique aqui\n\n\n\n\n\nBaixe os arquivos do repositório na pasta C:\\geo\\geoprocessamento-cbers4a. Depois, abra o PowerShell (menu Iniciar → digite “PowerShell” → executar como Administrador) e cole:\npowershell -ExecutionPolicy ByPass -c \"irm -useb https://pixi.sh/install.ps1 | iex\"\nFeche e reabra o terminal e confira com pixi --version. Se aparecer um número de versão, está pronto. O passo a passo completo está na Aula 00.\n\n\n\nCom o pixi instalado, abra o PowerShell na pasta do projeto e rode o Jupyter Lab:\ncd C:\\geo\\geoprocessamento-cbers4a\npixi run lab\nAbra colab/01_toa_boa.ipynb. O ambiente já tem o Py6S e o executável do 6S, então as duas células de instalação do topo do notebook não fazem nada aqui.\n\n\nClique no botão do Colab no topo da página. Diferente das outras aulas, aqui a instalação tem duas células e um reinício da sessão no meio: o 6S não é uma biblioteca Python, é um programa em Fortran, e no Colab ele só chega pelo conda.\n\n# célula 1 — instala o conda na sessão; o ambiente REINICIA aqui\n!pip install -q condacolab\nimport condacolab\ncondacolab.install()\n\n\n# célula 2 — rode DEPOIS do reinício\n!mamba install -q -y -c conda-forge rasterio pyproj py6s sixs pystac-client requests\n\nEspere a mensagem de reinício antes de rodar a segunda célula. Se você rodar as duas juntas, a segunda executa no ambiente antigo e não instala nada.\n\n\n\nA célula seguinte do notebook baixa o aulas_cbers.py e a pasta config/ do repositório (quando eles ainda não estão na pasta). O aulas_cbers.py guarda, de forma condensada, as etapas das aulas anteriores, e é isso que permite começar o curso por qualquer aula: se os arquivos da Aula 00 não estiverem em data/raw, ele baixa a mesma cena, com o mesmo recorte.\n\nimport aulas_cbers as ac\nac.configurar_gdal()\n\nCENA_ID = ac.CENA_PADRAO      # CBERS_4A_WPM_20260301_203_141_L4\nNIVEL = \"boa\"                 # \"boa\" (recomendado) ou \"toa\"\nESCALA = ac.ESCALA            # 10000: reflectância 0-1 gravada como int16\nNODATA = ac.NODATA            # -9999\n\narquivos = ac.arquivos_da_cena(CENA_ID)\nif len(arquivos) &lt; 5:\n    arquivos = ac.preparar_aula_01(CENA_ID)   # baixa do STAC, mesmo bbox da Aula 00\n\n\n\n\n\n\n\nAviso\n\n\n\nSe você escolheu outra cena na Aula 00, troque o CENA_ID. Para valer em todas as aulas de uma vez, altere CENA_PADRAO e AOI_BBOX no arquivo colab/aulas_cbers.py. O bbox precisa ser o mesmo em todas as aulas, pois é isso que permite o corregistro com o AROSICS na Aula 03.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#calibração-de-dn-para-radiância",
+    "href": "aulas/01-toa-boa.html#calibração-de-dn-para-radiância",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "1. Calibração: de DN para radiância",
+    "text": "1. Calibração: de DN para radiância\nAo lado de cada banda, a Aula 00 baixou o XML de metadados do produto. É de lá que vêm os dados que a conversão precisa:\n\nabsoluteCalibrationCoefficient: um ganho por banda, que transforma DN em radiância;\nsunPosition/elevation: a elevação do Sol no momento da passagem;\na data da passagem, que define a distância Terra-Sol.\n\nA convenção é multiplicativa e sem offset:\n\\[L_\\lambda = DN \\times G_\\lambda\\]\nO offset é zero porque, ao calibrar os sensores do CBERS, Pinto et al. (2016) obtiveram interceptos estatisticamente iguais a zero; os ganhos publicados já consideram essa condição.\n\nmeta = ac.ler_xml(CENA_ID)      # coeficientes + geometria solar, do XML\nesun = ac.ler_esun()            # config/esun_wpm.json\n\nd = ac.distancia_terra_sol(date.fromisoformat(meta[\"data\"]))\ncos_z = math.cos(math.radians(meta[\"zenite_solar\"]))",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#de-radiância-para-reflectância-toa",
+    "href": "aulas/01-toa-boa.html#de-radiância-para-reflectância-toa",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "2. De radiância para reflectância TOA",
+    "text": "2. De radiância para reflectância TOA\n\\[\\rho_{TOA} = \\frac{\\pi \\, d^2 \\, L_\\lambda}{ESUN_\\lambda \\, \\cos\\theta_z}\\]\nOnde \\(d\\) é a distância Terra-Sol em unidades astronômicas, \\(\\theta_z\\) é o ângulo zenital solar (90° menos a elevação) e \\(ESUN_\\lambda\\) é a irradiância solar exoatmosférica da banda. Os valores de \\(ESUN\\) do WPM ficam em config/esun_wpm.json e foram publicados pela CRESDA (a operadora chinesa do satélite), a partir da resposta espectral do sensor. Eles podem ser baixados no site oficial.\nAntes da conversão, o notebook marca os pixels sem dado. O produto usa 0 para “sem dado”, e consideramos nodata o pixel que vale zero em qualquer banda, e não só o que vale zero em todas. Isso porque, em TOA, o azul nunca é zero sobre a superfície (o espalhamento atmosférico garante algum sinal até na sombra), então um zero isolado é artefato da borda da imagem, e não um alvo escuro.\n\nzeros = np.zeros(forma, dtype=bool)\nfor n in dn:\n    zeros |= (dn[n] == 0)\nvalido = ~zeros\n\nradiancia, toa = {}, {}\nfor n, nome in ac.BANDAS_NATIVAS.items():\n    radiancia[n] = ac.dn_para_radiancia(dn[n], meta[\"coeficientes\"][n])\n    toa[n] = ac.radiancia_para_toa(radiancia[n], esun[n], d, cos_z)\n\n\n2.1 Conferindo antes de seguir\nVale conferir os valores antes de continuar. Se a convenção do coeficiente estivesse invertida (divisiva em vez de multiplicativa), a reflectância passaria de 1,0 na maioria dos pixels, o que é fisicamente impossível. Se o vermelho e o NIR estivessem trocados, o NDVI ficaria negativo sobre a vegetação. Faixas esperadas em TOA:\n\n\n\nalvo\nvermelho\nNIR\nNDVI\n\n\n\n\nvegetação densa\n0,03–0,10\n0,20–0,45\n0,45–0,80\n\n\nsolo exposto\npróximos entre si\npróximos entre si\n0,05–0,25\n\n\nágua\n—\n&lt; 0,06\nnegativo\n\n\n\nA função sanidade() do notebook amostra 200 mil pixels válidos, imprime os percentis de cada banda e do NDVI e avisa quando algo sai da faixa.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#de-toa-para-boa-a-correção-atmosférica-com-o-6s",
+    "href": "aulas/01-toa-boa.html#de-toa-para-boa-a-correção-atmosférica-com-o-6s",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "3. De TOA para BOA: a correção atmosférica com o 6S",
+    "text": "3. De TOA para BOA: a correção atmosférica com o 6S\nA reflectância TOA ainda carrega o efeito da atmosfera: o espalhamento (que acrescenta brilho, principalmente no azul), a absorção por vapor d’água e ozônio e o efeito de vizinhança. O 6S (Vermote et al., 1997) modela esses efeitos e devolve três coeficientes por banda, usados para fazer a inversão:\n\\[y = x_a L - x_b \\qquad\\qquad \\rho_{BOA} = \\frac{y}{1 + x_c \\, y}\\]\nO \\(x_b\\) é a parcela que a atmosfera acrescenta ao sinal (a radiância de trajetória), e ela é maior no azul. Por isso, depois da correção, o azul precisa cair.\n\n3.1 Os parâmetros atmosféricos\nOs coeficientes dependem da geometria (Sol e sensor), da altitude do alvo e do estado da atmosfera no dia. Esses valores ficam em config/atmosfera_rio_claro.json:\n\n\n\n\n\n\n\n\nparâmetro\no que é\nonde obter\n\n\n\n\naot550\nprofundidade óptica de aerossol em 550 nm\nMCD19A2 (MAIAC) ou AERONET\n\n\nvapor_agua_gcm2\ncoluna de vapor d’água (g/cm²)\nMERRA-2 (TQV) ou ERA5\n\n\nozonio_cmatm\ncoluna de ozônio (cm-atm)\nMERRA-2 (TO3) ou OMI/TROPOMI\n\n\naltitude_alvo_km\naltitude média do terreno\nqualquer MDE; Rio Claro ≈ 0,62 km\n\n\n\nAs condições atmosféricas mudam de um dia para o outro. Se você escolheu outra cena, data ou área, busque os valores do seu dia com o código que elaborei no Google Earth Engine (acesse aqui) e substitua no arquivo antes de continuar.\nEm Rio Claro o relevo é suave e uma altitude única resolve. Em áreas com grande amplitude de relevo, o ideal é dividir a cena em faixas de altitude com um modelo digital de elevação e rodar o 6S uma vez para cada faixa.\nAntes de rodar a correção, o notebook confere se o 6S está instalado. Se não estiver, ele avisa e segue em TOA para a aula não travar; nesse caso, todo o resto do curso vai usar um produto TOA. Se aparecer essa mensagem, rode pixi run check e confira a linha do 6S.\n\n\n3.2 Escolhendo o AOD quando você não tem a medida do dia (não recomendado)\nDos parâmetros, o AOD é o que mais mexe no resultado e o mais difícil de obter. Quando não temos a medida do dia, dá para estimá-lo a partir da própria imagem, pelo critério do alvo escuro: numa cena com água ou sombra densa, o pixel mais escuro tem reflectância de superfície no azul perto de zero (em torno de 0,005), mas não negativa. Se o AOD for alto demais, o 6S subtrai brilho demais e o percentil 1 do azul fica negativo; se for baixo demais, ele fica alto.\nCom AJUSTAR_AOD = True, o notebook roda o 6S só na banda azul com vários valores de AOD e escolhe o que deixa o alvo escuro mais perto de 0,005 (leva uns 30 s):\n\ntestes = {}\nfor aod in [0.03, 0.05, 0.08, 0.12, 0.16, 0.22]:\n    xa, xb, xc = ac.coeficientes_6s(meta, dict(atm, aot550=aod), 1)   # 1 = azul\n    y = xa * L_azul - xb\n    r = y / (1.0 + xc * y)\n    testes[aod] = np.percentile(r, 1)\n\naod_sugerido = min(testes, key=lambda a: abs(testes[a] - 0.005))\n\n\n\n3.3 A correção, banda a banda\nCom os parâmetros definidos, o 6S roda uma vez para cada banda e os coeficientes são aplicados sobre a radiância:\n\nfor n, nome in ac.BANDAS_NATIVAS.items():\n    xa, xb, xc = ac.coeficientes_6s(meta, atm, n)\n    y = xa * radiancia[n] - xb\n    refl[nome] = y / (1.0 + xc * y)\n\nO efeito da correção aparece no histograma: o azul cai (era o mais afetado pelo espalhamento) e o NDVI sobe, porque o vermelho cai proporcionalmente mais que o NIR.\n\n\n\nbanda         TOA p50    BOA p50     variação\nazul           0.1012     0.0424      -0.0588\nverde          0.0953     0.0685      -0.0268\nvermelho       0.0740     0.0605      -0.0135\nnir            0.2596     0.2736      +0.0140\n\nNDVI mediano: TOA 0.5546 -&gt; BOA 0.6415\n\n\n\n\n\n\n\n\nFigura 1: Distribuição da reflectância e do NDVI, antes e depois da correção atmosférica.\n\n\n\n\n\nFonte: Aula 01 — De DN para reflectância (TOA e BOA) e fusão com a pancromática\nPor fim, o notebook verifica os valores negativos. Uma pequena parcela de reflectância levemente negativa sobre água e sombra é normal em qualquer correção atmosférica (é ruído em torno de zero; o produto de reflectância de superfície do Landsat, por exemplo, aceita valores de −0,2 a 1,6). Já uma mediana negativa, ou mais de uns 5% dos pixels de uma banda abaixo de zero, indica correção demais, quase sempre por AOD alto.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#gravando-o-composto-rgbn-de-8-m",
+    "href": "aulas/01-toa-boa.html#gravando-o-composto-rgbn-de-8-m",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "4. Gravando o composto RGBN de 8 m",
+    "text": "4. Gravando o composto RGBN de 8 m\nA saída é gravada em int16, com a reflectância multiplicada por 10.000 (a mesma escala do Sentinel-2 L2A, o que evita conversão na Aula 03). O nodata passa a ser -9999, porque agora zero é um valor de reflectância válido. Valores abaixo de zero são gravados como 0 (PISO_REFLECTANCIA), e o número de pixels afetados fica registrado.\nA ordem das bandas passa a ser RGBN (vermelho, verde, azul, NIR), diferente da ordem nativa do CBERS (azul, verde, vermelho, NIR), e os nomes das bandas ficam gravados dentro do arquivo. Assim, as aulas seguintes leem a ordem pelo metadado, em vez de assumir, o que evita trocas silenciosas entre bandas.\n\nwith rasterio.open(rgbcomp, \"w\", **perfil) as dst:\n    for i, n in enumerate(ac.ORDEM_SAIDA, start=1):        # [3, 2, 1, 4] = R, G, B, NIR\n        arr = refl[ac.BANDAS_NATIVAS[n]]\n        esc = np.clip(np.rint(arr * ESCALA), PISO_ESC, TETO_ESC)\n        dst.write(np.where(valido, esc, NODATA).astype(\"int16\"), i)\n        dst.set_band_description(i, ac.NOMES_SAIDA[i - 1])\n\nJunto com o GeoTIFF é gravado um arquivo .params.json com tudo o que foi usado: coeficientes de calibração, ESUN, geometria solar, parâmetros atmosféricos, coeficientes do 6S e o diagnóstico de negativos. Assim, é possível saber depois exatamente como aquele arquivo foi gerado.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#alinhando-a-multiespectral-com-a-pancromática",
+    "href": "aulas/01-toa-boa.html#alinhando-a-multiespectral-com-a-pancromática",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "5. Alinhando a multiespectral com a pancromática",
+    "text": "5. Alinhando a multiespectral com a pancromática\nNa Aula 00, cada banda foi recortada na sua própria grade (8 m nas multiespectrais e 2 m na PAN), então as duas imagens podem ter ficado deslocadas em alguns metros. O Gram-Schmidt precisa que a razão entre elas seja exatamente 4 e que as origens coincidam; sem isso, a fusão gera um deslocamento que se propaga até o corregistro da Aula 03. A função alinhar_ms_pan recorta as duas imagens na extensão comum e ajusta a PAN para uma grade exatamente 4 vezes mais fina que a da multiespectral.\n\nms, pan, t_ms, t_pan, crs, nod_ms, FATOR = ac.alinhar_ms_pan(rgbcomp, arquivos[\"BAND0\"])",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#a-fusão-gram-schmidt",
+    "href": "aulas/01-toa-boa.html#a-fusão-gram-schmidt",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "6. A fusão Gram-Schmidt",
+    "text": "6. A fusão Gram-Schmidt\nO Gram-Schmidt é um método de substituição de componente (Laben; Brower, 2000), que funciona em quatro passos:\n\nsimula uma pancromática a partir das bandas multiespectrais, \\(I\\);\najusta a média e o desvio da pancromática real aos dessa simulada, produzindo \\(PAN'\\);\ncalcula \\(\\Delta = PAN' - I\\), que é o detalhe espacial que só a pancromática tem;\ndevolve esse detalhe a cada banda com um ganho próprio, \\(MS_i^{fus} = MS_i + g_i \\Delta\\), com \\(g_i = \\mathrm{cov}(MS_i, I) / \\mathrm{var}(I)\\) (Aiazzi; Baronti; Selva, 2007).\n\nComo o passo 2 ajusta a escala da PAN, tanto faz ela estar em DN ou em reflectância.\nO ponto mais importante é o passo 1. A forma clássica usa pesos fixos (R 0,166 | G 0,167 | B 0,167 | NIR 0,5, os padrões genéricos do ArcGIS Pro, já que o CBERS-4A não consta na lista de sensores da ferramenta). Esses pesos, porém, não representam a resposta espectral do WPM: com 0,5 no NIR, a pancromática simulada fica dominada pelo infravermelho e não se parece com a real. Com isso, o \\(\\Delta\\) passa a carregar diferenças espectrais, e não só detalhe espacial, o que empurra alvos escuros (água, sombra) para valores negativos.\nPor isso, usamos a abordagem de Aiazzi; Baronti; Selva (2007), conhecida como GSA (Gram-Schmidt Adaptive): a pancromática é degradada para 8 m e os pesos são estimados por mínimos quadrados a partir das próprias bandas multiespectrais,\n\\[I = a_0 + \\sum_i a_i \\, MS_i .\\]\nNa cena do curso, o desvio de \\(\\Delta\\) cai de cerca de 218 (pesos fixos) para 27 (GSA), na escala de 10.000. Essa implementação em NumPy substitui a ferramenta de pansharpening do ArcGIS Pro, que exige licença.\nNo notebook, as bandas multiespectrais são primeiro reamostradas para a grade de 2 m (convolução cúbica); depois, os coeficientes são estimados e a fusão é aplicada:\n\nalpha, r2_pan, _ = intensidade_por_regressao(ms.astype(\"float32\"), pan, valido_ms, FATOR)\nfus, ganhos, delta_fus = gram_schmidt(ms_up, pan, valido_fus, alpha=alpha)\n\nMesmo com o GSA, uma pequena parte dos pixels escuros fica abaixo de zero depois da fusão (na cena do curso, menos de 0,5% no azul e no vermelho, com valores em torno de −0,005). O notebook mostra esses números e grava o resultado com o mesmo piso em 0, registrando no .params.json quantos pixels foram ajustados.\n\n\n\n\n\n\n\n\n\nFigura 2: Cena fusionada em 2 m: cor natural e falsa cor NIR/R/G.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 3: O mesmo trecho antes (8 m) e depois (2 m) da fusão Gram-Schmidt.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#arquivos-finais-desta-aula",
+    "href": "aulas/01-toa-boa.html#arquivos-finais-desta-aula",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "Arquivos finais desta aula",
+    "text": "Arquivos finais desta aula\ndata/interim/rgbcomp_&lt;DATA&gt;_boa.tif          8 m, RGBN, reflectância x10000\ndata/interim/pansharpening_&lt;DATA&gt;_boa.tif    2 m, RGBN, reflectância x10000   &lt;- produto da aula\ndata/interim/*.params.json                   o que foi usado para gerar os arquivos\nNa Aula 02, esse arquivo de 2 m entra no OmniCloudMask, que separa nuvem espessa, nuvem fina e sombra de nuvem.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#erros-comuns-nesta-aula",
+    "href": "aulas/01-toa-boa.html#erros-comuns-nesta-aula",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "Erros comuns nesta aula",
+    "text": "Erros comuns nesta aula\n\n\n\n\n\n\n\nO que aparece na tela\nO que fazer\n\n\n\n\ncannot find the sixs executable\nO Py6S está instalado, o 6S não. No pixi: pixi run check, a linha “6S (binario)” tem que estar [ OK ]. No Colab: rode as duas células de instalação, com o reinício entre elas.\n\n\nO notebook avisa “Py6S/6S indisponível — seguindo em TOA”\nMesma causa acima. A aula continua rodando, mas o produto sai em TOA e a Aula 03 vai harmonizar níveis diferentes.\n\n\nnenhum XML utilizável encontrado\nOs XML não foram baixados na Aula 00 (com_xml=True) ou estão em outra pasta. Sem eles não há coeficiente de calibração.\n\n\nMediana de alguma banda negativa\nAOD alto demais. Rode a busca da seção 3.2.\n\n\nNDVI p95 abaixo de 0,35\nVermelho e NIR provavelmente trocados. Confira a ordem das bandas do arquivo de entrada.\n\n\nReflectância acima de 1,0 na maioria dos pixels\nConvenção do coeficiente invertida: a relação é L = DN × G, multiplicativa.\n\n\nas bandas MS não estão na mesma grade\nUma das bandas foi baixada com bbox diferente. Refaça a Aula 00 com o mesmo AOI_BBOX.\n\n\nrazão MS/PAN não inteira\nA pancromática não é de 2 m, ou não é da mesma cena que as multiespectrais.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/01-toa-boa.html#referências",
+    "href": "aulas/01-toa-boa.html#referências",
+    "title": "Aula 01 — De DN para reflectância (TOA e BOA)",
+    "section": "Referências",
+    "text": "Referências\n\n\nAIAZZI, B.; BARONTI, S.; SELVA, M. Improving Component Substitution Pansharpening Through Multivariate Regression of MS+Pan Data. IEEE Transactions on Geoscience and Remote Sensing, v. 45, n. 10, p. 3230–3239, 2007.\n\n\nLABEN, Craig A.; BROWER, Bernard V. Process for enhancing the spatial resolution of multispectral imagery using pan-sharpening., 2000. Disponível em: &lt;https://patents.google.com/patent/US6011875A/en&gt;\n\n\nPINTO, Cibele et al. First in-Flight Radiometric Calibration of MUX and WFI on-Board CBERS-4. Remote Sensing, v. 8, n. 5, p. 405, 2016.\n\n\nVERMOTE, E. F. et al. Second Simulation of the Satellite Signal in the Solar Spectrum, 6S: an overview. IEEE Transactions on Geoscience and Remote Sensing, v. 35, n. 3, p. 675–686, 1997.\n\n\n\nDocumentação e software\n\nCRESDA. Irradiância solar equivalente no topo da atmosfera dos sensores civis de observação terrestre (Anexo 4), rev. 2024-12-22. página da CRESDA\nUSGS. Landsat 8-9 Collection 2 Level 2 Science Product Guide (LSDS-1619), com a faixa válida de reflectância de superfície (−0,2 a 1,6). documento no USGS\nPy6S · rasterio",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 01 — De DN para reflectância (TOA e BOA)"
+    ]
+  },
+  {
+    "objectID": "aulas/00-ambiente.html#o-que-vamos-aprender",
+    "href": "aulas/00-ambiente.html#o-que-vamos-aprender",
+    "title": "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC",
+    "section": "O que vamos aprender",
+    "text": "O que vamos aprender\nSeja muito bem-vindo(a) à primeira aula dessa mini série!\nNessa aula vamos fazer duas coisas: preparar o ambiente Python que roda todas as aulas do curso (a correção atmosférica do CBERS-4A, a remoção de nuvens com o OmniCloudMask e a super-resolução do Sentinel-2 com o SEN2SR) e baixar a imagem CBERS-4A que vamos utilizar ao longo da série.\nUm “ambiente” é uma caixa isolada com uma versão do Python e um conjunto de bibliotecas fixas. Ele permite gerenciar tudo de forma organizada, sem conflitos e sem alterar arquivos do seu sistema.\nPara montar esse ambiente vamos usar o gerenciador pixi. Ele lê o arquivo pixi.toml (que já vem no repositório do curso), baixa o próprio Python e todas as bibliotecas na versão certa, e registra tudo no arquivo pixi.lock. É esse pixi.lock que garante que o ambiente da sua máquina seja idêntico ao que utilizei nos vídeos.\n\n\n\n\n\n\nNotaDúvida técnica: por que pixi? E não Miniforge/conda ou “pip” pelo terminal?\n\n\n\n\n\nEsta sequência de aulas tem uma combinação que nenhuma ferramenta sozinha resolve bem no Windows:\n\na correção atmosférica BOA depende do programa 6S (via Py6S), e o corregistro depende do GDAL. No Windows, esses binários só funcionam corretamente pelo conda-forge;\nos modelos de aprendizado profundo (omnicloudmask, sen2sr, mlstac) só existem no PyPI (o repositório do pip).\n\nO pixi une os dois mundos (conda-forge e PyPI) num único arquivo e num único pixi.lock. Na prática, você instala todas as bibliotecas de uma vez, num ambiente que já foi testado, sem precisar rodar comandos manualmente nem lidar com versões incompatíveis.\n\n\n\nAs principais bibliotecas do ambiente são: numpy, pandas, geopandas, rasterio, matplotlib, py6s (BOA), arosics (corregistro), torch, omnicloudmask e sen2sr. Você não precisa instalar nada disso à mão, o pixi.toml já lista tudo.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+    ]
+  },
+  {
+    "objectID": "aulas/00-ambiente.html#passo-1-baixar-o-material-do-curso",
+    "href": "aulas/00-ambiente.html#passo-1-baixar-o-material-do-curso",
+    "title": "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC",
+    "section": "Passo 1 — Baixar o material do curso",
+    "text": "Passo 1 — Baixar o material do curso\nVocê tem duas opções.\nCom Git (se você tiver o Git instalado no seu computador): abra o PowerShell e digite:\ncd C:\\geo\ngit clone https://github.com/danfioramonte/geoprocessamento-cbers4a.git\ncd geoprocessamento-cbers4a\nSem Git: na página do repositório, clique em Code → Download ZIP, extraia para C:\\geo\\ e entre na pasta pelo terminal.\n\n\n\n\n\n\nAviso\n\n\n\nTrabalhe em um caminho sem acentos e sem espaços, como C:\\geo\\. Pastas como C:\\Users\\João Paulo\\Área de Trabalho\\ causam erros de leitura no GDAL que são difíceis de diagnosticar. Evite também pastas sincronizadas em nuvem (OneDrive/Google Drive): o programa tenta sincronizar cada GeoTIFF e pode travar o processamento.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+    ]
+  },
+  {
+    "objectID": "aulas/00-ambiente.html#passo-2-instalar-o-pixi",
+    "href": "aulas/00-ambiente.html#passo-2-instalar-o-pixi",
+    "title": "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC",
+    "section": "Passo 2 — Instalar o pixi",
+    "text": "Passo 2 — Instalar o pixi\nEsse passo é para quem vai processar na própria máquina. Se você pretende usar o Google Colab, pode pular direto para o Passo 3. Lembre só que o Colab apaga os arquivos ao encerrar a sessão e tem limite de tempo e de disco; para áreas maiores, a instalação local compensa.\nO pixi é um único programa, instalado uma vez na sua máquina. Abra o PowerShell (menu Iniciar → digite “PowerShell” → executar como Administrador) e cole:\npowershell -ExecutionPolicy ByPass -c \"irm -useb https://pixi.sh/install.ps1 | iex\"\nDepois feche e reabra o terminal, para o PATH ser atualizado, e confira:\npixi --version\nSe aparecer um número de versão, está pronto. Você não precisa instalar o Python, o pixi cuida disso sozinho.\n\n2.1 Criar o ambiente\nNo PowerShell, entre na pasta do projeto e rode:\ncd C:\\geo\\geoprocessamento-cbers4a\npixi install\nO pixi vai ler o pixi.toml, baixar o Python, o GDAL, o PyTorch e todo o resto. Essa etapa leva alguns minutos, mas você só faz isso uma vez.\n\n\n2.2 Conferir se deu certo\npixi run check\nEsse comando roda o verificar_ambiente.py dentro do ambiente e lista cada biblioteca, uma por uma, inclusive o executável do 6S (que o BOA usa). Se algo aparecer como [FALHA], a própria saída diz o que fazer.\n\n\n2.3 Abrir o Jupyter Lab\npixi run lab\nO Jupyter Lab abre já dentro do ambiente correto, sem precisar “ativar” nada. Esse é o comando que você vai usar no início de cada aula.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+    ]
+  },
+  {
+    "objectID": "aulas/00-ambiente.html#passo-3-baixando-a-imagem-cbers-4a-via-api-stac",
+    "href": "aulas/00-ambiente.html#passo-3-baixando-a-imagem-cbers-4a-via-api-stac",
+    "title": "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC",
+    "section": "Passo 3 — Baixando a imagem CBERS-4A via API STAC",
+    "text": "Passo 3 — Baixando a imagem CBERS-4A via API STAC\nO STAC (SpatioTemporal Asset Catalog, ou Catálogo de Ativos Espaço-Temporais) (Radiant Earth Foundation, 2021) é um padrão para organizar e buscar imagens de satélite por meio de uma API. Vários provedores seguem esse padrão, incluindo o Brazil Data Cube (BDC) (Ferreira et al., 2020), do INPE, que disponibiliza as imagens CBERS-4A. Com ele, conseguimos buscar as cenas por área e por data e baixar só o recorte que nos interessa, sem precisar baixar a cena inteira.\nNessa etapa vamos baixar uma imagem CBERS-4A do sensor WPM para uma área de interesse (AOI) que cobre a área urbana e o horto florestal de Rio Claro/SP. Vamos buscar as cenas disponíveis, escolher a de interesse e baixar as bandas espectrais (PAN, azul, verde, vermelho e NIR) já recortadas para a nossa área, em GeoTIFF.\nTodo o código está no notebook colab/00_aquisicao_cbers.ipynb, que você pode rodar de duas formas:\n\nLocal (recomendado): com o ambiente pronto, rode pixi run lab, abra o notebook e execute célula a célula. Os arquivos são salvos em data/raw, que é onde a Aula 01 vai procurar.\nColab: clique no botão do Colab no topo da página. A primeira célula instala as bibliotecas na sessão, e a de configuração monta o seu Google Drive e grava os GeoTIFFs direto em MyDrive/geoprocessamento-cbers4a/data/raw, onde as Aulas 01 a 03 vão procurar.\n\n\n3.1 A coleção e as bandas\nVamos usar a coleção CB4A-WPM-L4-DN-1 do BDC: imagens do sensor WPM, ortorretificadas, em números digitais (int16, nodata = 0).\n\n\n\nasset\nbanda\nfaixa espectral\nresolução\n\n\n\n\nBAND0\nPAN\n0,45–0,90 µm\n2 m\n\n\nBAND1\nBlue\n0,45–0,52 µm\n8 m\n\n\nBAND2\nGreen\n0,52–0,59 µm\n8 m\n\n\nBAND3\nRed\n0,63–0,69 µm\n8 m\n\n\nBAND4\nNIR\n0,77–0,89 µm\n8 m\n\n\n\nUm detalhe dessa coleção: o campo de cobertura de nuvens do STAC (eo:cloud_cover) vem vazio em todas as cenas. Ou seja, não dá para filtrar por nuvem na busca. Por isso, a escolha da cena aqui é visual, pelas miniaturas (seção 3.5) e pela pré-visualização da AOI (seção 3.6). A detecção de nuvens propriamente dita fica para a Aula 02.\n\n\n3.2 Preparando o ambiente (Colab)\nA primeira célula só faz diferença no Colab, onde ela instala as bibliotecas na sessão. Localmente, com o pixi, ela não faz nada.\n\nimport sys\n\nNO_COLAB = \"google.colab\" in sys.modules\nif NO_COLAB:\n    !pip install -q pystac-client rasterio pandas matplotlib shapely pyproj requests pillow folium\n\n\n\n3.3 Configuração e imports\nEssa célula ajusta algumas opções do GDAL para leitura remota (novas tentativas quando a conexão com o INPE cai, por exemplo), importa as bibliotecas, define o endereço do STAC, a coleção e as bandas que vamos baixar, e cria a pasta de saída data/raw. Os ajustes do GDAL precisam vir antes de importar o rasterio.\n\nimport os\nos.environ.setdefault(\"GDAL_HTTP_MAX_RETRY\", \"5\")    # a API do INPE às vezes derruba a conexão\n# ... (demais ajustes e imports no notebook)\n\nSTAC_URL = \"https://data.inpe.br/bdc/stac/v1/\"\nCOLLECTION = \"CB4A-WPM-L4-DN-1\"\nBANDAS = {\"BAND1\": \"blue\", \"BAND2\": \"green\", \"BAND3\": \"red\", \"BAND4\": \"nir\", \"BAND0\": \"pan\"}\n\n# no Colab, grava direto no Google Drive (USAR_DRIVE = False para não usar)\nUSAR_DRIVE = True\nBASE_DADOS = \"data\"\nif \"google.colab\" in sys.modules and USAR_DRIVE:\n    from google.colab import drive\n    drive.mount(\"/content/drive\")\n    BASE_DADOS = \"/content/drive/MyDrive/geoprocessamento-cbers4a/data\"\n\nOUTPUT_DIR = os.path.join(BASE_DADOS, \"raw\")\nos.makedirs(OUTPUT_DIR, exist_ok=True)\nclient = Client.open(STAC_URL)\n\n\n\n3.4 Definindo a área de interesse (AOI)\nA AOI é um retângulo [oeste, sul, leste, norte] em graus (EPSG:4326). O exemplo cobre a área urbana e o horto florestal de Rio Claro/SP, com cerca de 13 × 14 km. Para a sua região, pegue as coordenadas no bbox finder e troque os valores. Tenha em mente que, quanto maior a AOI, mais demorado fica o download (principalmente da PAN).\n\nAOI_BBOX = [-47.625969, -22.467835, -47.498227, -22.344048]\nAOI_NOME = \"rio_claro\"\n\nlargura_km = (AOI_BBOX[2] - AOI_BBOX[0]) * 111 * np.cos(np.radians(AOI_BBOX[1]))\naltura_km = (AOI_BBOX[3] - AOI_BBOX[1]) * 111\nprint(f\"tamanho aproximado: {largura_km:.1f} x {altura_km:.1f} km\")\n\n\n\n\n\n\n\nDicaOpcional: usar o polígono de um município inteiro\n\n\n\n\n\nSe preferir usar os limites de um município no lugar do retângulo, o geobr já vem no ambiente do curso. Troque a célula acima por:\nimport geobr\nmuni = geobr.read_municipality(year=2020)\nalvo = muni.loc[(muni[\"abbrev_state\"] == \"SP\") & (muni[\"name_muni\"] == \"Rio Claro\")].iloc[0]\nAOI_BBOX = list(alvo.geometry.bounds)\nAOI_NOME = \"rio_claro\"\nCuidado: um município inteiro deixa o download bem mais lento.\n\n\n\nEm seguida, o notebook mostra um mapa interativo (folium) com o retângulo desenhado, para você conferir se ele caiu no lugar certo.\n\n\n3.5 Buscando e escolhendo a cena\nA busca é feita por área (bbox) e por intervalo de datas. Ela retorna toda cena cujo contorno cruza a AOI, e o resultado vira uma tabela com o índice (idx), o id, a data e a órbita/ponto de cada cena.\n\ndef buscar_cenas(bbox, datetime_range, collection=COLLECTION, limite=None):\n    busca = client.search(collections=[collection], bbox=bbox,\n                          datetime=datetime_range, max_items=limite)\n    items = list(busca.items())\n    # ... monta um DataFrame com idx, id, data, orbita_ponto e nº de bandas\n    return items, pd.DataFrame(linhas)\n\n\nitems, df = buscar_cenas(AOI_BBOX, \"2025-01-01/2026-09-03\")\ndf\n\nCada cena traz uma miniatura (um PNG leve da cena inteira), que é a forma mais rápida de ver se ela cobre a sua região. A função mostrar_thumbnails(items, df, n=8) exibe as oito primeiras, com o idx entre colchetes.\nLogo depois, o notebook define três funções que leem só a AOI de um arquivo remoto, sem baixar a cena inteira. Elas são usadas na pré-visualização e na exportação, então rode essa célula mesmo que você já saiba qual cena quer:\n\nreprojetar_bounds converte o bbox de graus para o sistema de coordenadas da cena;\njanela_da_aoi transforma esses limites numa janela de pixels, calculada para cada arquivo (a PAN tem grade de 2 m e as multiespectrais de 8 m);\nler_aoi lê essa janela, com a opção de uma leitura reduzida para inspeção rápida.\n\nA cena cobre mesmo a sua AOI? É comum uma cena aparecer na busca com 0% de cobertura: o retângulo dela cruza a AOI, mas ali só tem nodata. Além disso, a miniatura mostra a cena inteira, e a nossa AOI é só um pedaço dela. Por isso, o notebook recorta a miniatura na AOI: ele lê só o cabeçalho do GeoTIFF (para saber o CRS e os limites da cena), converte o bbox da AOI em pixels da miniatura, recorta e mede quanto da AOI tem dado. O que aparecer em cinza claro é nodata.\nUsamos a miniatura porque os GeoTIFFs dessa coleção não têm overviews (versões reduzidas embutidas), e ler as bandas de 8 cenas levaria mais de 10 minutos. A limitação é que o recorte sai pixelado: serve para avaliar cobertura e nuvens grandes, e o detalhe fica para a pré-visualização da seção 3.6.\n\n\n\n\n\n\n\n\n\n\n\n\n(a) Prévia das cenas candidatas CBERS-4A: miniatura recortada na AOI, com a cobertura medida ali.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nidx\nid\ndata\norbita_ponto\ncobertura_aoi_%\n\n\n\n\n0\n0\nCBERS_4A_WPM_20260327_205_141_L4\n2026-03-27\n205_141\n0.0\n\n\n1\n1\nCBERS_4A_WPM_20260301_203_141_L4\n2026-03-01\n203_141\n100.0\n\n\n2\n2\nCBERS_4A_WPM_20250927_204_141_L4\n2025-09-27\n204_141\n100.0\n\n\n3\n3\nCBERS_4A_WPM_20250727_204_141_L4\n2025-07-27\n204_141\n100.0\n\n\n4\n4\nCBERS_4A_WPM_20250626_204_141_L4\n2025-06-26\n204_141\n100.0\n\n\n5\n5\nCBERS_4A_WPM_20250526_204_141_L4\n2025-05-26\n204_141\n100.0\n\n\n6\n6\nCBERS_4A_WPM_20250521_205_141_L4\n2025-05-21\n205_141\n0.0\n\n\n7\n7\nCBERS_4A_WPM_20250217_205_141_L4\n2025-02-17\n205_141\n0.0\n\n\n8\n8\nCBERS_4A_WPM_20250122_204_141_L4\n2025-01-22\n204_141\nNaN\n\n\n\n\n\n\n\n(b)\n\n\n\n\n\nFigura 1\n\n\n\n\nFonte: Aula 00 — Aquisição da imagem CBERS-4A/WPM via STAC\nAgora escolha o idx da cena e coloque em ESCOLHA, seguindo dois critérios: cobertura_aoi_% acima de 95 e nuvem sobre uma parte da AOI. Normalmente buscamos a cena mais limpa possível, mas nas Aulas 02 e 03 vamos detectar as nuvens e preencher esses pixels com Sentinel-2 super-resolvido, e para isso precisamos de nuvem.\nA cena de referência do curso é a CBERS_4A_WPM_20260301_203_141_L4 (01/03/2026), que é o idx 1 da tabela. Se você escolher outra, anote o id: as Aulas 01, 02 e 03 pedem esse identificador.\n\nESCOLHA = 1  # &lt;-- troque pelo \"idx\" da cena desejada\n\nitem = items[ESCOLHA]\nprint(\"id:     \", item.id)\nprint(\"data:   \", item.properties.get(\"datetime\"))\n\n\n\n3.6 Pré-visualização em RGB\nAntes de baixar tudo em resolução total, vale conferir a cena escolhida com uma composição colorida da AOI (lida de forma reduzida). O contraste é ajustado por percentil (2%–98%), ignorando o nodata. O notebook mostra a cor natural e, em seguida, a falsa cor NIR/R/G, em que a vegetação aparece em vermelho.\n\nrgb = preview_rgb(item, AOI_BBOX)                                    # cor natural\n_ = preview_rgb(item, AOI_BBOX, bandas=(\"BAND4\", \"BAND3\", \"BAND2\"))  # falsa cor\n\n\n\n\n\n\n\n\n\n\nFigura 2: Pré-visualização em cor natural (R/G/B) do recorte da AOI, antes de exportar.\n\n\n\n\n\n\nSe não gostou da cena, volte na célula do ESCOLHA, troque o idx e rode de novo.\n\n\n3.7 Exportando as bandas para data/raw\nAgora lemos a AOI em resolução total e gravamos em GeoTIFF, preservando o tipo de dado original (int16, número digital), o nodata = 0, o CRS e a georreferência do recorte, com compressão deflate. Saem 5 GeoTIFFs, um por banda, nomeados com o asset do INPE (BAND0 a BAND4), e ao lado de cada um o XML de metadados da banda. É desse XML que a Aula 01 tira os coeficientes de calibração e a geometria solar. Por fim, as quatro multiespectrais são empilhadas num único arquivo RGBN; a PAN fica separada porque tem outra grade.\n\narquivos = exportar_cena(item, AOI_BBOX, AOI_NOME)     # 5 bandas + XML em data/raw\n\nordem = [\"BAND3\", \"BAND2\", \"BAND1\", \"BAND4\"]           # R, G, B, NIR\nstack_rgbn = empilhar([arquivos[a] for a in ordem],\n                      os.path.join(OUTPUT_DIR, f\"{AOI_NOME}_{item.id}_RGBN.tif\"),\n                      descricoes=[BANDAS[a] for a in ordem])\n\n\n\n\n\n\n\nAviso\n\n\n\nA PAN é a banda mais demorada, com 4× mais linhas e 4× mais colunas que as multiespectrais (na AOI do curso, cerca de 6.500 × 7.000 pixels). Se a conexão com o INPE cair no meio, rode a célula de novo.\n\n\n\n\n3.8 Conferindo o resultado\nPara fechar, abrimos os arquivos gravados e conferimos o CRS, o tamanho, a resolução e os nomes das bandas, além de uma visualização rápida em RGB, falsa cor e PAN.\n\n\n\nCRS:        EPSG:32723\nshape:      1742 x 1615 (4 bandas, int16)\nresolução:  (8.0, 8.0) m\nbounds:     BoundingBox(left=229772.0, bottom=7513022.0, right=242692.0, top=7526958.0)\ndescrições: ('red', 'green', 'blue', 'nir')\n\nPAN -&gt; 6968 x 6462 | resolução: (2.0, 2.0) m\n\n\n\n\n\n\n\n\nFigura 3: Visualização rápida do recorte exportado: RGB, falsa cor NIR/R/G e PAN.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+    ]
+  },
+  {
+    "objectID": "aulas/00-ambiente.html#próximo-passo",
+    "href": "aulas/00-ambiente.html#próximo-passo",
+    "title": "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nOs arquivos ficaram em data/raw:\ndata/raw/rio_claro_&lt;CENA_ID&gt;_BAND0.tif       pancromática, 2 m\ndata/raw/rio_claro_&lt;CENA_ID&gt;_BAND1..4.tif    multiespectrais, 8 m\ndata/raw/rio_claro_&lt;CENA_ID&gt;_BAND*.xml       calibração e geometria solar\ndata/raw/rio_claro_&lt;CENA_ID&gt;_RGBN.tif        multiespectrais empilhadas\nNa Aula 01 vamos converter esses números digitais para reflectância TOA e BOA e fundir as multiespectrais com a pancromática. Um lembrete: o arquivo exportado herda a zona UTM da cena. Se você baixar cenas de órbitas diferentes para a mesma AOI, elas podem cair em zonas UTM distintas, e aí é preciso reprojetar antes de comparar.\nTravou em algum ponto? A página de erros comuns apresenta as mensagens mais frequentes e o que fazer com cada uma.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+    ]
+  },
+  {
+    "objectID": "aulas/00-ambiente.html#referências",
+    "href": "aulas/00-ambiente.html#referências",
+    "title": "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC",
+    "section": "Referências",
+    "text": "Referências\n\n\nFERREIRA, Karine R. et al. Earth Observation Data Cubes for Brazil: Requirements, Methodology and Products. Remote Sensing, v. 12, n. 24, p. 4033, 2020.\n\n\nRADIANT EARTH FOUNDATION. SpatioTemporal Asset Catalog (STAC) Specification. Radiant Earth Foundation, 2021. Disponível em: &lt;https://stacspec.org&gt;",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 00 — Instalando o pixi e adquirindo a imagem CBERS-4A via STAC"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#o-que-vamos-aprender",
+    "href": "aulas/02-omnicloudmask.html#o-que-vamos-aprender",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "O que vamos aprender",
+    "text": "O que vamos aprender\nNessa aula, vamos utilizar o OmniCloudMask para detectar nuvens e sombras na cena de 2 m que geramos na Aula 01. O resultado é uma máscara georreferenciada que indica quais pixels estão cobertos por nuvem ou sombra, e é ela que a Aula 03 vai usar para saber quais pixels precisam ser substituídos.\nO OmniCloudMask (OCM) (Wright et al., 2025) é uma rede neural convolucional treinada com cenas de vários sensores para separar quatro classes:\n\n\n\n\n\n\n\n\nvalor\nclasse\no que é\n\n\n\n\n0\nclear\ncéu limpo, pixel utilizável\n\n\n1\nthick_cloud\nnuvem espessa, opaca\n\n\n2\nthin_cloud\nnuvem fina (cirros), que deixa passar parte do sinal da superfície\n\n\n3\ncloud_shadow\nsombra projetada pela nuvem\n\n\n\nEle usa só três bandas (vermelho, verde e infravermelho próximo) e é agnóstico ao sensor: não foi treinado com o CBERS-4A e mesmo assim funciona, porque aprendeu as características espectrais e a textura das nuvens, e não as particularidades de um satélite. Isso é possível porque o OCM foi treinado com um conjunto de dados enorme, com imagens de vários sensores e resoluções e de todo o mundo (para mais detalhes, consulte Wright et al. (2025)). Apesar de ser bastante robusto, o modelo ainda erra: algumas sombras podem passar despercebidas e algumas nuvens finas podem ser confundidas com alvos claros.\nA sombra conta tanto quanto a nuvem. Um pixel sombreado mostra a superfície, mas com a radiância errada, porque recebeu só a luz difusa do céu. Se ele entrar numa classificação de uso e cobertura da terra, vai gerar erros que muitas vezes passam na inspeção visual, mas aparecem na matriz de confusão. Por isso, a classe cloud_shadow também é tratada como lacuna na Aula 03.\n\n\n\n\n\n\nNotaO OCM não detecta neblina nem fumaça\n\n\n\nUma cena com neblina generalizada, ou com fumaça de queimada, pode sair quase toda como clear, já que ali não existe a borda de uma nuvem, e sim uma perda gradual de contraste. O modelo pode identificar, mas não é garantido. Verifique com atenção o resultado na sua cena.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#antes-de-começar",
+    "href": "aulas/02-omnicloudmask.html#antes-de-começar",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "Antes de começar",
+    "text": "Antes de começar\nEsta aula usa o data/interim/pansharpening_&lt;DATA&gt;_boa.tif, produto da Aula 01. Se você está começando o curso por aqui, o notebook refaz sozinho as etapas anteriores com ac.preparar_aula_02(), baixando a cena e convertendo para reflectância.\n\nLocalmente (pixi - recomendado)Google Colab\n\n\nSe você está começando por essa aula, o pixi é a linha de execução recomendada.\n\n\n\n\n\n\nNotaAinda não instalou o pixi? Clique aqui\n\n\n\n\n\nBaixe os arquivos do repositório na pasta C:\\geo\\geoprocessamento-cbers4a. Depois, abra o PowerShell (menu Iniciar → digite “PowerShell” → executar como Administrador) e cole:\npowershell -ExecutionPolicy ByPass -c \"irm -useb https://pixi.sh/install.ps1 | iex\"\nFeche e reabra o terminal e confira com pixi --version. Se aparecer um número de versão, está pronto. O passo a passo completo está na Aula 00.\n\n\n\nCom o pixi instalado, abra o PowerShell na pasta do projeto e rode o Jupyter Lab:\ncd C:\\geo\\geoprocessamento-cbers4a\npixi run lab\nAbra colab/02_nuvens_omnicloudmask.ipynb e pode iniciar as células.\n\n\nClique no botão do Colab no topo da página. Aqui não há conda nem reinício de sessão: a primeira célula instala o OmniCloudMask pelo pip e mantém o PyTorch que já vem no Colab, acrescentando só o torchvision da mesma versão e variante (CPU ou GPU) dele. Misturar o PyTorch do Colab com um torchvision de outra compilação derruba o OCM com o erro operator torchvision::nms does not exist.\nA aula parte do pansharpening_*.tif que a Aula 01 gravou no seu Drive. Se você começar por aqui sem ele, o atalho refaz as aulas anteriores em TOA, porque o 6S só chega pelo conda (ver Aula 01); a detecção de nuvem funciona nos dois níveis.\n\n\n\nDepois da instalação, o notebook traz o aulas_cbers.py do repositório e define os parâmetros da aula. O mais importante é o DETECT_RES, a resolução em que a detecção acontece:\n\nCENA_ID = ac.CENA_PADRAO\nNIVEL = \"boa\"                 # tem que ser o mesmo que você gerou na Aula 01\nDETECT_RES = 10.0             # resolução (m) em que a detecção acontece\nBANDA_RED, BANDA_GREEN, BANDA_NIR = 1, 2, 4     # ordem RGBN do produto da Aula 01\nPATCH, OVERLAP = 1000, 300    # tamanho dos blocos e sobreposição usados pelo OCM",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#por-que-detectar-em-10-m-e-não-nos-2-m",
+    "href": "aulas/02-omnicloudmask.html#por-que-detectar-em-10-m-e-não-nos-2-m",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "1. Por que detectar em 10 m e não nos 2 m?",
+    "text": "1. Por que detectar em 10 m e não nos 2 m?\nPor três motivos:\n\nO OCM foi validado na faixa de 10 a 50 m. Fora dela o desempenho cai: a rede aprendeu a reconhecer a nuvem numa determinada escala de textura, e em 2 m ela vê detalhe demais;\nA nuvem é um objeto grande. A borda de uma nuvem não é nítida em nenhuma escala, existe uma faixa de transição de dezenas de metros. Detectar em 2 m não deixa a borda mais correta, só mais ruidosa;\nCusto. São 16 vezes menos pixels para a rede processar.\n\nA cena é lida já reduzida para 10 m, pela média dos pixels, e os pixels sem dado são marcados para o OCM ignorar. Depois, a máscara volta para a grade de 2 m por vizinho mais próximo, que é o único método de reamostragem adequado para dados categóricos.\n\nwith rasterio.open(entrada) as src:\n    escala = src.res[0] / DETECT_RES\n    h, w = int(round(src.height * escala)), int(round(src.width * escala))\n\n    # bandas na ordem exigida pelo OCM: Red, Green, NIR\n    det = src.read([BANDA_RED, BANDA_GREEN, BANDA_NIR], out_shape=(3, h, w),\n                   resampling=Resampling.average).astype(\"float32\")\n    mascara = src.read_masks(1, out_shape=(h, w), resampling=Resampling.average)\n    t_det = src.transform * Affine.scale(src.width / w, src.height / h)\n\nvalido = (mascara &gt;= 255) & np.all(det &gt; -5000, axis=0)\ndet[:, ~valido] = 0.0     # o OCM ignora estes pixels (no_data_value=0)",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#rodando-o-omnicloudmask",
+    "href": "aulas/02-omnicloudmask.html#rodando-o-omnicloudmask",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "2. Rodando o OmniCloudMask",
+    "text": "2. Rodando o OmniCloudMask\nNa primeira execução, o OCM baixa os pesos do modelo pelo Hugging Face. Ele processa a imagem em blocos de PATCH pixels, com OVERLAP de sobreposição, e faz a média nas emendas. Roda em CPU ou GPU.\n\nfrom omnicloudmask import predict_from_array\n\nmask = predict_from_array(\n    det,\n    patch_size=PATCH,\n    patch_overlap=OVERLAP,\n    no_data_value=0,\n    apply_no_data_mask=True,\n    model_download_source=\"hugging_face\",\n)\nmask = np.squeeze(np.asarray(mask)).astype(\"uint8\")\n\nAo final, o notebook mostra quantos pixels caíram em cada classe. Na cena do curso, cerca de 11% da AOI ficou marcada como contaminada: quase 7% de nuvem espessa e 4% de sombra.\n\n\n\n\nTabela 1\n\n\n\ndispositivo: CPU\n\n--- composição da cena (pixels válidos, grade de detecção) ---\n  0 clear        :  1,597,022  ( 88.7 %)\n  1 thick_cloud  :    123,299  (  6.9 %)\n  2 thin_cloud   :          0  (  0.0 %)\n  3 cloud_shadow :     79,316  (  4.4 %)\n  -&gt; nuvem + sombra:    202,615  ( 11.3 %)\n  -&gt; utilizável    :  1,597,022  ( 88.7 %)\n\n\n\n\nFonte: Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#verificando-antes-de-continuar",
+    "href": "aulas/02-omnicloudmask.html#verificando-antes-de-continuar",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "3. Verificando antes de continuar",
+    "text": "3. Verificando antes de continuar\nNenhuma máscara de nuvem é perfeita, e a hora de encontrar os erros é agora. O notebook mostra a falsa cor e a máscara lado a lado, e depois um zoom na maior mancha de nuvem. O que conferir:\n\nsombra deslocada: a sombra fica do lado oposto ao Sol em relação à nuvem. Se a classe 3 aparecer do lado errado, alguma banda está trocada na entrada;\nnuvem fina confundida com alvo claro: telhado metálico, areia e pátio de concreto às vezes entram como classe 2, o que é mais comum em áreas urbanas;\nborda: uma faixa de classe 2 em volta da nuvem espessa é esperada, pois é a transição real, e é melhor que ela entre na máscara do que fique de fora;\nágua: corpos d’água escuros às vezes são classificados como sombra. Se a sua AOI tem represa, olhe com atenção.\n\n\n\n\n\n\n\n\n\n\nFigura 1: Falsa cor e a máscara do OmniCloudMask, lado a lado.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigura 2: Zoom na maior mancha de nuvem, com a máscara sobreposta.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#as-três-máscaras",
+    "href": "aulas/02-omnicloudmask.html#as-três-máscaras",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "4. As três máscaras",
+    "text": "4. As três máscaras\nA máscara é gravada em três arquivos, cada um com um papel:\n\n\n\n\n\n\n\n\narquivo\ngrade\npara que serve\n\n\n\n\n*_cloudmask_10m.tif\n10 m\na máscara na grade em que a rede decidiu, útil para conferir o resultado\n\n\n*_cloudmask_native.tif\n2 m\na que a Aula 03 usa; precisa estar exatamente na grade do CBERS\n\n\n*_clearmask_native.tif\n2 m\nversão binária (1 = utilizável), prática para multiplicar por outros rasters\n\n\n\n\nnativa = np.full((nativo[\"height\"], nativo[\"width\"]), 255, dtype=\"uint8\")\nreproject(source=mask, destination=nativa,\n          src_transform=t_det, src_crs=nativo[\"crs\"],\n          dst_transform=nativo[\"transform\"], dst_crs=nativo[\"crs\"],\n          resampling=Resampling.nearest)          # dado categórico: vizinho mais próximo",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#aplicando-a-máscara-na-imagem",
+    "href": "aulas/02-omnicloudmask.html#aplicando-a-máscara-na-imagem",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "5. Aplicando a máscara na imagem",
+    "text": "5. Aplicando a máscara na imagem\nAgora gravamos uma cópia da cena em que os pixels de nuvem e de sombra viram nodata (e não zero). Um pixel zerado entraria nas estatísticas puxando a média para baixo; como nodata, ele é ignorado pelo rasterio, pelo QGIS e pelo AROSICS, que não vai tentar achar pontos de amarração dentro da área removida. A gravação é feita em faixas de linhas, para não ocupar muita memória.\n\n\n\n\n\n\n\n\n\nFigura 3: A cena antes e depois de nuvem e sombra virarem nodata.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#vale-a-pena-preencher",
+    "href": "aulas/02-omnicloudmask.html#vale-a-pena-preencher",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "6. Vale a pena preencher?",
+    "text": "6. Vale a pena preencher?\nSe a nuvem cobre 1% da AOI, muitas vezes compensa descartar esses pixels e seguir. Se cobre 25%, descartar significa perder um quarto da área, e aí a substituição com Sentinel-2 super-resolvido compensa o trabalho. Não existe um limiar universal: a decisão é sua, e o notebook grava no .params.json, ao lado da máscara, a fração contaminada, a área em hectares e a composição por classe, para que ela fique registrada.\nVale lembrar que, entre descartar e preencher com outro sensor, o cenário ideal é compor com outra data do próprio CBERS, se você tiver uma cena próxima e limpa naquela área. Assim, a radiometria e a resolução continuam as mesmas, sem precisar de super-resolução.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#o-que-ficou-pronto",
+    "href": "aulas/02-omnicloudmask.html#o-que-ficou-pronto",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "O que ficou pronto",
+    "text": "O que ficou pronto\ndata/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_10m.tif      máscara na grade de detecção\ndata/interim/pansharpening_&lt;DATA&gt;_boa_cloudmask_native.tif   máscara em 2 m   &lt;- p/ Aula 03\ndata/interim/pansharpening_&lt;DATA&gt;_boa_clearmask_native.tif   binária, 1 = utilizável\ndata/interim/pansharpening_&lt;DATA&gt;_boa_masked.tif             cena com lacunas &lt;- p/ Aula 03\nNa Aula 03, essas lacunas são preenchidas com Sentinel-2 levado de 10 m para 2,5 m pelo SEN2SR, corregistrado com o CBERS pelo AROSICS e ajustado radiometricamente antes da substituição.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#erros-comuns-nesta-aula",
+    "href": "aulas/02-omnicloudmask.html#erros-comuns-nesta-aula",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "Erros comuns nesta aula",
+    "text": "Erros comuns nesta aula\n\n\n\n\n\n\n\nO que aparece na tela\nO que fazer\n\n\n\n\nResamplingAlgorithmError: &lt;Resampling.min: 9&gt; can be used for warp operations but not for reads and writes\nmin, max, med, q1, q3 e sum só valem em reprojeção, não em leitura. Para leitura reduzida use average, bilinear, cubic ou nearest e, para saber onde há nodata, read_masks() com average.\n\n\nO download dos pesos trava ou dá erro de rede\nTroque model_download_source=\"hugging_face\" por \"google_drive\".\n\n\nA máscara sai vazia (100% clear)\nConfira a ordem das bandas: o OCM espera Red, Green, NIR nessa ordem. Com o produto da Aula 01 (RGBN), são os índices 1, 2 e 4.\n\n\nA máscara marca a cena inteira como nuvem\nProvavelmente a entrada está em escala errada (DN misturado com reflectância) ou o nodata não foi declarado no arquivo.\n\n\nSombra aparece do lado errado da nuvem\nBandas trocadas na leitura. Verifique src.descriptions do arquivo de entrada.\n\n\nMemoryError em CPU\nReduza PATCH para 500 e OVERLAP para 150, ou aumente DETECT_RES para 20 m.\n\n\nA máscara em 2 m não bate com a grade do CBERS na Aula 03\nVocê rodou a Aula 02 sobre um pansharpening diferente do que a Aula 03 está lendo. Refaça sobre o mesmo arquivo.",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/02-omnicloudmask.html#referências",
+    "href": "aulas/02-omnicloudmask.html#referências",
+    "title": "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask",
+    "section": "Referências",
+    "text": "Referências\n\n\nWRIGHT, Nicholas et al. Training sensor-agnostic deep learning models for remote sensing: Achieving state-of-the-art cloud and cloud shadow identification with OmniCloudMask. Remote Sensing of Environment, v. 322, p. 114694, 2025.\n\n\n\nDocumentação e software\n\nOmniCloudMask no GitHub\nrasterio — reamostragem na leitura",
+    "crumbs": [
+      "Início",
+      "Aulas",
+      "Aula 02 — Detecção de nuvem e sombra com OmniCloudMask"
+    ]
+  },
+  {
+    "objectID": "aulas/99-erros-comuns.html",
+    "href": "aulas/99-erros-comuns.html",
+    "title": "Erros comuns",
+    "section": "",
+    "text": "Duas causas possíveis:\n\nVocê não reabriu o terminal. O instalador do pixi adiciona o programa ao PATH, mas isso só vale em terminais abertos depois da instalação. Feche todas as janelas de terminal, abra de novo e teste com pixi --version.\nA instalação não terminou. Rode de novo, em um PowerShell:\npowershell -ExecutionPolicy ByPass -c \"irm -useb https://pixi.sh/install.ps1 | iex\"\n\n\n\n\nEsse aviso vem de um atalho falso que o Windows instala por padrão: ele finge ser o Python e responde isso quando nada real está no PATH. Com o pixi você não chama python diretamente — use pixi run python ... ou pixi run lab, que usam o Python do ambiente do projeto.\nSe quiser desativar o atalho falso de vez: Configurações → Aplicativos → Configurações avançadas do aplicativo → Aliases de execução de aplicativo → desligue python.exe e python3.exe.\n\n\n\n\n\n\nAviso\n\n\n\nNão instale o Python do python.org para “resolver” isso. O pixi já traz o seu próprio Python, e ter dois instalados é a causa mais comum de erros confusos mais adiante.\n\n\n\n\n\nO SmartScreen desconfia de arquivos .bat baixados da internet. É esperado. Você pode clicar em “Mais informações” → “Executar assim mesmo”, ou simplesmente rodar os comandos manualmente, na pasta do projeto:\npixi install\npixi run check\n\n\n\nNa primeira vez o pixi baixa o Python, o GDAL, o PyTorch e o restante — pode levar alguns minutos, e a barra às vezes parece parada sem estar. Espere. Se travar de verdade (rede caindo, por exemplo), interrompa com Ctrl+C e rode pixi install de novo: ele aproveita o que já baixou.\n\n\n\nApague a pasta oculta .pixi e recrie. Não apague o pixi.lock — é ele que garante a reprodução.\nrmdir /s /q .pixi\npixi install\n\n\n\nQuase sempre é o caminho. Duas causas no Windows:\nAcentos e espaços. Uma pasta como C:\\Users\\João Paulo\\Área de Trabalho\\ quebra a leitura no GDAL de formas difíceis de diagnosticar. Trabalhe em C:\\geo\\.\nOneDrive. A Área de Trabalho e a pasta Documentos costumam estar sincronizadas com o OneDrive, que tenta enviar cada GeoTIFF gerado para a nuvem e trava o processamento. Mantenha os dados fora dele.",
+    "crumbs": [
+      "Início",
+      "Apoio",
+      "Erros comuns"
+    ]
+  },
+  {
+    "objectID": "aulas/99-erros-comuns.html#instalação",
+    "href": "aulas/99-erros-comuns.html#instalação",
+    "title": "Erros comuns",
+    "section": "",
+    "text": "Duas causas possíveis:\n\nVocê não reabriu o terminal. O instalador do pixi adiciona o programa ao PATH, mas isso só vale em terminais abertos depois da instalação. Feche todas as janelas de terminal, abra de novo e teste com pixi --version.\nA instalação não terminou. Rode de novo, em um PowerShell:\npowershell -ExecutionPolicy ByPass -c \"irm -useb https://pixi.sh/install.ps1 | iex\"\n\n\n\n\nEsse aviso vem de um atalho falso que o Windows instala por padrão: ele finge ser o Python e responde isso quando nada real está no PATH. Com o pixi você não chama python diretamente — use pixi run python ... ou pixi run lab, que usam o Python do ambiente do projeto.\nSe quiser desativar o atalho falso de vez: Configurações → Aplicativos → Configurações avançadas do aplicativo → Aliases de execução de aplicativo → desligue python.exe e python3.exe.\n\n\n\n\n\n\nAviso\n\n\n\nNão instale o Python do python.org para “resolver” isso. O pixi já traz o seu próprio Python, e ter dois instalados é a causa mais comum de erros confusos mais adiante.\n\n\n\n\n\nO SmartScreen desconfia de arquivos .bat baixados da internet. É esperado. Você pode clicar em “Mais informações” → “Executar assim mesmo”, ou simplesmente rodar os comandos manualmente, na pasta do projeto:\npixi install\npixi run check\n\n\n\nNa primeira vez o pixi baixa o Python, o GDAL, o PyTorch e o restante — pode levar alguns minutos, e a barra às vezes parece parada sem estar. Espere. Se travar de verdade (rede caindo, por exemplo), interrompa com Ctrl+C e rode pixi install de novo: ele aproveita o que já baixou.\n\n\n\nApague a pasta oculta .pixi e recrie. Não apague o pixi.lock — é ele que garante a reprodução.\nrmdir /s /q .pixi\npixi install\n\n\n\nQuase sempre é o caminho. Duas causas no Windows:\nAcentos e espaços. Uma pasta como C:\\Users\\João Paulo\\Área de Trabalho\\ quebra a leitura no GDAL de formas difíceis de diagnosticar. Trabalhe em C:\\geo\\.\nOneDrive. A Área de Trabalho e a pasta Documentos costumam estar sincronizadas com o OneDrive, que tenta enviar cada GeoTIFF gerado para a nuvem e trava o processamento. Mantenha os dados fora dele.",
+    "crumbs": [
+      "Início",
+      "Apoio",
+      "Erros comuns"
+    ]
+  },
+  {
+    "objectID": "aulas/99-erros-comuns.html#execução",
+    "href": "aulas/99-erros-comuns.html#execução",
+    "title": "Erros comuns",
+    "section": "Execução",
+    "text": "Execução\n\nModuleNotFoundError, mesmo tendo instalado tudo\nVocê provavelmente rodou o python do sistema, e não o do ambiente. Sempre execute através do pixi, na pasta do projeto:\npixi run lab\npixi run python meu_script.py\nSe o pacote realmente não estiver lá, confirme que ele está no pixi.toml e rode pixi install.\n\n\nO BOA falha com “cannot find the sixs executable”\nO BOA depende do programa 6S, que não é uma biblioteca Python e sim um executável. No pixi ele vem do pacote conda sixs, já listado no pixi.toml. Confirme com:\npixi run check\nA linha “6S (binario)” deve aparecer como [ OK ]. Se estiver ausente, cheque se sixs continua no pixi.toml e rode pixi install de novo.\n\n\nCUDA out of memory\nO recorte é grande demais para a memória da placa. Reduza o edge_size ou processe em blocos menores. Sem placa NVIDIA isso não acontece: roda em CPU, só mais devagar.\n\n\nO download do modelo do SEN2SR trava no meio\nRode a célula de novo. O mlstac retoma de onde parou.",
+    "crumbs": [
+      "Início",
+      "Apoio",
+      "Erros comuns"
+    ]
+  }
+]

@@ -1,0 +1,141 @@
+# ============================================================================
+# pixi.toml — ambiente Geoprocessamento CBERS-4A
+# ----------------------------------------------------------------------------
+# Um ambiente unico e reproduzivel para TODAS as aulas, no Windows, incluindo a
+# correcao BOA (via 6S), o coregistro (AROSICS) e o deep learning (PyTorch) —
+# tudo pela pilha nativa do conda-forge. So os pacotes de modelo que nao existem
+# no conda-forge (omnicloudmask, sen2sr, mlstac) e o geobr vem do PyPI.
+#
+# COMO USAR
+#   1. Instale o pixi uma vez (ver Aula 00).
+#   2. Nesta pasta, rode:
+#        pixi install        # cria o ambiente e gera o pixi.lock
+#        pixi run lab        # abre o Jupyter Lab dentro do ambiente
+#        pixi run check      # confere se tudo foi instalado
+#
+# LOGICA DA DIVISAO DE CANAIS
+#   [dependencies]      -> conda-forge. Traz os BINARIOS (GDAL, o executavel 6S)
+#                          E o PyTorch (pytorch-cpu). Manter o torch no mesmo
+#                          canal do numpy/scipy evita o conflito de OpenMP/MKL no
+#                          Windows, que derruba o kernel do Jupyter ao importar.
+#   [pypi-dependencies] -> PyPI (via uv, por dentro do pixi). Apenas o que NAO
+#                          existe no conda-forge: os pacotes de modelo e o geobr.
+#                          Os de modelo dependem de torch; o pixi mapeia o
+#                          "pytorch" do conda para o "torch" do PyPI, entao nao
+#                          ha download duplicado.
+#
+# NUNCA misture "pip install rasterio/gdal/torch" aqui: o conda-forge ja cuida
+# disso. Para adicionar um pacote, use  pixi add <nome>  (conda-forge)  ou
+# pixi add --pypi <nome>  (PyPI).
+#
+# ============================================================================
+
+[workspace]
+name = "geoprocessamento-cbers4a"
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+# ----------------------------------------------------------------------------
+# conda-forge — base, geoespacial, cientifico, atmosferico, coregistro e torch
+# ----------------------------------------------------------------------------
+[dependencies]
+python = "3.12.*"
+
+# stack geoespacial (o conda-forge traz GDAL/GEOS/PROJ como binarios)
+gdal = "*"
+rasterio = "*"
+geopandas = "*"
+shapely = "*"
+pyproj = "*"
+
+# cientifico
+numpy = "*"
+scipy = "*"
+pandas = "*"
+scikit-image = "*"
+matplotlib-base = "*"       # notebooks usam backend inline; -base evita puxar Qt
+
+# deep learning — PyTorch de CPU pelo conda-forge (pilha nativa coerente).
+# SEN2SR Lite e OmniCloudMask rodam em CPU; nenhum script do curso precisa de GPU.
+pytorch-cpu = "*"
+torchvision = "*"
+
+# correcao atmosferica — BOA  (Aula 01)
+py6s = "*"
+sixs = "*"                  # o EXECUTAVEL 6S; build win-64 disponivel no conda-forge
+
+# coregistro do S2-SR com o CBERS  (AROSICS; puxa o gdal do conda-forge)
+arosics = "*"
+
+# acesso a catalogos de imagem via STAC (Aula 00: INPE; Aula 03: Planetary Computer)
+pystac-client = "*"
+planetary-computer = "*"
+requests = "*"             # download dos assets/thumbnails/XML do STAC do INPE
+folium = "*"               # mapinha opcional da AOI (Aula 00)
+pillow = "*"               # abre as miniaturas (thumbnails) das cenas (Aula 00)
+# geobr NAO existe no conda-forge (so o r-geobr, que e do R). Ele esta la
+# embaixo, em [pypi-dependencies].
+
+# ambiente de trabalho + toolchain do site
+jupyterlab = "*"
+ipykernel = "*"
+tqdm = "*"
+quarto = "*"                # permite  pixi run preview / render  sem Quarto do sistema
+
+# ----------------------------------------------------------------------------
+# PyPI (via uv, por cima do conda) — apenas os pacotes de modelo que NAO estao
+# no conda-forge. Todos dependem de torch, que ja vem do conda-forge acima.
+# ----------------------------------------------------------------------------
+[pypi-dependencies]
+omnicloudmask = "*"
+sen2sr = "*"
+mlstac = "*"
+geobr = ">=2.0.0"           # AOI pelo poligono de um municipio (Aula 00, opcao B).
+                            # So existe no PyPI; usa o geopandas que ja veio do
+                            # conda-forge, entao nao ha download duplicado.
+                            #
+                            # O ">=2.0.0" e OBRIGATORIO. As versoes antigas (ate a
+                            # 0.1.9) so publicaram "sdist" no PyPI, e o setup.py delas
+                            # tenta ler um README que nao vem dentro do pacote — e
+                            # exatamente a falha
+                            #   FileNotFoundError: ...\src\master-README.md
+                            # Da 2.0.0 em diante existe wheel pronta, que nao precisa
+                            # de build nenhum.
+
+# ----------------------------------------------------------------------------
+# ajuste fino do resolvedor de PyPI
+# ----------------------------------------------------------------------------
+# O geobr 2.0.0 declara tetos de versao apertados (geopandas<=1.1.2 e
+# shapely<=2.1.0). O conda-forge instala versoes mais novas (geopandas 1.1.4,
+# shapely 2.1.2) e, sem este bloco, o uv julga o geobr 2.0.0 "incompativel", vai
+# caindo de versao ate os sdists quebrados e derruba o  pixi install.
+#
+# Esses tetos sao so conservadorismo do empacotamento (o Poetry poe teto em tudo):
+# testado, o geobr 2.0.0 importa e funciona com geopandas 1.1.4 e shapely 2.1.2.
+# O bloco abaixo manda o uv ignorar os dois tetos e usar o que o conda-forge ja
+# instalou.
+#
+# ATENCAO: dependency-overrides desliga a checagem de versao do pacote listado em
+# TODAS as dependencias PyPI. Use so quando souber que o teto e falso, como aqui.
+[pypi-options.dependency-overrides]
+geopandas = "*"
+shapely = "*"
+
+# ----------------------------------------------------------------------------
+# atalhos:  pixi run <tarefa>
+# ----------------------------------------------------------------------------
+[tasks]
+lab = "jupyter lab"
+check = "python verificar_ambiente.py"
+preview = "quarto preview"
+render = "quarto render"
+
+# Higiene antes de publicar. As saidas salvas nos notebooks vao inteiras para o
+# GitHub e para o site, e algumas trazem o caminho completo de onde o notebook
+# rodou (avisos do arosics e do tqdm apontam para .pixi/envs/.../site-packages,
+# o AROSICS imprime o caminho do .tif que gravou). Nao e senha, mas entrega a
+# estrutura de pastas da sua maquina em repositorio publico — e some so trocando
+# o prefixo. Use "publicar" no lugar de "render" quando for commitar.
+limpar = "python scripts/limpar_caminhos.py"
+conferir-caminhos = "python scripts/limpar_caminhos.py --conferir"
+publicar = { depends-on = ["limpar", "render"] }

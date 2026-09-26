@@ -1,0 +1,78 @@
+---
+title: "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2"
+subtitle: "Correção atmosférica, remoção de nuvens e substituição de pixels"
+author:
+  - "Danilo Roberto Fioramonte"
+  - "Danilo Marques de Magalhães"
+date: "2026-09-26"
+---
+
+O presente material é um Recurso Educacional Aberto elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Geografia, na área de Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (*Digital Number*) para reflectância de topo de atmosfera (*top-of-atmosphere*) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca *OmniCloudMask*) [@wright_training_2025]; e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2,5 metros de resolução espacial utilizando o modelo SEN2SR + interpolação bicúbica para 2 metros) [@aybar_radiometrically_2026].
+
+Cada aula contém vídeo (em breve), código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - **Recomendado**) e Google Colab para quem prefere rodar em ambiente nuvem.
+
+::: {.callout-note}
+## Recomendações de instalação
+A instalação local (usando `pixi`) é recomendada para usuários que precisam processar áreas maiores, tendo em vista que o Google Colab tem limitações de tempo de execução e de espaço em disco. A instalação local também é recomendada para quem deseja aprender a instalar e configurar ambientes Python, tendo em vista que essa é uma habilidade importante para trabalhar com dados geoespaciais.
+:::
+
+Não é preciso ter experiência com Python, pixi ou GitHub. A Aula 00 começa do
+zero absoluto.
+
+## Cronograma de aulas
+
+| Aula | Assunto |
+|------|---------|
+| [00](aulas/00-ambiente.qmd) | Instalando o pixi e adquirindo a imagem CBERS-4A via STAC |
+| [01](aulas/01-toa-boa.qmd) | Convertendo DN do CBERS-4A para reflectância TOA e BOA  |
+| [02](aulas/02-omnicloudmask.qmd) | Detectando e removendo pixels de nuvens com OmniCloudMask |
+| [03](aulas/03-sen2sr.qmd) | Substituindo pixels usando SEN2SR e Sentinel-2 |
+
+Travou em algum ponto? Veja a página de [erros comuns](aulas/99-erros-comuns.qmd).
+
+## Como citar
+
+Este material tem DOI próprio e pode ser citado como obra. Se ele foi útil na
+sua pesquisa, aula ou relatório técnico, use a referência abaixo (ABNT NBR
+6023):
+
+> FIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
+> imagens CBERS-4A/WPM e Sentinel-2**: correção atmosférica, remoção de nuvens e substituição de pixels. Versão 1.0.0. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material
+> didático. DOI: 10.5281/zenodo.XXXXXXX. Disponível em:
+> <https://danfioramonte.github.io/geoprocessamento-cbers4a/>. Acesso em: dia mês ano.
+
+::: {.callout-tip collapse="true"}
+## Em BibTeX
+
+``` bibtex
+@misc{fioramonte_magalhaes_geoprocessamento_2026,
+  author    = {Fioramonte, Danilo Roberto and Magalhães, Danilo Marques de},
+  title     = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:
+               correção atmosférica, remoção de nuvens e substituição de pixels},
+  year      = {2026},
+  version   = {1.0.0},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.XXXXXXX},
+  url       = {https://danfioramonte.github.io/geoprocessamento-cbers4a/},
+  note      = {Material didático}
+}
+```
+:::
+
+::: {.callout-important}
+## Cite também os métodos que você usar
+
+Este material organiza e explica ferramentas de terceiros. Ao empregar os
+métodos das aulas, cite os trabalhos originais junto com esta obra: STAC 
+[@stac2021specification] para aquisição de imagens via API; Brazil Data Cube
+[@ferreira_earth_2020] para as imagens CBERS-4A; SEN2SR 
+[@aybar_radiometrically_2026] para a super-resolução; OmniCloudMask
+[@wright_training_2025] para a detecção de nuvens; o 6S
+[@vermote_second_1997] para a correção atmosférica; o AROSICS
+[@scheffler_arosics_2017] para o corregistro; e o Gram-Schmidt
+[@laben_process_2000; @aiazzi_improving_2007] para a fusão com a pancromática.
+:::
+
+## Referências
+::: {#refs}
+:::
