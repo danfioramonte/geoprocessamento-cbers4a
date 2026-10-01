@@ -161,18 +161,28 @@ de $ESUN$ do WPM ficam em `config/esun_wpm.json` e foram publicados pela **CRESD
 chinesa do satélite), a partir da resposta espectral do sensor. Eles podem ser baixados no
 [site oficial](https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html).
 
-Antes da conversão, o notebook marca os pixels sem dado. O produto usa `0` para "sem dado", e
-consideramos nodata o pixel que vale zero em **qualquer** banda, e não só o que vale zero em todas.
-Isso porque, em TOA, o azul nunca é zero sobre a superfície (o espalhamento atmosférico garante
-algum sinal até na sombra), então um zero isolado é artefato da borda da imagem, e não um alvo
-escuro.
+Antes da conversão, o notebook trata os pixels sem dado. O produto usa `0` para "sem dado". Em
+TOA nenhuma banda chega a zero sobre a superfície (o espalhamento atmosférico garante algum sinal
+até na sombra), então todo zero é falha, e não alvo escuro. Mas há dois tipos de falha:
+
+- **Borda**: zero em **todas** as bandas (fora do recorte da cena), ou zero parcial encostado nessa
+  região. Vira nodata.
+- **Dropout de detector**: zero em **uma** banda só, num pixel isolado no meio da cena, com os
+  vizinhos e a pancromática normais. As outras bandas estão boas, então o pixel é **reparado**: a
+  banda que falhou é interpolada a partir dos vizinhos válidos da mesma banda.
+
+Marcar o dropout como nodata parece mais conservador, mas a fusão (seção 6) amplia cada pixel
+inválido de 8 m para um buraco de 8 × 8 pixels de 2 m (16 m de lado). Na cena do curso são 43
+dropouts, que virariam 43 quadrados sem dado no pansharpening.
 
 ```{python}
 #| eval: false
-zeros = np.zeros(forma, dtype=bool)
+# borda (nodata de verdade) x dropout de detector (reparado pelos vizinhos)
+borda, dropout = ac.separar_zeros(dn)
+dn = ac.reparar_dropouts(dn, dropout)
+valido = ~borda
 for n in dn:
-    zeros |= (dn[n] == 0)
-valido = ~zeros
+    valido &= (dn[n] != 0)
 
 radiancia, toa = {}, {}
 for n, nome in ac.BANDAS_NATIVAS.items():

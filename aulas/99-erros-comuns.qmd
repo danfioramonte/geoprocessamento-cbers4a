@@ -104,6 +104,18 @@ pixi run check
 A linha "6S (binario)" deve aparecer como `[ OK ]`. Se estiver ausente, cheque
 se `sixs` continua no `pixi.toml` e rode `pixi install` de novo.
 
+### Quadradinhos sem dado (16 m) no pansharpening ou no mosaico
+
+Versões antigas da Aula 01 marcavam como nodata qualquer pixel com zero em
+**alguma** banda. Na cena do curso há 43 pixels de *dropout* de detector (zero
+em uma banda só, no meio da imagem), e a fusão ampliava cada um para um buraco
+de 8 × 8 pixels de 2 m. A versão atual repara esses pixels pelos vizinhos.
+
+Como as funções pulam o que já existe ("já existe — nada a fazer"), apague os
+arquivos gerados com a regra antiga e rode de novo a partir da Aula 01:
+`data/interim/rgbcomp_*`, `data/interim/pansharpening_*` e
+`data/processed/mosaico_*`.
+
 ### `CUDA out of memory`
 
 O recorte é grande demais para a memória da placa. Reduza o `edge_size` ou

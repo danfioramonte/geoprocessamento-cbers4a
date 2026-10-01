@@ -506,6 +506,78 @@ def coeficientes_6s(meta: dict, atm: dict, banda_nativa: int) -> tuple:
     return (s.outputs.coef_xa, s.outputs.coef_xb, s.outputs.coef_xc)
 
 
+# Dropout de detector. No L4 do WPM aparecem pixels que valem 0 em UMA banda só,
+# isolados no meio da cena, com os vizinhos e a PAN normais. Não são borda nem
+# alvo escuro: é falha pontual do detector. Se viram nodata, a fusão amplia cada
+# um para um buraco de 8 x 8 px de 2 m (o cúbico e a máscara reamostrada contaminam
+# a vizinhança). Grupos de até MAX_PX_DROPOUT pixels longe da borda são reparados
+# por interpolação a partir dos vizinhos válidos da MESMA banda.
+MAX_PX_DROPOUT = 4
+
+
+def separar_zeros(dn: dict, max_px=MAX_PX_DROPOUT):
+    """Classifica os zeros do DN em BORDA (nodata de verdade) e DROPOUT.
+
+    dn : {banda_nativa: array 2D de DN}, todas na mesma grade.
+
+    borda   : zero em TODAS as bandas, mais os zeros parciais encostados nessa
+              região ou na moldura da imagem (desalinhamento entre as bandas na
+              borda do recorte).
+    dropout : zero em ALGUMAS bandas, em grupos pequenos (<= max_px pixels) no
+              interior da cena. É reparável.
+
+    Devolve (borda, dropout), máscaras booleanas 2D.
+    """
+    from scipy import ndimage as ndi
+
+    pilha = np.stack([dn[n] == 0 for n in sorted(dn)])
+    todos, algum = pilha.all(axis=0), pilha.any(axis=0)
+    parcial = algum & ~todos
+
+    oito = np.ones((3, 3), dtype=bool)
+    rotulos, n = ndi.label(parcial, structure=oito)
+    if n == 0:
+        return todos, np.zeros_like(todos)
+
+    # um grupo "toca a borda" se encosta em `todos` ou na moldura da imagem
+    perto_borda = ndi.binary_dilation(todos, structure=oito)
+    perto_borda[[0, -1], :] = True
+    perto_borda[:, [0, -1]] = True
+    ids = np.arange(1, n + 1)
+    toca = np.asarray(ndi.maximum(perto_borda.astype("uint8"), rotulos, ids)) > 0
+    tamanho = np.asarray(ndi.sum(parcial, rotulos, ids))
+
+    eh_dropout = np.zeros(n + 1, dtype=bool)
+    eh_dropout[1:] = ~toca & (tamanho <= max_px)
+    dropout = eh_dropout[rotulos]
+    return todos | (parcial & ~dropout), dropout
+
+
+def reparar_dropouts(dn: dict, dropout, raio=3) -> dict:
+    """Preenche os zeros marcados como dropout, banda a banda.
+
+    Cada pixel recebe a média ponderada pelo inverso da distância dos vizinhos
+    VÁLIDOS da mesma banda, até `raio` pixels (fillnodata do GDAL). As outras
+    bandas do pixel, que estão boas, não são tocadas. Se não houver vizinho
+    válido no raio, o pixel continua 0 e vira nodata na etapa seguinte.
+    """
+    from rasterio.fill import fillnodata
+
+    saida = {}
+    for n, arr in dn.items():
+        alvo = dropout & (arr == 0)
+        if not alvo.any():
+            saida[n] = arr
+            continue
+        cheio = fillnodata(arr.astype("float32"),
+                           mask=(arr != 0).astype("uint8"),
+                           max_search_distance=raio, smoothing_iterations=0)
+        rep = arr.copy()
+        rep[alvo] = np.rint(cheio[alvo]).astype(arr.dtype)
+        saida[n] = rep
+    return saida
+
+
 def converter_reflectancia(cena_id=CENA_PADRAO, nivel="boa", atmosfera=None,
                            destino=None, esun=None) -> Path:
     """DN -> reflectância (TOA ou BOA) e composição RGBN de 8 m.
@@ -544,13 +616,18 @@ def converter_reflectancia(cena_id=CENA_PADRAO, nivel="boa", atmosfera=None,
                 raise ValueError("as bandas MS não têm a mesma grade.")
             dn[n] = src.read(1)
 
-    # nodata: zero em QUALQUER banda. Em reflectância TOA o azul nunca é zero
-    # sobre terra (o espalhamento Rayleigh garante sinal até na sombra), então
-    # um zero isolado é artefato de borda, não alvo escuro.
-    zeros = np.zeros(forma, dtype=bool)
+    # Zeros do DN. Em TOA nenhuma banda é zero sobre terra (o espalhamento
+    # atmosférico garante sinal até na sombra), então todo zero é falha — mas há
+    # dois tipos: BORDA (zero em todas as bandas, ou encostado nela) vira nodata;
+    # DROPOUT (zero isolado em uma banda, no interior) é reparado pelos vizinhos.
+    # Tratar dropout como nodata abria buracos de 16 m no pansharpening.
+    borda, dropout = separar_zeros(dn)
+    if dropout.any():
+        dn = reparar_dropouts(dn, dropout)
+        print(f"dropouts de detector reparados: {int(dropout.sum())} px")
+    valido = ~borda
     for n in dn:
-        zeros |= (dn[n] == 0)
-    valido = ~zeros
+        valido &= (dn[n] != 0)
 
     atm = None
     if nivel == "boa":
@@ -581,7 +658,8 @@ def converter_reflectancia(cena_id=CENA_PADRAO, nivel="boa", atmosfera=None,
                            ColorInterp.blue, ColorInterp.undefined]
         dst.update_tags(ORDEM_BANDAS="RGBN", NIVEL=nivel.upper(),
                         FATOR_ESCALA=str(ESCALA), CENA=cena_id,
-                        DATA=meta["data"])
+                        DATA=meta["data"],
+                        DROPOUTS_REPARADOS=str(int(dropout.sum())))
     print(f"Escrito: {saida}")
     return saida
 

@@ -62,3 +62,4 @@ desktop.ini
 **/*.quarto_ipynb
 
 colab/00_aquisicao_cbers_*.ipynb
+colab/03_sen2sr_harmonizacao_*.ipynb
