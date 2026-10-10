@@ -23,14 +23,21 @@ CONVENÇÃO DE PASTAS (igual no Colab e no pixi local)
 
 CONVENÇÃO DE NOMES
     data/raw/rio_claro_<CENA_ID>_BAND<n>.tif
-    data/interim/rgbcomp_<DATA>_<nivel>.tif             8 m, RGBN, refl x10000
+    data/interim/rgbcomp_<DATA>_<nivel>.tif             8 m, BGRN, refl x10000
     data/interim/pan_<DATA>_alinhada.tif                2 m, 1 banda
-    data/interim/pansharpening_<DATA>_<nivel>.tif       2 m, RGBN, refl x10000
+    data/interim/pansharpening_<DATA>_<nivel>.tif       2 m, BGRN, refl x10000
     data/interim/pansharpening_<DATA>_<nivel>_cloudmask_native.tif
     data/interim/pansharpening_<DATA>_<nivel>_masked.tif
     data/interim/S2_<DATA>_10m.tif                      6 bandas int16
     data/interim/S2_<DATA>_SR2p5m.tif                   4 bandas float32
     data/processed/mosaico_<DATA>_gapfilled.tif
+    data/processed/S2_<DATA>_2m_10bandas.tif            só Sentinel-2, 10 bandas
+
+ORDEM DAS BANDAS
+    Todo raster de 4 bandas segue a ordem em que o WPM captura a cena (que é
+    também a do Sentinel-2): 1 = azul, 2 = verde, 3 = vermelho, 4 = NIR (BGRN).
+    O nome de cada banda vai gravado no arquivo, e as aulas acham as bandas por
+    esse nome — ver indices_bandas() e na_ordem_atual().
 
 TODAS as etapas trabalham na MESMA bounding box e, da Aula 01 em diante, na
 mesma grade de 2 m. É isso que faz o corregistro do AROSICS (Aula 03) fechar.
@@ -71,8 +78,16 @@ BANDAS = {"BAND1": "blue", "BAND2": "green", "BAND3": "red",
 
 # numeração nativa do WPM -> papel espectral
 BANDAS_NATIVAS = {1: "azul", 2: "verde", 3: "vermelho", 4: "nir"}
-ORDEM_SAIDA = [3, 2, 1, 4]                                   # RGBN
-NOMES_SAIDA = ["red", "green", "blue", "nir"]
+
+# Os produtos mantêm a ordem em que o WPM captura as bandas: B1 azul, B2 verde,
+# B3 vermelho, B4 NIR (BGRN). É também a ordem do Sentinel-2 (B02, B03, B04, B08).
+ORDEM_SAIDA = [1, 2, 3, 4]                                   # BGRN (nativa)
+NOMES_SAIDA = ["blue", "green", "red", "nir"]
+ORDEM_BANDAS = "BGRN"
+
+# posição (1 = primeira banda) das composições coloridas, tirada dos nomes acima
+RGB = tuple(NOMES_SAIDA.index(n) + 1 for n in ("red", "green", "blue"))        # (3, 2, 1)
+FALSA_COR = tuple(NOMES_SAIDA.index(n) + 1 for n in ("nir", "red", "green"))  # (4, 3, 2)
 
 ESCALA = 10000          # reflectância 0-1 gravada como int16 (igual ao S2 L2A)
 NODATA = -9999
@@ -88,9 +103,82 @@ TETO_REFLECTANCIA = 1.6
 # pesos do pansharpening Gram-Schmidt (padrão do ArcGIS Pro para sensor UNKNOWN).
 # Só entram como plano B: por padrão a intensidade é estimada por REGRESSÃO da
 # própria PAN sobre as bandas MS (GSA, Aiazzi et al. 2007) — ver gram_schmidt().
-PESOS_GS = {"red": 0.166, "green": 0.167, "blue": 0.167, "nir": 0.5}
+PESOS_GS = {"blue": 0.167, "green": 0.167, "red": 0.166, "nir": 0.5}
 
 _BASE = Path("data")
+
+
+# ---------------------------------------------------------------------------
+# Ordem das bandas
+# ---------------------------------------------------------------------------
+
+def _nomes_do_arquivo(src) -> list:
+    return [(d or "").strip().lower() for d in src.descriptions]
+
+
+def indices_bandas(caminho, nomes=("red", "green", "nir")) -> list:
+    """Posição (1 = primeira) de cada banda, achada pelo NOME gravado no arquivo.
+
+    As aulas gravam o nome de cada banda dentro do GeoTIFF; aqui ele é lido em
+    vez de assumido. Se faltar algum nome, dá erro: nunca devolve uma posição
+    chutada, que trocaria as bandas em silêncio.
+    """
+    import rasterio
+    with rasterio.open(caminho) as src:
+        descr = _nomes_do_arquivo(src)
+    faltando = [n for n in nomes if n not in descr]
+    if faltando:
+        raise ValueError(f"{Path(caminho).name}: bandas {faltando} não encontradas pelo "
+                         f"nome (o arquivo tem {descr}). Refaça a aula que gerou o arquivo.")
+    return [descr.index(n) + 1 for n in nomes]
+
+
+def na_ordem_atual(caminho) -> bool:
+    """True se o arquivo existe e as 4 primeiras bandas estão na ordem atual (BGRN).
+
+    Protege os atalhos "já existe — nada a fazer": um arquivo gravado por uma
+    versão anterior do curso, em outra ordem de bandas, é refeito em vez de ser
+    reaproveitado com as bandas trocadas.
+    """
+    import rasterio
+    caminho = Path(caminho)
+    if not caminho.exists():
+        return False
+    with rasterio.open(caminho) as src:
+        descr = _nomes_do_arquivo(src)[:len(NOMES_SAIDA)]
+    if descr == NOMES_SAIDA:
+        return True
+    print(f"AVISO: {caminho.name} está em outra ordem de bandas ({descr}); "
+          f"a ordem atual é {NOMES_SAIDA}. O arquivo será refeito.")
+    return False
+
+
+def cores_por_nome(nomes) -> list:
+    """Interpretação de cor (GDAL) de cada banda, a partir do nome.
+
+    Diz ao QGIS/GDAL qual banda é o vermelho, o verde e o azul: assim o arquivo
+    abre em cor natural mesmo com o azul na banda 1. As outras ficam 'undefined'.
+    """
+    from rasterio.enums import ColorInterp
+    mapa = {"red": ColorInterp.red, "green": ColorInterp.green, "blue": ColorInterp.blue}
+    return [mapa.get((n or "").strip().lower(), ColorInterp.undefined) for n in nomes]
+
+
+def remover_aux(caminho) -> Path:
+    """Apaga o .aux.xml que sobrou de uma versão anterior do arquivo.
+
+    O QGIS e o ArcGIS guardam estatísticas e nomes de banda num arquivo
+    <nome>.tif.aux.xml ao lado da imagem. Quando a imagem é regravada (ainda mais
+    com outra ordem de bandas), esse arquivo antigo fica para trás e pode se
+    sobrepor aos nomes e às estatísticas novas: o QGIS passaria a esticar o
+    contraste do azul com as estatísticas do vermelho, sem aviso nenhum.
+    """
+    caminho = Path(caminho)
+    aux = caminho.with_name(caminho.name + ".aux.xml")
+    if aux.exists():
+        aux.unlink()
+        print(f"removido {aux.name} (sobra de uma versão anterior do arquivo)")
+    return caminho
 
 
 # ---------------------------------------------------------------------------
@@ -288,6 +376,7 @@ def _exportar_banda(href, bbox, destino: Path) -> Path:
             perfil.update(tiled=False)
             perfil.pop("blockxsize", None)
             perfil.pop("blockysize", None)
+    remover_aux(destino)
     with rasterio.open(destino, "w", **perfil) as dst:
         dst.write(dados, 1)
     return destino
@@ -580,18 +669,17 @@ def reparar_dropouts(dn: dict, dropout, raio=3) -> dict:
 
 def converter_reflectancia(cena_id=CENA_PADRAO, nivel="boa", atmosfera=None,
                            destino=None, esun=None) -> Path:
-    """DN -> reflectância (TOA ou BOA) e composição RGBN de 8 m.
+    """DN -> reflectância (TOA ou BOA) e composição de 8 m na ordem nativa (BGRN).
 
     Saída: data/interim/rgbcomp_<DATA>_<nivel>.tif, int16, reflectância x10000,
-    nodata -9999, bandas rotuladas red/green/blue/nir.
+    nodata -9999, bandas rotuladas blue/green/red/nir.
     """
     import rasterio
-    from rasterio.enums import ColorInterp
 
     destino = Path(destino) if destino else pastas()["interim"]
     data = data_da_cena(cena_id)
     saida = destino / f"rgbcomp_{data}_{nivel}.tif"
-    if saida.exists():
+    if na_ordem_atual(saida):
         print(f"{saida.name} já existe — nada a fazer.")
         return saida
 
@@ -649,14 +737,14 @@ def converter_reflectancia(cena_id=CENA_PADRAO, nivel="boa", atmosfera=None,
                   BIGTIFF="IF_SAFER")
     nativo = {1: "azul", 2: "verde", 3: "vermelho", 4: "nir"}
     piso_esc, teto_esc = PISO_REFLECTANCIA * ESCALA, TETO_REFLECTANCIA * ESCALA
+    remover_aux(saida)
     with rasterio.open(saida, "w", **perfil) as dst:
         for i, n in enumerate(ORDEM_SAIDA, start=1):
             esc = np.clip(np.rint(refl[nativo[n]] * ESCALA), piso_esc, teto_esc)
             dst.write(np.where(valido, esc, NODATA).astype("int16"), i)
             dst.set_band_description(i, NOMES_SAIDA[i - 1])
-        dst.colorinterp = [ColorInterp.red, ColorInterp.green,
-                           ColorInterp.blue, ColorInterp.undefined]
-        dst.update_tags(ORDEM_BANDAS="RGBN", NIVEL=nivel.upper(),
+        dst.colorinterp = cores_por_nome(NOMES_SAIDA)
+        dst.update_tags(ORDEM_BANDAS=ORDEM_BANDAS, NIVEL=nivel.upper(),
                         FATOR_ESCALA=str(ESCALA), CENA=cena_id,
                         DATA=meta["data"],
                         DROPOUTS_REPARADOS=str(int(dropout.sum())))
@@ -730,7 +818,7 @@ def intensidade_por_regressao(ms_lr, pan, valido_lr, fator):
     valido_lr : (h, w) máscara de pixel válido do MS
 
     O Gram-Schmidt clássico simula a pancromática com pesos fixos
-    (I = 0,166 R + 0,167 G + 0,167 B + 0,5 NIR). Esses pesos são um chute sobre
+    (I = 0,167 B + 0,167 G + 0,166 R + 0,5 NIR). Esses pesos são um chute sobre
     a resposta espectral do sensor: I acaba dominado pelo NIR e fica muito
     diferente da PAN de verdade. Aí `delta = PAN - I` deixa de ser só o detalhe
     de alta frequência e passa a carregar o descasamento espectral inteiro — que
@@ -741,7 +829,8 @@ def intensidade_por_regressao(ms_lr, pan, valido_lr, fator):
     achar por mínimos quadrados os coeficientes que MELHOR reproduzem a PAN a
     partir das bandas MS. Com isso `delta` volta a ser detalhe de verdade.
 
-    Devolve (alpha, r2, pan_lp), com alpha = [a_red, a_green, a_blue, a_nir, a0].
+    Devolve (alpha, r2, pan_lp), com um coeficiente por banda, na ordem das
+    bandas do MS (BGRN: [a_blue, a_green, a_red, a_nir]), mais a constante a0.
     """
     n_bandas, h, w = ms_lr.shape
     pan_lp = (pan[:h * fator, :w * fator]
@@ -819,12 +908,12 @@ def fundir(cena_id=CENA_PADRAO, nivel="boa", destino=None) -> Path:
     destino = Path(destino) if destino else pastas()["interim"]
     data = data_da_cena(cena_id)
     saida = destino / f"pansharpening_{data}_{nivel}.tif"
-    if saida.exists():
+    if na_ordem_atual(saida):
         print(f"{saida.name} já existe — nada a fazer.")
         return saida
 
     rgbcomp = destino / f"rgbcomp_{data}_{nivel}.tif"
-    if not rgbcomp.exists():
+    if not na_ordem_atual(rgbcomp):
         rgbcomp = converter_reflectancia(cena_id, nivel, destino=destino)
     pan_path = arquivos_da_cena(cena_id).get("BAND0")
     if pan_path is None:
@@ -861,6 +950,7 @@ def fundir(cena_id=CENA_PADRAO, nivel="boa", destino=None) -> Path:
                   transform=t_pan, crs=crs, nodata=NODATA, compress="deflate",
                   predictor=2, tiled=True, blockxsize=512, blockysize=512,
                   BIGTIFF="IF_SAFER", interleave="band")
+    remover_aux(saida)
     with rasterio.open(saida, "w", **perfil) as dst:
         for i in range(4):
             frac = float((fus[i][valido] < piso_esc).mean())
@@ -868,7 +958,8 @@ def fundir(cena_id=CENA_PADRAO, nivel="boa", destino=None) -> Path:
             dst.write(np.where(valido, b, NODATA).astype("int16"), i + 1)
             dst.set_band_description(i + 1, NOMES_SAIDA[i])
             print(f"  {NOMES_SAIDA[i]:<6} ceifado no piso: {frac:.3%}")
-        dst.update_tags(ORDEM_BANDAS="RGBN", NIVEL=nivel.upper(),
+        dst.colorinterp = cores_por_nome(NOMES_SAIDA)
+        dst.update_tags(ORDEM_BANDAS=ORDEM_BANDAS, NIVEL=nivel.upper(),
                         FATOR_ESCALA=str(ESCALA), METODO="Gram-Schmidt (GSA)",
                         PESOS=json.dumps(PESOS_GS), CENA=cena_id,
                         FAIXA_REFLECTANCIA=f"[{PISO_REFLECTANCIA}, {TETO_REFLECTANCIA}]")
@@ -876,7 +967,7 @@ def fundir(cena_id=CENA_PADRAO, nivel="boa", destino=None) -> Path:
     return saida
 
 
-def carimbar_bandas(caminho, ordem="RGBN") -> tuple:
+def carimbar_bandas(caminho, ordem=ORDEM_BANDAS) -> tuple:
     """Grava os nomes das bandas dentro do GeoTIFF, sem reescrever os pixels."""
     import rasterio
     nomes = {"RGBN": ["red", "green", "blue", "nir"],
@@ -884,6 +975,7 @@ def carimbar_bandas(caminho, ordem="RGBN") -> tuple:
     with rasterio.open(caminho, "r+") as src:
         for i, n in enumerate(nomes[:src.count], start=1):
             src.set_band_description(i, n)
+        src.colorinterp = (cores_por_nome(nomes) + cores_por_nome([""] * src.count))[:src.count]
         atual = src.descriptions
     print(f"{Path(caminho).name}: {atual}")
     return atual
@@ -898,13 +990,14 @@ NODATA_MASCARA = 255
 
 
 def mascara_nuvens(entrada, destino=None, detect_res=10.0,
-                   banda_red=1, banda_green=2, banda_nir=4,
+                   banda_red=None, banda_green=None, banda_nir=None,
                    patch_size=1000, patch_overlap=300,
                    aplicar=True) -> dict:
     """Roda o OmniCloudMask e grava máscara, máscara clear e imagem mascarada.
 
-    Entrada em ordem RGBN (padrão do pansharpening da Aula 01): red=1, green=2,
-    nir=4.
+    As posições de red/green/nir são lidas pelo NOME gravado no arquivo de
+    entrada (no pansharpening da Aula 01, ordem BGRN: red=3, green=2, nir=4).
+    Passe banda_red/banda_green/banda_nir só para um arquivo sem os nomes.
     """
     import rasterio
     from rasterio import Affine
@@ -916,6 +1009,8 @@ def mascara_nuvens(entrada, destino=None, detect_res=10.0,
     entrada = Path(entrada)
     destino = Path(destino) if destino else pastas()["interim"]
     stem = entrada.stem
+    if None in (banda_red, banda_green, banda_nir):
+        banda_red, banda_green, banda_nir = indices_bandas(entrada, ("red", "green", "nir"))
 
     with rasterio.open(entrada) as src:
         nativo = {"transform": src.transform, "crs": src.crs,
@@ -950,6 +1045,7 @@ def mascara_nuvens(entrada, destino=None, detect_res=10.0,
                       nodata=NODATA_MASCARA, compress="deflate",
                       tiled=True, blockxsize=256, blockysize=256,
                       BIGTIFF="IF_SAFER")
+        remover_aux(caminho)
         with rasterio.open(caminho, "w", **perfil) as dst:
             dst.write(arr.astype("uint8"), 1)
         return caminho
@@ -987,6 +1083,8 @@ def mascara_nuvens(entrada, destino=None, detect_res=10.0,
                           tiled=True, blockxsize=512, blockysize=512,
                           BIGTIFF="IF_SAFER", interleave="band")
             nublado = np.isin(nativa, [1, 2, 3])
+            descr = src.descriptions
+            remover_aux(alvo)
             with rasterio.open(alvo, "w", **perfil) as dst:
                 for b in range(1, src.count + 1):
                     for r0 in range(0, src.height, 2048):
@@ -995,7 +1093,9 @@ def mascara_nuvens(entrada, destino=None, detect_res=10.0,
                         dados = src.read(b, window=jan)
                         dados[nublado[r0:r0 + nr, :]] = nd
                         dst.write(dados, b, window=jan)
-                    dst.set_band_description(b, NOMES_SAIDA[b - 1])
+                    dst.set_band_description(b, descr[b - 1] or NOMES_SAIDA[b - 1])
+                dst.colorinterp = src.colorinterp
+                dst.update_tags(ORDEM_BANDAS=src.tags().get("ORDEM_BANDAS", ""))
         saidas["mascarada"] = alvo
         print(f"Escrito: {alvo}")
     return saidas
@@ -1034,7 +1134,10 @@ def preparar_aula_03(cena_id=CENA_PADRAO, nivel="boa") -> dict:
     inter = pastas()["interim"]
     nativa = inter / f"{fus.stem}_cloudmask_native.tif"
     mascarada = inter / f"{fus.stem}_masked.tif"
-    if nativa.exists() and mascarada.exists():
+    # a máscara vale se está na ordem atual e é mais nova que o pansharpening
+    # (se a Aula 01 foi refeita depois, a máscara é refeita também)
+    if (nativa.exists() and na_ordem_atual(mascarada)
+            and mascarada.stat().st_mtime >= fus.stat().st_mtime):
         print("Máscara de nuvem já existe — nada a fazer.")
     else:
         r.update(mascara_nuvens(fus))

@@ -117,7 +117,7 @@ Se este material foi útil na sua pesquisa, aula ou relatório, cite-o assim
 
 > FIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. **Geoprocessamento com
 > imagens CBERS-4A/WPM e Sentinel-2**: correção atmosférica, remoção de nuvens e substituição de pixels.
-> Versão 1.0.1. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material
+> Versão 1.1.0. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material
 > didático. DOI: 10.5281/zenodo.22970993. Disponível em:
 > https://danfioramonte.github.io/geoprocessamento-cbers4a/. Acesso em: dia mês ano.
 
@@ -130,7 +130,7 @@ Se este material foi útil na sua pesquisa, aula ou relatório, cite-o assim
   title        = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:
                   correção atmosférica, remoção de nuvens e substituição de pixels},
   year         = {2026},
-  version      = {1.0.1},
+  version      = {1.1.0},
   publisher    = {Zenodo},
   doi          = {10.5281/zenodo.22970993},
   url          = {https://danfioramonte.github.io/geoprocessamento-cbers4a/},

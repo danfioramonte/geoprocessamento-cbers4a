@@ -4,7 +4,7 @@ subtitle: "Preparando o ambiente Python, conhecendo as bibliotecas e baixando a 
 author:
   - "Danilo Roberto Fioramonte"
   - "Danilo Marques de Magalhães"
-date: "2026-09-26"
+date: "2026-10-09"
 ---
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/00_aquisicao_cbers.ipynb){target="_blank"}
@@ -335,15 +335,16 @@ original (`int16`, número digital), o `nodata = 0`, o CRS e a georreferência d
 compressão `deflate`. Saem 5 GeoTIFFs, um por banda, nomeados com o asset do INPE (`BAND0` a
 `BAND4`), e ao lado de cada um o **XML de metadados** da banda. É desse XML que a Aula 01 tira os
 coeficientes de calibração e a geometria solar. Por fim, as quatro multiespectrais são empilhadas
-num único arquivo RGBN; a PAN fica separada porque tem outra grade.
+num único arquivo, na mesma ordem em que o WPM captura a cena (azul, verde, vermelho, NIR); a PAN
+fica separada porque tem outra grade.
 
 ```{python}
 #| eval: false
 arquivos = exportar_cena(item, AOI_BBOX, AOI_NOME)     # 5 bandas + XML em data/raw
 
-ordem = ["BAND3", "BAND2", "BAND1", "BAND4"]           # R, G, B, NIR
-stack_rgbn = empilhar([arquivos[a] for a in ordem],
-                      os.path.join(OUTPUT_DIR, f"{AOI_NOME}_{item.id}_RGBN.tif"),
+ordem = ["BAND1", "BAND2", "BAND3", "BAND4"]           # B, G, R, NIR (ordem nativa)
+stack_bgrn = empilhar([arquivos[a] for a in ordem],
+                      os.path.join(OUTPUT_DIR, f"{AOI_NOME}_{item.id}_BGRN.tif"),
                       descricoes=[BANDAS[a] for a in ordem])
 ```
 
@@ -368,7 +369,7 @@ Os arquivos ficaram em `data/raw`:
 data/raw/rio_claro_<CENA_ID>_BAND0.tif       pancromática, 2 m
 data/raw/rio_claro_<CENA_ID>_BAND1..4.tif    multiespectrais, 8 m
 data/raw/rio_claro_<CENA_ID>_BAND*.xml       calibração e geometria solar
-data/raw/rio_claro_<CENA_ID>_RGBN.tif        multiespectrais empilhadas
+data/raw/rio_claro_<CENA_ID>_BGRN.tif        multiespectrais empilhadas (azul, verde, vermelho, NIR)
 ```
 
 Na [Aula 01](01-toa-boa.qmd) vamos converter esses números digitais para reflectância **TOA** e

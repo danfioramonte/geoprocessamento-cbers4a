@@ -20,8 +20,8 @@ authors:
     given-names: Danilo Marques de
     affiliation: "Universidade Estadual Paulista (UNESP), Instituto de Geociências e Ciências Exatas, Rio Claro, SP, Brasil"
     orcid: "https://orcid.org/0000-0001-9306-4326"
-version: "1.0.1"
-date-released: "2026-09-26"
+version: "1.1.0"
+date-released: "2026-10-07"
 license:
   - MIT
   - CC-BY-4.0

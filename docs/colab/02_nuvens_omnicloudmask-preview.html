@@ -413,7 +413,7 @@
 </blockquote>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="514657ac" class="cell" data-execution_count="1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="514657ac" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:26.873874Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:26.872876Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:26.879358Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:26.879358Z&quot;}}" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># --- Colab: instala as bibliotecas na sessão (sem conda, sem reinício) ---</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> sys</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -444,7 +444,7 @@
 <p>Baixa o <code>aulas_cbers.py</code> e a pasta <code>config/</code> do repositório (se ainda não estiverem na pasta) e importa as bibliotecas da aula.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="2aacf960" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="2aacf960" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:26.880363Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:26.880363Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:27.254956Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:27.254956Z&quot;}}" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># --- Módulo de apoio e configuração ---</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
@@ -478,11 +478,11 @@
 <p>O <code>DETECT_RES</code>, a resolução em que a detecção acontece, é a decisão mais importante desta aula, e a próxima seção explica por quê.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="11c45dce" class="cell" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="11c45dce" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:27.256467Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:27.256467Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:27.277309Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:27.277309Z&quot;}}" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO</span>
 <span id="cb4-2"><a href="#cb4-2"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                 <span class="co"># tem que casar com o que você gerou na Aula 01</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a>DETECT_RES <span class="op">=</span> <span class="fl">10.0</span>             <span class="co"># resolução (m) em que a detecção acontece</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>BANDA_RED, BANDA_GREEN, BANDA_NIR <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>     <span class="co"># ordem RGBN do produto da Aula 01</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># BANDA_RED / BANDA_GREEN / BANDA_NIR: lidas do arquivo de entrada, pelo nome (logo abaixo)</span></span>
 <span id="cb4-5"><a href="#cb4-5"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># janelamento interno do OCM</span></span>
 <span id="cb4-6"><a href="#cb4-6"></a>NODATA <span class="op">=</span> ac.NODATA</span>
 <span id="cb4-7"><a href="#cb4-7"></a>CLASSES <span class="op">=</span> ac.CLASSES_OCM</span>
@@ -498,21 +498,29 @@
 <span id="cb4-17"><a href="#cb4-17"></a>DATA <span class="op">=</span> ac.data_da_cena(CENA_ID)</span>
 <span id="cb4-18"><a href="#cb4-18"></a></span>
 <span id="cb4-19"><a href="#cb4-19"></a>entrada <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"pansharpening_</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>NIVEL<span class="sc">}</span><span class="ss">.tif"</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="cf">if</span> <span class="kw">not</span> entrada.exists():</span>
-<span id="cb4-21"><a href="#cb4-21"></a>    <span class="co"># atalho para quem começou o curso por esta aula: refaz Aula 00 + Aula 01</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a>    r <span class="op">=</span> ac.preparar_aula_02(CENA_ID, NIVEL)</span>
-<span id="cb4-23"><a href="#cb4-23"></a>    NIVEL, entrada <span class="op">=</span> r[<span class="st">"nivel"</span>], Path(r[<span class="st">"pansharpening"</span>])</span>
-<span id="cb4-24"><a href="#cb4-24"></a></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb4-26"><a href="#cb4-26"></a>    <span class="bu">print</span>(<span class="ss">f"entrada : </span><span class="sc">{</span>entrada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-27"><a href="#cb4-27"></a>    <span class="bu">print</span>(<span class="ss">f"          </span><span class="sc">{</span>src<span class="sc">.</span>width<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>src<span class="sc">.</span>height<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>src<span class="sc">.</span>res[<span class="dv">0</span>]<span class="sc">:g}</span><span class="ss"> m | </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-28"><a href="#cb4-28"></a>    <span class="bu">print</span>(<span class="ss">f"bandas  : </span><span class="sc">{</span>src<span class="sc">.</span>descriptions<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-29"><a href="#cb4-29"></a>    <span class="bu">print</span>(<span class="ss">f"nodata  : </span><span class="sc">{</span>src<span class="sc">.</span>nodata<span class="sc">}</span><span class="ss"> | CRS: </span><span class="sc">{</span>src<span class="sc">.</span>crs<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="cf">if</span> <span class="kw">not</span> ac.na_ordem_atual(entrada):</span>
+<span id="cb4-21"><a href="#cb4-21"></a>    <span class="co"># atalho para quem começou o curso por esta aula (ou tem um arquivo antigo,</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>    <span class="co"># gravado em outra ordem de bandas): refaz Aula 00 + Aula 01</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a>    r <span class="op">=</span> ac.preparar_aula_02(CENA_ID, NIVEL)</span>
+<span id="cb4-24"><a href="#cb4-24"></a>    NIVEL, entrada <span class="op">=</span> r[<span class="st">"nivel"</span>], Path(r[<span class="st">"pansharpening"</span>])</span>
+<span id="cb4-25"><a href="#cb4-25"></a></span>
+<span id="cb4-26"><a href="#cb4-26"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
+<span id="cb4-27"><a href="#cb4-27"></a>    <span class="bu">print</span>(<span class="ss">f"entrada : </span><span class="sc">{</span>entrada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    <span class="bu">print</span>(<span class="ss">f"          </span><span class="sc">{</span>src<span class="sc">.</span>width<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>src<span class="sc">.</span>height<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>src<span class="sc">.</span>res[<span class="dv">0</span>]<span class="sc">:g}</span><span class="ss"> m | </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    <span class="bu">print</span>(<span class="ss">f"bandas  : </span><span class="sc">{</span>src<span class="sc">.</span>descriptions<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-30"><a href="#cb4-30"></a>    <span class="bu">print</span>(<span class="ss">f"nodata  : </span><span class="sc">{</span>src<span class="sc">.</span>nodata<span class="sc">}</span><span class="ss"> | CRS: </span><span class="sc">{</span>src<span class="sc">.</span>crs<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co"># Posição de cada banda, lida pelo NOME que a Aula 01 gravou no arquivo (e não</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a><span class="co"># assumida). Na ordem nativa do CBERS (azul, verde, vermelho, NIR), o OCM usa as</span></span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="co"># bandas 3 (vermelho), 2 (verde) e 4 (NIR).</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a>BANDA_RED, BANDA_GREEN, BANDA_NIR <span class="op">=</span> ac.indices_bandas(entrada, [<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"nir"</span>])</span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="bu">print</span>(<span class="ss">f"OCM usa : red = banda </span><span class="sc">{</span>BANDA_RED<span class="sc">}</span><span class="ss">, green = banda </span><span class="sc">{</span>BANDA_GREEN<span class="sc">}</span><span class="ss">, nir = banda </span><span class="sc">{</span>BANDA_NIR<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>entrada : pansharpening_20260301_boa.tif
           6456 x 6968 px @ 2 m | int16
-bandas  : ('red', 'green', 'blue', 'nir')
-nodata  : -9999.0 | CRS: EPSG:32723</code></pre>
+bandas  : ('blue', 'green', 'red', 'nir')
+nodata  : -9999.0 | CRS: EPSG:32723
+OCM usa : red = banda 3, green = banda 2, nir = banda 4</code></pre>
 </div>
 </div></div>
 <div id="525cfc3e" class="cell markdown">
@@ -528,7 +536,7 @@ nodata  : -9999.0 | CRS: EPSG:32723</code></pre>
 <p>Na célula abaixo, a cena é lida já reduzida para 10 m (pela média dos pixels), nas três bandas que o OCM usa, e os pixels sem dado são marcados para o modelo ignorar.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cfd00285" class="cell" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cfd00285" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:27.278818Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:27.278818Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:28.338071Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:28.338071Z&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
 <span id="cb6-2"><a href="#cb6-2"></a>    nativo <span class="op">=</span> {<span class="st">"transform"</span>: src.transform, <span class="st">"crs"</span>: src.crs,</span>
 <span id="cb6-3"><a href="#cb6-3"></a>              <span class="st">"height"</span>: src.height, <span class="st">"width"</span>: src.width, <span class="st">"res"</span>: src.res[<span class="dv">0</span>]}</span>
@@ -559,7 +567,7 @@ nodata  : -9999.0 | CRS: EPSG:32723</code></pre>
 <span id="cb6-28"><a href="#cb6-28"></a><span class="bu">print</span>(<span class="ss">f"pixels válidos    : </span><span class="sc">{</span>valido<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:,}</span><span class="ss"> (</span><span class="sc">{</span>valido<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>grade de detecção : 1291 x 1394 px @ 10 m
-pixels válidos    : 1,799,637 (100.00%)</code></pre>
+pixels válidos    : 1,799,654 (100.00%)</code></pre>
 </div>
 </div></div>
 <div id="934e13c7" class="cell markdown">
@@ -568,7 +576,7 @@ pixels válidos    : 1,799,637 (100.00%)</code></pre>
 <p>Na primeira execução, o OCM baixa os pesos do modelo pelo Hugging Face (HF). Ele processa a imagem em blocos de <code>PATCH</code> pixels, com <code>OVERLAP</code> de sobreposição, e faz a média nas emendas. Ao final, a célula mostra quantos pixels caíram em cada classe.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="5" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:28.340252Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:28.340252Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:34.273476Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:34.273476Z&quot;}}">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
@@ -607,12 +615,12 @@ Tabela&nbsp;1
 <pre><code>dispositivo: CPU
 
 --- composição da cena (pixels válidos, grade de detecção) ---
-  0 clear        :  1,597,022  ( 88.7 %)
-  1 thick_cloud  :    123,299  (  6.9 %)
+  0 clear        :  1,597,038  ( 88.7 %)
+  1 thick_cloud  :    123,317  (  6.9 %)
   2 thin_cloud   :          0  (  0.0 %)
-  3 cloud_shadow :     79,316  (  4.4 %)
-  -&gt; nuvem + sombra:    202,615  ( 11.3 %)
-  -&gt; utilizável    :  1,597,022  ( 88.7 %)</code></pre>
+  3 cloud_shadow :     79,299  (  4.4 %)
+  -&gt; nuvem + sombra:    202,616  ( 11.3 %)
+  -&gt; utilizável    :  1,597,038  ( 88.7 %)</code></pre>
 </div>
 </div>
 </figure>
@@ -630,7 +638,7 @@ Tabela&nbsp;1
 </ul>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-ocm-mascara" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-ocm-mascara" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:34.276481Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:34.275480Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:34.801320Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:34.801320Z&quot;}}" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">def</span> stretch(b, m):</span>
 <span id="cb11-2"><a href="#cb11-2"></a>    v <span class="op">=</span> b[m]</span>
 <span id="cb11-3"><a href="#cb11-3"></a>    <span class="cf">if</span> v.size <span class="op">==</span> <span class="dv">0</span>:</span>
@@ -669,7 +677,7 @@ Figura&nbsp;1: Falsa cor e a máscara do OmniCloudMask, lado a lado.
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-ocm-zoom" class="cell" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-ocm-zoom" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:34.812829Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:34.811829Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:35.050590Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:35.050590Z&quot;}}" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># zoom na maior mancha de nuvem, para conferir a borda de perto</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a>nuvem <span class="op">=</span> np.isin(mask, [<span class="dv">1</span>, <span class="dv">2</span>])</span>
 <span id="cb12-3"><a href="#cb12-3"></a><span class="cf">if</span> nuvem.<span class="bu">any</span>():</span>
@@ -718,36 +726,37 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 </ul>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="2d477cd6" class="cell" data-execution_count="9">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="2d477cd6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:35.062987Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:35.062987Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:35.446414Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:35.446414Z&quot;}}" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">def</span> gravar_mascara(caminho, arr, transform):</span>
 <span id="cb13-2"><a href="#cb13-2"></a>    perfil <span class="op">=</span> <span class="bu">dict</span>(driver<span class="op">=</span><span class="st">"GTiff"</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>, count<span class="op">=</span><span class="dv">1</span>,</span>
 <span id="cb13-3"><a href="#cb13-3"></a>                  height<span class="op">=</span>arr.shape[<span class="dv">0</span>], width<span class="op">=</span>arr.shape[<span class="dv">1</span>], transform<span class="op">=</span>transform,</span>
 <span id="cb13-4"><a href="#cb13-4"></a>                  crs<span class="op">=</span>nativo[<span class="st">"crs"</span>], nodata<span class="op">=</span>NODATA_MASCARA, compress<span class="op">=</span><span class="st">"deflate"</span>,</span>
 <span id="cb13-5"><a href="#cb13-5"></a>                  tiled<span class="op">=</span><span class="va">True</span>, blockxsize<span class="op">=</span><span class="dv">256</span>, blockysize<span class="op">=</span><span class="dv">256</span>, BIGTIFF<span class="op">=</span><span class="st">"IF_SAFER"</span>)</span>
-<span id="cb13-6"><a href="#cb13-6"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb13-7"><a href="#cb13-7"></a>        dst.write(arr.astype(<span class="st">"uint8"</span>), <span class="dv">1</span>)</span>
-<span id="cb13-8"><a href="#cb13-8"></a>        dst.set_band_description(<span class="dv">1</span>, <span class="st">"ocm_classe"</span>)</span>
-<span id="cb13-9"><a href="#cb13-9"></a>        dst.update_tags(CLASSES<span class="op">=</span><span class="st">"0=clear,1=thick_cloud,2=thin_cloud,3=cloud_shadow,255=nodata"</span>)</span>
-<span id="cb13-10"><a href="#cb13-10"></a>    <span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>caminho<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11"></a>    <span class="cf">return</span> caminho</span>
-<span id="cb13-12"><a href="#cb13-12"></a></span>
+<span id="cb13-6"><a href="#cb13-6"></a>    ac.remover_aux(caminho)  <span class="co"># um .aux.xml antigo (QGIS/ArcGIS) não pode se sobrepor aos nomes novos</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(caminho, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb13-8"><a href="#cb13-8"></a>        dst.write(arr.astype(<span class="st">"uint8"</span>), <span class="dv">1</span>)</span>
+<span id="cb13-9"><a href="#cb13-9"></a>        dst.set_band_description(<span class="dv">1</span>, <span class="st">"ocm_classe"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10"></a>        dst.update_tags(CLASSES<span class="op">=</span><span class="st">"0=clear,1=thick_cloud,2=thin_cloud,3=cloud_shadow,255=nodata"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11"></a>    <span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>caminho<span class="sc">.</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-12"><a href="#cb13-12"></a>    <span class="cf">return</span> caminho</span>
 <span id="cb13-13"><a href="#cb13-13"></a></span>
-<span id="cb13-14"><a href="#cb13-14"></a>stem <span class="op">=</span> entrada.stem</span>
-<span id="cb13-15"><a href="#cb13-15"></a>cam_det <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_</span><span class="sc">{</span><span class="bu">int</span>(DETECT_RES)<span class="sc">}</span><span class="ss">m.tif"</span>,</span>
-<span id="cb13-16"><a href="#cb13-16"></a>                         mask, t_det)</span>
-<span id="cb13-17"><a href="#cb13-17"></a></span>
-<span id="cb13-18"><a href="#cb13-18"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), NODATA_MASCARA, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
-<span id="cb13-19"><a href="#cb13-19"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
-<span id="cb13-20"><a href="#cb13-20"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
-<span id="cb13-21"><a href="#cb13-21"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
-<span id="cb13-22"><a href="#cb13-22"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># categórico: só vizinho mais próximo</span></span>
-<span id="cb13-23"><a href="#cb13-23"></a>cam_nat <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_native.tif"</span>,</span>
-<span id="cb13-24"><a href="#cb13-24"></a>                         nativa, nativo[<span class="st">"transform"</span>])</span>
-<span id="cb13-25"><a href="#cb13-25"></a></span>
-<span id="cb13-26"><a href="#cb13-26"></a>clear <span class="op">=</span> (nativa <span class="op">==</span> <span class="dv">0</span>).astype(<span class="st">"uint8"</span>)</span>
-<span id="cb13-27"><a href="#cb13-27"></a>clear[nativa <span class="op">==</span> NODATA_MASCARA] <span class="op">=</span> NODATA_MASCARA</span>
-<span id="cb13-28"><a href="#cb13-28"></a>cam_clear <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_clearmask_native.tif"</span>,</span>
-<span id="cb13-29"><a href="#cb13-29"></a>                           clear, nativo[<span class="st">"transform"</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-14"><a href="#cb13-14"></a></span>
+<span id="cb13-15"><a href="#cb13-15"></a>stem <span class="op">=</span> entrada.stem</span>
+<span id="cb13-16"><a href="#cb13-16"></a>cam_det <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_</span><span class="sc">{</span><span class="bu">int</span>(DETECT_RES)<span class="sc">}</span><span class="ss">m.tif"</span>,</span>
+<span id="cb13-17"><a href="#cb13-17"></a>                         mask, t_det)</span>
+<span id="cb13-18"><a href="#cb13-18"></a></span>
+<span id="cb13-19"><a href="#cb13-19"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), NODATA_MASCARA, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
+<span id="cb13-20"><a href="#cb13-20"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
+<span id="cb13-21"><a href="#cb13-21"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb13-22"><a href="#cb13-22"></a>          dst_transform<span class="op">=</span>nativo[<span class="st">"transform"</span>], dst_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
+<span id="cb13-23"><a href="#cb13-23"></a>          resampling<span class="op">=</span>Resampling.nearest)          <span class="co"># categórico: só vizinho mais próximo</span></span>
+<span id="cb13-24"><a href="#cb13-24"></a>cam_nat <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_cloudmask_native.tif"</span>,</span>
+<span id="cb13-25"><a href="#cb13-25"></a>                         nativa, nativo[<span class="st">"transform"</span>])</span>
+<span id="cb13-26"><a href="#cb13-26"></a></span>
+<span id="cb13-27"><a href="#cb13-27"></a>clear <span class="op">=</span> (nativa <span class="op">==</span> <span class="dv">0</span>).astype(<span class="st">"uint8"</span>)</span>
+<span id="cb13-28"><a href="#cb13-28"></a>clear[nativa <span class="op">==</span> NODATA_MASCARA] <span class="op">=</span> NODATA_MASCARA</span>
+<span id="cb13-29"><a href="#cb13-29"></a>cam_clear <span class="op">=</span> gravar_mascara(P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_clearmask_native.tif"</span>,</span>
+<span id="cb13-30"><a href="#cb13-30"></a>                           clear, nativo[<span class="st">"transform"</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Escrito: pansharpening_20260301_boa_cloudmask_10m.tif
 Escrito: pansharpening_20260301_boa_cloudmask_native.tif
@@ -761,7 +770,7 @@ Escrito: pansharpening_20260301_boa_clearmask_native.tif</code></pre>
 <p>A gravação é feita em faixas de 2.048 linhas, para não ocupar muita memória. A figura seguinte compara a cena antes e depois.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="9ea00ba3" class="cell" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="9ea00ba3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:35.447930Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:35.447930Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:39.004756Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:39.004756Z&quot;}}" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>mascarada <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>stem<span class="sc">}</span><span class="ss">_masked.tif"</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a>nublado <span class="op">=</span> np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
 <span id="cb15-3"><a href="#cb15-3"></a></span>
@@ -775,31 +784,34 @@ Escrito: pansharpening_20260301_boa_clearmask_native.tif</code></pre>
 <span id="cb15-11"><a href="#cb15-11"></a>                  interleave<span class="op">=</span><span class="st">"band"</span>)</span>
 <span id="cb15-12"><a href="#cb15-12"></a>    descr <span class="op">=</span> src.descriptions</span>
 <span id="cb15-13"><a href="#cb15-13"></a></span>
-<span id="cb15-14"><a href="#cb15-14"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb15-15"><a href="#cb15-15"></a>        <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb15-16"><a href="#cb15-16"></a>            <span class="cf">for</span> r0 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, src.height, <span class="dv">2048</span>):</span>
-<span id="cb15-17"><a href="#cb15-17"></a>                nr <span class="op">=</span> <span class="bu">min</span>(<span class="dv">2048</span>, src.height <span class="op">-</span> r0)</span>
-<span id="cb15-18"><a href="#cb15-18"></a>                jan <span class="op">=</span> Window(<span class="dv">0</span>, r0, src.width, nr)</span>
-<span id="cb15-19"><a href="#cb15-19"></a>                dados <span class="op">=</span> src.read(b, window<span class="op">=</span>jan)</span>
-<span id="cb15-20"><a href="#cb15-20"></a>                dados[nublado[r0:r0 <span class="op">+</span> nr, :]] <span class="op">=</span> nd</span>
-<span id="cb15-21"><a href="#cb15-21"></a>                dst.write(dados, b, window<span class="op">=</span>jan)</span>
-<span id="cb15-22"><a href="#cb15-22"></a>            dst.set_band_description(b, descr[b <span class="op">-</span> <span class="dv">1</span>] <span class="kw">or</span> ac.NOMES_SAIDA[b <span class="op">-</span> <span class="dv">1</span>])</span>
-<span id="cb15-23"><a href="#cb15-23"></a>        dst.update_tags(MASCARA<span class="op">=</span><span class="bu">str</span>(cam_nat.name), CLASSES_MASCARADAS<span class="op">=</span><span class="st">"1,2,3"</span>)</span>
-<span id="cb15-24"><a href="#cb15-24"></a></span>
-<span id="cb15-25"><a href="#cb15-25"></a><span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>mascarada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>mascarada<span class="sc">.</span>stat()<span class="sc">.</span>st_size <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-14"><a href="#cb15-14"></a>    ac.remover_aux(mascarada)  <span class="co"># um .aux.xml antigo (QGIS/ArcGIS) não pode se sobrepor aos nomes novos</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb15-16"><a href="#cb15-16"></a>        <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, src.count <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb15-17"><a href="#cb15-17"></a>            <span class="cf">for</span> r0 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, src.height, <span class="dv">2048</span>):</span>
+<span id="cb15-18"><a href="#cb15-18"></a>                nr <span class="op">=</span> <span class="bu">min</span>(<span class="dv">2048</span>, src.height <span class="op">-</span> r0)</span>
+<span id="cb15-19"><a href="#cb15-19"></a>                jan <span class="op">=</span> Window(<span class="dv">0</span>, r0, src.width, nr)</span>
+<span id="cb15-20"><a href="#cb15-20"></a>                dados <span class="op">=</span> src.read(b, window<span class="op">=</span>jan)</span>
+<span id="cb15-21"><a href="#cb15-21"></a>                dados[nublado[r0:r0 <span class="op">+</span> nr, :]] <span class="op">=</span> nd</span>
+<span id="cb15-22"><a href="#cb15-22"></a>                dst.write(dados, b, window<span class="op">=</span>jan)</span>
+<span id="cb15-23"><a href="#cb15-23"></a>            dst.set_band_description(b, descr[b <span class="op">-</span> <span class="dv">1</span>] <span class="kw">or</span> ac.NOMES_SAIDA[b <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="cb15-24"><a href="#cb15-24"></a>        dst.colorinterp <span class="op">=</span> src.colorinterp       <span class="co"># mesma ordem e mesmas cores da entrada</span></span>
+<span id="cb15-25"><a href="#cb15-25"></a>        dst.update_tags(MASCARA<span class="op">=</span><span class="bu">str</span>(cam_nat.name), CLASSES_MASCARADAS<span class="op">=</span><span class="st">"1,2,3"</span>,</span>
+<span id="cb15-26"><a href="#cb15-26"></a>                        ORDEM_BANDAS<span class="op">=</span>src.tags().get(<span class="st">"ORDEM_BANDAS"</span>, <span class="st">""</span>))</span>
+<span id="cb15-27"><a href="#cb15-27"></a></span>
+<span id="cb15-28"><a href="#cb15-28"></a><span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>mascarada<span class="sc">.</span>name<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>mascarada<span class="sc">.</span>stat()<span class="sc">.</span>st_size <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB)"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Escrito: pansharpening_20260301_boa_masked.tif  (214.5 MB)</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-fig-ocm-antes-depois" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:39.006760Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:39.006760Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:40.838475Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:40.838475Z&quot;}}" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># antes x depois, em resolução reduzida</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(mascarada) <span class="im">as</span> src:</span>
 <span id="cb17-3"><a href="#cb17-3"></a>    fator <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, src.width <span class="op">//</span> <span class="dv">800</span>)</span>
 <span id="cb17-4"><a href="#cb17-4"></a>    forma <span class="op">=</span> (src.height <span class="op">//</span> fator, src.width <span class="op">//</span> fator)</span>
-<span id="cb17-5"><a href="#cb17-5"></a>    dep <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    dep <span class="op">=</span> src.read(ac.RGB, out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,      <span class="co"># vermelho, verde, azul = bandas 3, 2, 1</span></span>
 <span id="cb17-6"><a href="#cb17-6"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
 <span id="cb17-7"><a href="#cb17-7"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
-<span id="cb17-8"><a href="#cb17-8"></a>    ant <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    ant <span class="op">=</span> src.read(ac.RGB, out_shape<span class="op">=</span>(<span class="dv">3</span>,) <span class="op">+</span> forma,</span>
 <span id="cb17-9"><a href="#cb17-9"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
 <span id="cb17-10"><a href="#cb17-10"></a></span>
 <span id="cb17-11"><a href="#cb17-11"></a><span class="cf">for</span> arr <span class="kw">in</span> (ant, dep):</span>
@@ -834,7 +846,7 @@ Figura&nbsp;3: A cena antes e depois de nuvem e sombra virarem nodata.
 <p>Entre descartar e preencher com outro sensor, o cenário ideal é <strong>compor com outra data do próprio CBERS</strong>, se você tiver uma cena próxima e limpa naquela área. Assim, a radiometria e a resolução continuam as mesmas, sem precisar de super-resolução.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="a2554d5b" class="cell" data-execution_count="12">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="a2554d5b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:40.853524Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:40.853524Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:41.038179Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:41.038179Z&quot;}}" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>n_validos <span class="op">=</span> <span class="bu">int</span>((nativa <span class="op">!=</span> NODATA_MASCARA).<span class="bu">sum</span>())</span>
 <span id="cb18-2"><a href="#cb18-2"></a>n_nuvem <span class="op">=</span> <span class="bu">int</span>(np.isin(nativa, [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]).<span class="bu">sum</span>())</span>
 <span id="cb18-3"><a href="#cb18-3"></a>resumo <span class="op">=</span> {</span>

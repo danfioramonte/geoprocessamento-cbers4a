@@ -338,7 +338,7 @@
   <li><a href="#a-correção-banda-a-banda" id="toc-a-correção-banda-a-banda" class="nav-link" data-scroll-target="#a-correção-banda-a-banda">4.2 A correção, banda a banda</a></li>
   <li><a href="#o-que-a-correção-mudou" id="toc-o-que-a-correção-mudou" class="nav-link" data-scroll-target="#o-que-a-correção-mudou">O que a correção mudou</a></li>
   <li><a href="#reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma" id="toc-reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma" class="nav-link" data-scroll-target="#reflectância-negativa-o-que-é-normal-e-o-que-é-sintoma">4.3 Reflectância negativa: o que é normal e o que é sintoma</a></li>
-  <li><a href="#gravando-o-composto-rgbn-de-8-m" id="toc-gravando-o-composto-rgbn-de-8-m" class="nav-link" data-scroll-target="#gravando-o-composto-rgbn-de-8-m">5. Gravando o composto RGBN de 8 m</a></li>
+  <li><a href="#gravando-o-composto-de-8-m" id="toc-gravando-o-composto-de-8-m" class="nav-link" data-scroll-target="#gravando-o-composto-de-8-m">5. Gravando o composto de 8 m</a></li>
   <li><a href="#alinhando-a-multiespectral-com-a-pancromática" id="toc-alinhando-a-multiespectral-com-a-pancromática" class="nav-link" data-scroll-target="#alinhando-a-multiespectral-com-a-pancromática">6. Alinhando a multiespectral com a pancromática</a></li>
   <li><a href="#a-fusão-gram-schmidt" id="toc-a-fusão-gram-schmidt" class="nav-link" data-scroll-target="#a-fusão-gram-schmidt">7. A fusão Gram-Schmidt</a>
   <ul class="collapse">
@@ -412,7 +412,7 @@
 <tr class="even">
 <td>fusão Gram-Schmidt</td>
 <td>MS 8 m + PAN 2 m</td>
-<td>RGBN de 2 m</td>
+<td>4 bandas de 2 m (azul, verde, vermelho, NIR)</td>
 <td>grade da pancromática</td>
 </tr>
 </tbody>
@@ -432,7 +432,7 @@
 </blockquote>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cd34a4b7" class="cell" data-execution_count="1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cd34a4b7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:10.591636Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:10.591636Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:10.596047Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:10.596047Z&quot;}}" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># --- Colab, parte 1 de 2: instala o conda na sessão (REINICIA o ambiente) ---</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> sys</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -447,7 +447,7 @@
 <pre><code>Ambiente: local (pixi/Jupyter)</code></pre>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="b839a196" class="cell" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="b839a196" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:10.597054Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:10.597054Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:10.599406Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:10.599406Z&quot;}}" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># --- Colab, parte 2 de 2: rode DEPOIS do reinício ---</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="im">import</span> sys</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
@@ -464,7 +464,7 @@
 <p>Essa célula baixa do repositório o <code>aulas_cbers.py</code> e a pasta <code>config/</code> (só quando eles ainda não estão na pasta). O <code>aulas_cbers.py</code> guarda, de forma condensada, as etapas das aulas anteriores, e é o que permite começar o curso por qualquer aula. A pasta <code>config/</code> traz a irradiância solar (ESUN) do sensor e os parâmetros atmosféricos.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="d8c397ad" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="d8c397ad" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:10.600410Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:10.600410Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:10.605179Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:10.604571Z&quot;}}" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># --- Traz o módulo de apoio e os arquivos de configuração do repositório ---</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="co"># aulas_cbers.py guarda, de forma compacta, as etapas das aulas anteriores; é o</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="co"># que permite começar o curso por qualquer aula. config/ traz a ESUN do sensor e</span></span>
@@ -496,7 +496,7 @@ ok   config/atmosfera_rio_claro.json</code></pre>
 <p>Também ficam aqui a faixa de reflectância aceita no arquivo final (<code>PISO_REFLECTANCIA</code> e <code>TETO_REFLECTANCIA</code>, explicadas na seção 4.3) e a opção <code>AJUSTAR_AOD</code>, da seção 4.1.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="9bc45dc6" class="cell" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="9bc45dc6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:10.606186Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:10.606186Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:10.989008Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:10.989008Z&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> aulas_cbers <span class="im">as</span> ac</span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a>ac.configurar_gdal()          <span class="co"># ajustes de leitura remota, ANTES do rasterio</span></span>
@@ -514,40 +514,46 @@ ok   config/atmosfera_rio_claro.json</code></pre>
 <span id="cb6-15"><a href="#cb6-15"></a><span class="co"># ---- parâmetros da aula -----------------------------------------------------</span></span>
 <span id="cb6-16"><a href="#cb6-16"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO          <span class="co"># cena de referência do curso (Rio Claro, com nuvem)</span></span>
 <span id="cb6-17"><a href="#cb6-17"></a>AOI_BBOX <span class="op">=</span> ac.AOI_BBOX            <span class="co"># [oeste, sul, leste, norte] em EPSG:4326</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                     <span class="co"># "boa" (recomendado) ou "toa"</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a>ESCALA <span class="op">=</span> ac.ESCALA                <span class="co"># reflectância 0-1 gravada como int16 x10000</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a>NODATA <span class="op">=</span> ac.NODATA                <span class="co"># -9999</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="co"># Faixa física da reflectância GRAVADA. Reflectância negativa não existe na</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a><span class="co"># natureza: o que aparece abaixo de zero é ruído da correção atmosférica e</span></span>
-<span id="cb6-24"><a href="#cb6-24"></a><span class="co"># undershoot da fusão sobre alvo escuro. O diagnóstico da seção 4.3 mede esses</span></span>
-<span id="cb6-25"><a href="#cb6-25"></a><span class="co"># negativos ANTES de gravar — o piso não esconde o sintoma, só evita que o</span></span>
-<span id="cb6-26"><a href="#cb6-26"></a><span class="co"># produto final carregue valor impossível. Como o NODATA é -9999, pixel ceifado</span></span>
-<span id="cb6-27"><a href="#cb6-27"></a><span class="co"># continua VÁLIDO (vale 0), não vira buraco.</span></span>
-<span id="cb6-28"><a href="#cb6-28"></a>PISO_REFLECTANCIA <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb6-29"><a href="#cb6-29"></a>TETO_REFLECTANCIA <span class="op">=</span> <span class="fl">1.6</span></span>
-<span id="cb6-30"><a href="#cb6-30"></a></span>
-<span id="cb6-31"><a href="#cb6-31"></a><span class="co"># Busca do AOD pelo critério do alvo escuro (seção 4.1). Custa ~30 s e evita o</span></span>
-<span id="cb6-32"><a href="#cb6-32"></a><span class="co"># erro mais comum do BOA: corrigir demais e afundar a cena em valores negativos.</span></span>
-<span id="cb6-33"><a href="#cb6-33"></a>AJUSTAR_AOD <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb6-34"><a href="#cb6-34"></a></span>
-<span id="cb6-35"><a href="#cb6-35"></a><span class="co"># No Colab, os dados ficam no seu Google Drive, na mesma pasta em que a Aula 00</span></span>
-<span id="cb6-36"><a href="#cb6-36"></a><span class="co"># gravou (MyDrive/geoprocessamento-cbers4a/data), e não se perdem quando a</span></span>
-<span id="cb6-37"><a href="#cb6-37"></a><span class="co"># sessão encerra. Localmente não faz nada. USAR_DRIVE = False usa /content/data.</span></span>
-<span id="cb6-38"><a href="#cb6-38"></a>USAR_DRIVE <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb6-39"><a href="#cb6-39"></a><span class="cf">if</span> USAR_DRIVE:</span>
-<span id="cb6-40"><a href="#cb6-40"></a>    ac.usar_drive()</span>
-<span id="cb6-41"><a href="#cb6-41"></a>P <span class="op">=</span> ac.pastas()</span>
-<span id="cb6-42"><a href="#cb6-42"></a>DATA <span class="op">=</span> ac.data_da_cena(CENA_ID)</span>
-<span id="cb6-43"><a href="#cb6-43"></a></span>
-<span id="cb6-44"><a href="#cb6-44"></a><span class="bu">print</span>(<span class="ss">f"cena  : </span><span class="sc">{</span>CENA_ID<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-45"><a href="#cb6-45"></a><span class="bu">print</span>(<span class="ss">f"data  : </span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-46"><a href="#cb6-46"></a><span class="bu">print</span>(<span class="ss">f"nível : </span><span class="sc">{</span>NIVEL<span class="sc">.</span>upper()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-47"><a href="#cb6-47"></a><span class="bu">print</span>(<span class="ss">f"bbox  : </span><span class="sc">{</span>AOI_BBOX<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-48"><a href="#cb6-48"></a><span class="co"># Caminho RELATIVO de proposito: a saida deste notebook vai para o GitHub,</span></span>
-<span id="cb6-49"><a href="#cb6-49"></a><span class="co"># e o caminho absoluto entregaria a estrutura de pastas da sua maquina.</span></span>
-<span id="cb6-50"><a href="#cb6-50"></a><span class="co"># Se precisar do absoluto para depurar, rode P["base"].resolve() a parte.</span></span>
-<span id="cb6-51"><a href="#cb6-51"></a><span class="bu">print</span>(<span class="ss">f"dados : </span><span class="sc">{</span>P[<span class="st">'base'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co"># Outra cena ou outra área? No Colab o aulas_cbers.py vem pronto do repositório,</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="co"># então a troca é feita aqui mesmo: descomente e ajuste as linhas abaixo. O id</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="co"># segue o formato da coluna "id" da Aula 00 (use o mesmo CENA_ID nas Aulas 02 e</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="co"># 03), e o "ac.AOI_BBOX" faz o download da cena usar a área nova.</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="co"># CENA_ID = "CBERS_4A_WPM_20250927_204_141_L4"</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="co"># ac.AOI_BBOX = AOI_BBOX = [-47.6, -22.5, -47.3, -22.2]   # o mesmo bbox da Aula 00</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                     <span class="co"># "boa" (recomendado) ou "toa"</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>ESCALA <span class="op">=</span> ac.ESCALA                <span class="co"># reflectância 0-1 gravada como int16 x10000</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>NODATA <span class="op">=</span> ac.NODATA                <span class="co"># -9999</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="co"># Faixa física da reflectância GRAVADA. Reflectância negativa não existe na</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="co"># natureza: o que aparece abaixo de zero é ruído da correção atmosférica e</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a><span class="co"># undershoot da fusão sobre alvo escuro. O diagnóstico da seção 4.3 mede esses</span></span>
+<span id="cb6-31"><a href="#cb6-31"></a><span class="co"># negativos ANTES de gravar — o piso não esconde o sintoma, só evita que o</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a><span class="co"># produto final carregue valor impossível. Como o NODATA é -9999, pixel ceifado</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a><span class="co"># continua VÁLIDO (vale 0), não vira buraco.</span></span>
+<span id="cb6-34"><a href="#cb6-34"></a>PISO_REFLECTANCIA <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a>TETO_REFLECTANCIA <span class="op">=</span> <span class="fl">1.6</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a></span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="co"># Busca do AOD pelo critério do alvo escuro (seção 4.1). Custa ~30 s e evita o</span></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="co"># erro mais comum do BOA: corrigir demais e afundar a cena em valores negativos.</span></span>
+<span id="cb6-39"><a href="#cb6-39"></a>AJUSTAR_AOD <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a></span>
+<span id="cb6-41"><a href="#cb6-41"></a><span class="co"># No Colab, os dados ficam no seu Google Drive, na mesma pasta em que a Aula 00</span></span>
+<span id="cb6-42"><a href="#cb6-42"></a><span class="co"># gravou (MyDrive/geoprocessamento-cbers4a/data), e não se perdem quando a</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a><span class="co"># sessão encerra. Localmente não faz nada. USAR_DRIVE = False usa /content/data.</span></span>
+<span id="cb6-44"><a href="#cb6-44"></a>USAR_DRIVE <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="cf">if</span> USAR_DRIVE:</span>
+<span id="cb6-46"><a href="#cb6-46"></a>    ac.usar_drive()</span>
+<span id="cb6-47"><a href="#cb6-47"></a>P <span class="op">=</span> ac.pastas()</span>
+<span id="cb6-48"><a href="#cb6-48"></a>DATA <span class="op">=</span> ac.data_da_cena(CENA_ID)</span>
+<span id="cb6-49"><a href="#cb6-49"></a></span>
+<span id="cb6-50"><a href="#cb6-50"></a><span class="bu">print</span>(<span class="ss">f"cena  : </span><span class="sc">{</span>CENA_ID<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-51"><a href="#cb6-51"></a><span class="bu">print</span>(<span class="ss">f"data  : </span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-52"><a href="#cb6-52"></a><span class="bu">print</span>(<span class="ss">f"nível : </span><span class="sc">{</span>NIVEL<span class="sc">.</span>upper()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-53"><a href="#cb6-53"></a><span class="bu">print</span>(<span class="ss">f"bbox  : </span><span class="sc">{</span>AOI_BBOX<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-54"><a href="#cb6-54"></a><span class="co"># Caminho RELATIVO de proposito: a saida deste notebook vai para o GitHub,</span></span>
+<span id="cb6-55"><a href="#cb6-55"></a><span class="co"># e o caminho absoluto entregaria a estrutura de pastas da sua maquina.</span></span>
+<span id="cb6-56"><a href="#cb6-56"></a><span class="co"># Se precisar do absoluto para depurar, rode P["base"].resolve() a parte.</span></span>
+<span id="cb6-57"><a href="#cb6-57"></a><span class="bu">print</span>(<span class="ss">f"dados : </span><span class="sc">{</span>P[<span class="st">'base'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cena  : CBERS_4A_WPM_20260301_203_141_L4
 data  : 20260301
@@ -562,7 +568,7 @@ dados : data</code></pre>
 <p>Se você fez a Aula 00, os arquivos já estão em <code>data/raw</code>. Se começou por aqui, a célula abaixo baixa os mesmos recortes do STAC do INPE (mesma cena e mesmo bbox). Em seguida, ela lista o tamanho, a resolução, o tipo de dado e o nodata de cada banda.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="0aac18f7" class="cell" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="0aac18f7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:10.991013Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:10.991013Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:11.012150Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:11.012150Z&quot;}}" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>arquivos <span class="op">=</span> ac.arquivos_da_cena(CENA_ID)</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="cf">if</span> <span class="bu">len</span>(arquivos) <span class="op">&lt;</span> <span class="dv">5</span>:</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    arquivos <span class="op">=</span> ac.preparar_aula_01(CENA_ID)</span>
@@ -592,9 +598,12 @@ BAND0 (  pan):  6462 x 6968  px @ 2 m | int16 | nodata=0.0 | EPSG:32723</code></
 <p><span class="math display">\[L = DN \times \text{coeficiente}\]</span></p>
 <p>Pinto et al.&nbsp;(2016) confirmam a forma <span class="math inline">\(L = G \cdot DN + b\)</span> para os sensores do CBERS e mostram que os interceptos ajustados são estatisticamente iguais a zero.</p>
 <p>A célula abaixo lê o XML e a ESUN do sensor e calcula a distância Terra-Sol e o cosseno do ângulo zenital solar.</p>
+<blockquote class="blockquote">
+<p><strong>ESUN de outro sensor:</strong> os valores lidos na célula abaixo (<code>config/esun_wpm.json</code>) valem para o CBERS-4A com a câmera WPM. Se você adaptar a aula para outro sensor, troque também a ESUN, senão a reflectância sai errada sem dar erro nenhum. Para as câmeras do CBERS-4A, os valores estão na tabela do <a href="https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250228101153187103775.pdf">Apêndice 4 da CRESDA</a>.</p>
+</blockquote>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="bbb8f1e2" class="cell" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="bbb8f1e2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:11.013656Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:11.013656Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:11.018640Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:11.018640Z&quot;}}" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>meta <span class="op">=</span> ac.ler_xml(CENA_ID)</span>
 <span id="cb10-2"><a href="#cb10-2"></a>esun <span class="op">=</span> ac.ler_esun()          <span class="co"># config/esun_wpm.json (fonte: CRESDA, anexo 4)</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
@@ -634,10 +643,16 @@ banda        coef. calib.    ESUN (W m-2 um-1)
 <p><span class="math display">\[L_\lambda = DN \times G_\lambda \qquad\qquad
 \rho_{TOA} = \frac{\pi \, d^2 \, L_\lambda}{ESUN_\lambda \, \cos\theta_z}\]</span></p>
 <p>Onde <span class="math inline">\(d\)</span> é a distância Terra-Sol em unidades astronômicas e <span class="math inline">\(\theta_z\)</span> é o ângulo zenital solar (90° menos a elevação). O <span class="math inline">\(ESUN\)</span> é a irradiância solar exoatmosférica da banda. Os valores do WPM ficam em <code>config/esun_wpm.json</code> e foram publicados pela <strong>CRESDA</strong> (a operadora chinesa do satélite), a partir da resposta espectral do sensor. Eles estão disponíveis no <a href="https://www.cresda.cn/zgzywxyyzx/zlxz/0107/20250107110105361912927_pc.html">site oficial</a>.</p>
-<p>Antes da conversão, a célula abaixo marca os pixels sem dado. O produto usa <code>0</code> para “sem dado”, e consideramos nodata o pixel que vale zero em <strong>qualquer</strong> banda, e não só o que vale zero em todas. Isso porque, em TOA, o azul nunca é zero sobre a superfície (o espalhamento atmosférico garante algum sinal até na sombra), então um zero isolado é artefato da borda da imagem, e não um alvo escuro. Depois, a célula converte DN em radiância e radiância em TOA, e imprime os percentis de cada banda.</p>
+<p>Antes da conversão, a célula abaixo trata os pixels sem dado. O produto usa <code>0</code> para “sem dado”. Em TOA nenhuma banda chega a zero sobre a superfície (o espalhamento atmosférico garante algum sinal até na sombra), então todo zero é falha, e não alvo escuro. Mas há dois tipos de falha, e eles pedem tratamentos diferentes:</p>
+<ul>
+<li><strong>Borda</strong>: zero em <strong>todas</strong> as bandas (fora do recorte da cena), ou zero parcial encostado nessa região. Vira nodata.</li>
+<li><strong>Dropout de detector</strong>: zero em <strong>uma</strong> banda só, num pixel isolado no meio da cena, com os vizinhos e a pancromática normais. As outras bandas desse pixel estão boas, então ele é <strong>reparado</strong>: o valor da banda que falhou é interpolado a partir dos vizinhos válidos da mesma banda (<code>ac.reparar_dropouts</code>).</li>
+</ul>
+<p>Por que não marcar o dropout como nodata? Porque a fusão (seção 7) amplia cada pixel inválido de 8 m para um buraco de 8 × 8 pixels de 2 m, ou seja, 16 m de lado: a reamostragem cúbica e a máscara reamostrada contaminam a vizinhança. Na cena do curso são 43 dropouts, que virariam 43 quadrados sem dado no pansharpening.</p>
+<p>Depois, a célula converte DN em radiância e radiância em TOA, e imprime os percentis de cada banda.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="4f50bae1" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="4f50bae1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:11.020150Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:11.020150Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:11.574148Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:11.574148Z&quot;}}" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>dn, perfil, forma <span class="op">=</span> {}, <span class="va">None</span>, <span class="va">None</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">sorted</span>(ac.BANDAS_NATIVAS):</span>
 <span id="cb12-3"><a href="#cb12-3"></a>    <span class="cf">with</span> rasterio.<span class="bu">open</span>(arquivos[<span class="ss">f"BAND</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span>]) <span class="im">as</span> src:</span>
@@ -648,33 +663,38 @@ banda        coef. calib.    ESUN (W m-2 um-1)
 <span id="cb12-8"><a href="#cb12-8"></a>        dn[n] <span class="op">=</span> src.read(<span class="dv">1</span>)</span>
 <span id="cb12-9"><a href="#cb12-9"></a></span>
 <span id="cb12-10"><a href="#cb12-10"></a>zeros <span class="op">=</span> np.zeros(forma, dtype<span class="op">=</span><span class="bu">bool</span>)</span>
-<span id="cb12-11"><a href="#cb12-11"></a>simultaneos <span class="op">=</span> np.ones(forma, dtype<span class="op">=</span><span class="bu">bool</span>)</span>
-<span id="cb12-12"><a href="#cb12-12"></a><span class="cf">for</span> n <span class="kw">in</span> dn:</span>
-<span id="cb12-13"><a href="#cb12-13"></a>    zeros <span class="op">|=</span> (dn[n] <span class="op">==</span> <span class="dv">0</span>)</span>
-<span id="cb12-14"><a href="#cb12-14"></a>    simultaneos <span class="op">&amp;=</span> (dn[n] <span class="op">==</span> <span class="dv">0</span>)</span>
-<span id="cb12-15"><a href="#cb12-15"></a>valido <span class="op">=</span> <span class="op">~</span>zeros</span>
-<span id="cb12-16"><a href="#cb12-16"></a></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="bu">print</span>(<span class="ss">f"grade MS : </span><span class="sc">{</span>forma[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>forma[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> px"</span>)</span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="bu">print</span>(<span class="ss">f"nodata   : </span><span class="sc">{</span>zeros<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:,}</span><span class="ss"> px (</span><span class="sc">{</span>zeros<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">)"</span>)</span>
-<span id="cb12-19"><a href="#cb12-19"></a><span class="bu">print</span>(<span class="ss">f"  zero em todas as bandas : </span><span class="sc">{</span><span class="bu">int</span>(simultaneos.<span class="bu">sum</span>())<span class="sc">:,}</span><span class="ss">"</span>)</span>
-<span id="cb12-20"><a href="#cb12-20"></a><span class="bu">print</span>(<span class="ss">f"  zero em algumas bandas  : </span><span class="sc">{</span><span class="bu">int</span>((zeros <span class="op">&amp;</span> <span class="op">~</span>simultaneos).<span class="bu">sum</span>())<span class="sc">:,}</span><span class="ss">  "</span></span>
-<span id="cb12-21"><a href="#cb12-21"></a>      <span class="ss">f"(marcados como nodata)"</span>)</span>
-<span id="cb12-22"><a href="#cb12-22"></a></span>
-<span id="cb12-23"><a href="#cb12-23"></a><span class="co"># ---- a conversão propriamente dita ----</span></span>
-<span id="cb12-24"><a href="#cb12-24"></a>radiancia, toa <span class="op">=</span> {}, {}</span>
-<span id="cb12-25"><a href="#cb12-25"></a><span class="cf">for</span> n, nome <span class="kw">in</span> ac.BANDAS_NATIVAS.items():</span>
-<span id="cb12-26"><a href="#cb12-26"></a>    radiancia[n] <span class="op">=</span> ac.dn_para_radiancia(dn[n], meta[<span class="st">"coeficientes"</span>][n])</span>
-<span id="cb12-27"><a href="#cb12-27"></a>    toa[n] <span class="op">=</span> ac.radiancia_para_toa(radiancia[n], esun[n], d, cos_z)</span>
-<span id="cb12-28"><a href="#cb12-28"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="cf">for</span> n <span class="kw">in</span> dn:</span>
+<span id="cb12-12"><a href="#cb12-12"></a>    zeros <span class="op">|=</span> (dn[n] <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb12-13"><a href="#cb12-13"></a></span>
+<span id="cb12-14"><a href="#cb12-14"></a><span class="co"># borda (nodata de verdade) x dropout de detector (reparado pelos vizinhos)</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a>borda, dropout <span class="op">=</span> ac.separar_zeros(dn)</span>
+<span id="cb12-16"><a href="#cb12-16"></a>dn <span class="op">=</span> ac.reparar_dropouts(dn, dropout)</span>
+<span id="cb12-17"><a href="#cb12-17"></a>valido <span class="op">=</span> <span class="op">~</span>borda</span>
+<span id="cb12-18"><a href="#cb12-18"></a><span class="cf">for</span> n <span class="kw">in</span> dn:</span>
+<span id="cb12-19"><a href="#cb12-19"></a>    valido <span class="op">&amp;=</span> (dn[n] <span class="op">!=</span> <span class="dv">0</span>)</span>
+<span id="cb12-20"><a href="#cb12-20"></a></span>
+<span id="cb12-21"><a href="#cb12-21"></a><span class="bu">print</span>(<span class="ss">f"grade MS : </span><span class="sc">{</span>forma[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>forma[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> px"</span>)</span>
+<span id="cb12-22"><a href="#cb12-22"></a><span class="bu">print</span>(<span class="ss">f"pixels com zero em alguma banda: </span><span class="sc">{</span><span class="bu">int</span>(zeros.<span class="bu">sum</span>())<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb12-23"><a href="#cb12-23"></a><span class="bu">print</span>(<span class="ss">f"  borda  (viram nodata)        : </span><span class="sc">{</span><span class="bu">int</span>(borda.<span class="bu">sum</span>())<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb12-24"><a href="#cb12-24"></a><span class="bu">print</span>(<span class="ss">f"  dropout (reparados)          : </span><span class="sc">{</span><span class="bu">int</span>(dropout.<span class="bu">sum</span>())<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb12-25"><a href="#cb12-25"></a><span class="bu">print</span>(<span class="ss">f"nodata final: </span><span class="sc">{</span><span class="bu">int</span>((<span class="op">~</span>valido).<span class="bu">sum</span>())<span class="sc">:,}</span><span class="ss"> px (</span><span class="sc">{</span>(<span class="op">~</span>valido)<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">)"</span>)</span>
+<span id="cb12-26"><a href="#cb12-26"></a></span>
+<span id="cb12-27"><a href="#cb12-27"></a><span class="co"># ---- a conversão propriamente dita ----</span></span>
+<span id="cb12-28"><a href="#cb12-28"></a>radiancia, toa <span class="op">=</span> {}, {}</span>
 <span id="cb12-29"><a href="#cb12-29"></a><span class="cf">for</span> n, nome <span class="kw">in</span> ac.BANDAS_NATIVAS.items():</span>
-<span id="cb12-30"><a href="#cb12-30"></a>    v <span class="op">=</span> toa[n][valido]</span>
-<span id="cb12-31"><a href="#cb12-31"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nome<span class="sc">:&lt;9}</span><span class="ss"> TOA: p1=</span><span class="sc">{</span>np<span class="sc">.</span>percentile(v, <span class="dv">1</span>)<span class="sc">:.4f}</span><span class="ss">  p50=</span><span class="sc">{</span>np<span class="sc">.</span>percentile(v, <span class="dv">50</span>)<span class="sc">:.4f}</span><span class="ss">  "</span></span>
-<span id="cb12-32"><a href="#cb12-32"></a>          <span class="ss">f"p99=</span><span class="sc">{</span>np<span class="sc">.</span>percentile(v, <span class="dv">99</span>)<span class="sc">:.4f}</span><span class="ss">  máx=</span><span class="sc">{</span>v<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-30"><a href="#cb12-30"></a>    radiancia[n] <span class="op">=</span> ac.dn_para_radiancia(dn[n], meta[<span class="st">"coeficientes"</span>][n])</span>
+<span id="cb12-31"><a href="#cb12-31"></a>    toa[n] <span class="op">=</span> ac.radiancia_para_toa(radiancia[n], esun[n], d, cos_z)</span>
+<span id="cb12-32"><a href="#cb12-32"></a></span>
+<span id="cb12-33"><a href="#cb12-33"></a><span class="cf">for</span> n, nome <span class="kw">in</span> ac.BANDAS_NATIVAS.items():</span>
+<span id="cb12-34"><a href="#cb12-34"></a>    v <span class="op">=</span> toa[n][valido]</span>
+<span id="cb12-35"><a href="#cb12-35"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nome<span class="sc">:&lt;9}</span><span class="ss"> TOA: p1=</span><span class="sc">{</span>np<span class="sc">.</span>percentile(v, <span class="dv">1</span>)<span class="sc">:.4f}</span><span class="ss">  p50=</span><span class="sc">{</span>np<span class="sc">.</span>percentile(v, <span class="dv">50</span>)<span class="sc">:.4f}</span><span class="ss">  "</span></span>
+<span id="cb12-36"><a href="#cb12-36"></a>          <span class="ss">f"p99=</span><span class="sc">{</span>np<span class="sc">.</span>percentile(v, <span class="dv">99</span>)<span class="sc">:.4f}</span><span class="ss">  máx=</span><span class="sc">{</span>v<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>grade MS : 1615 x 1742 px
-nodata   : 43 px (0.00%)
-  zero em todas as bandas : 0
-  zero em algumas bandas  : 43  (marcados como nodata)
+pixels com zero em alguma banda: 43
+  borda  (viram nodata)        : 0
+  dropout (reparados)          : 43
+nodata final: 0 px (0.00%)
 azul      TOA: p1=0.0842  p50=0.1012  p99=0.2775  máx=0.5817
 verde     TOA: p1=0.0635  p50=0.0953  p99=0.2724  máx=0.6249
 vermelho  TOA: p1=0.0436  p50=0.0740  p99=0.2899  máx=0.5872
@@ -719,7 +739,7 @@ nir       TOA: p1=0.0905  p50=0.2596  p99=0.4103  máx=0.6477</code></pre>
 <p>A função <code>sanidade()</code> abaixo amostra 200 mil pixels válidos, imprime os percentis de cada banda e do NDVI e avisa quando algo sai da faixa.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="eb7eda82" class="cell" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="eb7eda82" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:11.575658Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:11.575658Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:11.612309Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:11.612309Z&quot;}}" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> sanidade(refl_por_nome, valido, n_amostra<span class="op">=</span><span class="dv">200_000</span>):</span>
 <span id="cb14-2"><a href="#cb14-2"></a>    <span class="co">"""Faixas de reflectância e NDVI numa amostra de pixels válidos."""</span></span>
 <span id="cb14-3"><a href="#cb14-3"></a>    idx <span class="op">=</span> np.flatnonzero(valido.ravel())</span>
@@ -752,11 +772,11 @@ nir       TOA: p1=0.0905  p50=0.2596  p99=0.4103  máx=0.6477</code></pre>
 <span id="cb14-30"><a href="#cb14-30"></a>sanidade({ac.BANDAS_NATIVAS[n]: toa[n] <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">sorted</span>(toa)}, valido)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>banda      p1       p5       p50      p95      p99       frac&gt;1
-azul       0.0842   0.0870   0.1012   0.1751   0.2815    0.0000%
-verde      0.0635   0.0696   0.0953   0.1729   0.2767    0.0000%
-vermelho   0.0436   0.0482   0.0740   0.2032   0.2945    0.0000%
-nir        0.0912   0.1380   0.2596   0.3603   0.4115    0.0000%
-NDVI       -0.0098  0.0702   0.5546   0.7065   0.7406  
+azul       0.0842   0.0870   0.1012   0.1751   0.2809    0.0000%
+verde      0.0641   0.0696   0.0953   0.1729   0.2761    0.0000%
+vermelho   0.0436   0.0482   0.0740   0.2038   0.2927    0.0000%
+nir        0.0912   0.1380   0.2596   0.3603   0.4103    0.0000%
+NDVI       -0.0121  0.0693   0.5544   0.7060   0.7405  
 
   &gt; faixas dentro do esperado.</code></pre>
 </div>
@@ -773,7 +793,7 @@ NDVI       -0.0098  0.0702   0.5546   0.7065   0.7406
 <p>A célula abaixo confere se o 6S está instalado. Se não estiver, ela avisa e <strong>segue em TOA</strong> para a aula não travar; nesse caso, todo o resto do curso vai usar um produto TOA. Se aparecer essa mensagem no pixi, rode <code>pixi run check</code> e confira a linha do 6S.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="869f8a52" class="cell" data-execution_count="9">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="869f8a52" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:11.614314Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:11.613314Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:11.788969Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:11.788969Z&quot;}}" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>tem_6s <span class="op">=</span> ac.tem_6s()</span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="bu">print</span>(<span class="st">"6S disponível:"</span>, tem_6s)</span>
 <span id="cb16-3"><a href="#cb16-3"></a></span>
@@ -810,7 +830,7 @@ perfil aerossol : Continental</code></pre>
 <p>Com <code>AJUSTAR_AOD = True</code>, a célula abaixo roda o 6S só na banda azul, com vários valores de AOD, e escolhe o que deixa o alvo escuro mais perto de 0,005 (leva uns 30 s).</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="8f2e2d05" class="cell" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="8f2e2d05" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:11.790336Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:11.790336Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:11.794333Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:11.794333Z&quot;}}" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">if</span> NIVEL <span class="op">==</span> <span class="st">"boa"</span> <span class="kw">and</span> AJUSTAR_AOD:</span>
 <span id="cb18-2"><a href="#cb18-2"></a>    ALVO_ESCURO <span class="op">=</span> <span class="fl">0.005</span>          <span class="co"># reflectância esperada do pixel mais escuro no azul</span></span>
 <span id="cb18-3"><a href="#cb18-3"></a>    rng_t <span class="op">=</span> np.random.default_rng(<span class="dv">0</span>)</span>
@@ -851,7 +871,7 @@ perfil aerossol : Continental</code></pre>
 <p>Com os parâmetros definidos, o 6S roda uma vez para cada banda e os coeficientes <span class="math inline">\(x_a\)</span>, <span class="math inline">\(x_b\)</span> e <span class="math inline">\(x_c\)</span> são aplicados sobre a radiância.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="2c0e9cc4" class="cell" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="2c0e9cc4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:11.795337Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:11.795337Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:12.872891Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:12.872891Z&quot;}}" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>refl <span class="op">=</span> {ac.BANDAS_NATIVAS[n]: toa[n].copy() <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">sorted</span>(toa)}</span>
 <span id="cb20-2"><a href="#cb20-2"></a>coefs_6s <span class="op">=</span> {}</span>
 <span id="cb20-3"><a href="#cb20-3"></a></span>
@@ -880,7 +900,7 @@ xb é o termo que a atmosfera ACRESCENTA (maior no azul, como esperado).</code><
 <p>O sinal mais claro de que a correção funcionou: o <strong>azul cai bastante</strong> (era o mais afetado pelo espalhamento) e o <strong>NDVI sobe</strong> (o vermelho cai proporcionalmente mais que o NIR). A célula abaixo compara as medianas de cada banda em TOA e BOA e mostra os histogramas.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-fig-toa-boa" class="cell" data-execution_count="12">
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-fig-toa-boa" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:12.874896Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:12.874896Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:13.093838Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:13.093838Z&quot;}}" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="cf">if</span> NIVEL <span class="op">==</span> <span class="st">"boa"</span>:</span>
 <span id="cb22-2"><a href="#cb22-2"></a>    idx <span class="op">=</span> np.flatnonzero(valido.ravel())</span>
 <span id="cb22-3"><a href="#cb22-3"></a>    idx <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>).choice(idx, <span class="bu">min</span>(<span class="dv">200_000</span>, idx.size), replace<span class="op">=</span><span class="va">False</span>)</span>
@@ -922,7 +942,7 @@ verde          0.0953     0.0685      -0.0268
 vermelho       0.0740     0.0605      -0.0135
 nir            0.2596     0.2736      +0.0140
 
-NDVI mediano: TOA 0.5546 -&gt; BOA 0.6415</code></pre>
+NDVI mediano: TOA 0.5544 -&gt; BOA 0.6414</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div id="fig-toa-boa" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -950,7 +970,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <p>A tabela abaixo mostra, para cada banda, a porcentagem de negativos, o percentil 1, a mediana e o mínimo, e indica se o resultado é ruído ou sintoma.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="tbl-negativos" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="13">
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="tbl-negativos" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:13.095353Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:13.095353Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:13.193531Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:13.193531Z&quot;}}" data-execution_count="13">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-negativos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
@@ -992,16 +1012,16 @@ nir           0.00%    0.0890    0.2736    0.0319
 </figure>
 </div></div>
 <div id="dcb3a565" class="cell markdown">
-<section id="gravando-o-composto-rgbn-de-8-m" class="level2">
-<h2 class="anchored" data-anchor-id="gravando-o-composto-rgbn-de-8-m">5. Gravando o composto RGBN de 8 m</h2>
+<section id="gravando-o-composto-de-8-m" class="level2">
+<h2 class="anchored" data-anchor-id="gravando-o-composto-de-8-m">5. Gravando o composto de 8 m</h2>
 <p>A saída é gravada em <code>int16</code>, com a reflectância multiplicada por <strong>10.000</strong> (a mesma escala do Sentinel-2 L2A, o que evita conversão na Aula 03). O nodata passa a ser <code>-9999</code>, e não 0, porque agora zero é um valor de reflectância válido.</p>
-<p>A ordem das bandas passa a ser <strong>RGBN</strong> (vermelho, verde, azul, NIR), diferente da ordem nativa do CBERS (azul, verde, vermelho, NIR), e os nomes das bandas ficam <strong>gravados dentro do arquivo</strong>. Assim, as aulas seguintes leem a ordem pelo metadado, em vez de assumir, o que evita trocas silenciosas entre bandas.</p>
+<p>As bandas ficam <strong>na mesma ordem em que o WPM captura a cena</strong>: B1 azul, B2 verde, B3 vermelho e B4 NIR (BGRN), que é também a ordem do Sentinel-2 (B02, B03, B04, B08). Os nomes das bandas ficam <strong>gravados dentro do arquivo</strong>, junto com a interpretação de cor (assim o QGIS abre a imagem em cor natural mesmo com o azul na banda 1). As aulas seguintes acham cada banda pelo nome, em vez de assumir a posição, o que evita trocas silenciosas entre bandas.</p>
 <p>Junto com o GeoTIFF é gravado um arquivo <code>.params.json</code> com tudo o que foi usado (coeficientes de calibração, ESUN, geometria solar, parâmetros atmosféricos, coeficientes do 6S e o diagnóstico de negativos), para que seja possível saber depois como aquele arquivo foi gerado.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="c617005c" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>ORDEM_SAIDA <span class="op">=</span> ac.ORDEM_SAIDA        <span class="co"># [3, 2, 1, 4] = vermelho, verde, azul, NIR (numeração nativa)</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>NOMES <span class="op">=</span> ac.NOMES_SAIDA              <span class="co"># ["red", "green", "blue", "nir"]</span></span>
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="c617005c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:13.195732Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:13.195732Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:13.596510Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:13.596510Z&quot;}}" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>ORDEM_SAIDA <span class="op">=</span> ac.ORDEM_SAIDA        <span class="co"># [1, 2, 3, 4] = azul, verde, vermelho, NIR (ordem nativa)</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>NOMES <span class="op">=</span> ac.NOMES_SAIDA              <span class="co"># ["blue", "green", "red", "nir"]</span></span>
 <span id="cb26-3"><a href="#cb26-3"></a></span>
 <span id="cb26-4"><a href="#cb26-4"></a>rgbcomp <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"rgbcomp_</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>NIVEL<span class="sc">}</span><span class="ss">.tif"</span></span>
 <span id="cb26-5"><a href="#cb26-5"></a>perfil.update(count<span class="op">=</span><span class="dv">4</span>, dtype<span class="op">=</span><span class="st">"int16"</span>, nodata<span class="op">=</span>NODATA, compress<span class="op">=</span><span class="st">"deflate"</span>, predictor<span class="op">=</span><span class="dv">2</span>,</span>
@@ -1010,47 +1030,51 @@ nir           0.00%    0.0890    0.2736    0.0319
 <span id="cb26-8"><a href="#cb26-8"></a>PISO_ESC, TETO_ESC <span class="op">=</span> PISO_REFLECTANCIA <span class="op">*</span> ESCALA, TETO_REFLECTANCIA <span class="op">*</span> ESCALA</span>
 <span id="cb26-9"><a href="#cb26-9"></a>cortados <span class="op">=</span> {}</span>
 <span id="cb26-10"><a href="#cb26-10"></a></span>
-<span id="cb26-11"><a href="#cb26-11"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(rgbcomp, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
-<span id="cb26-12"><a href="#cb26-12"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(ORDEM_SAIDA, start<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb26-13"><a href="#cb26-13"></a>        arr <span class="op">=</span> refl[ac.BANDAS_NATIVAS[n]]</span>
-<span id="cb26-14"><a href="#cb26-14"></a>        fora <span class="op">=</span> (arr <span class="op">&lt;</span> PISO_REFLECTANCIA) <span class="op">|</span> (arr <span class="op">&gt;</span> TETO_REFLECTANCIA)</span>
-<span id="cb26-15"><a href="#cb26-15"></a>        cortados[NOMES[i <span class="op">-</span> <span class="dv">1</span>]] <span class="op">=</span> <span class="bu">int</span>(fora[valido].<span class="bu">sum</span>())</span>
-<span id="cb26-16"><a href="#cb26-16"></a>        esc <span class="op">=</span> np.clip(np.rint(arr <span class="op">*</span> ESCALA), PISO_ESC, TETO_ESC)</span>
-<span id="cb26-17"><a href="#cb26-17"></a>        dst.write(np.where(valido, esc, NODATA).astype(<span class="st">"int16"</span>), i)</span>
-<span id="cb26-18"><a href="#cb26-18"></a>        dst.set_band_description(i, NOMES[i <span class="op">-</span> <span class="dv">1</span>])</span>
-<span id="cb26-19"><a href="#cb26-19"></a>    dst.colorinterp <span class="op">=</span> [ColorInterp.red, ColorInterp.green, ColorInterp.blue,</span>
-<span id="cb26-20"><a href="#cb26-20"></a>                       ColorInterp.undefined]</span>
-<span id="cb26-21"><a href="#cb26-21"></a>    dst.update_tags(ORDEM_BANDAS<span class="op">=</span><span class="st">"RGBN"</span>, NIVEL<span class="op">=</span>NIVEL.upper(), FATOR_ESCALA<span class="op">=</span><span class="bu">str</span>(ESCALA),</span>
-<span id="cb26-22"><a href="#cb26-22"></a>                    CENA<span class="op">=</span>CENA_ID, DATA<span class="op">=</span>meta[<span class="st">"data"</span>])</span>
-<span id="cb26-23"><a href="#cb26-23"></a></span>
-<span id="cb26-24"><a href="#cb26-24"></a><span class="co"># procedência: o que foi usado para gerar este arquivo, em texto, ao lado dele</span></span>
-<span id="cb26-25"><a href="#cb26-25"></a>params <span class="op">=</span> {</span>
-<span id="cb26-26"><a href="#cb26-26"></a>    <span class="st">"gerado_em"</span>: datetime.now().isoformat(timespec<span class="op">=</span><span class="st">"seconds"</span>),</span>
-<span id="cb26-27"><a href="#cb26-27"></a>    <span class="st">"aula"</span>: <span class="st">"01"</span>, <span class="st">"cena"</span>: CENA_ID, <span class="st">"data_cena"</span>: meta[<span class="st">"data"</span>], <span class="st">"nivel"</span>: NIVEL,</span>
-<span id="cb26-28"><a href="#cb26-28"></a>    <span class="st">"bbox_4326"</span>: AOI_BBOX,</span>
-<span id="cb26-29"><a href="#cb26-29"></a>    <span class="st">"convencao_coeficiente"</span>: <span class="st">"L = DN * absoluteCalibrationCoefficient (offset zero)"</span>,</span>
-<span id="cb26-30"><a href="#cb26-30"></a>    <span class="st">"coeficientes_calibracao"</span>: meta[<span class="st">"coeficientes"</span>],</span>
-<span id="cb26-31"><a href="#cb26-31"></a>    <span class="st">"esun"</span>: esun, <span class="st">"distancia_terra_sol_ua"</span>: d, <span class="st">"cos_zenite_solar"</span>: cos_z,</span>
-<span id="cb26-32"><a href="#cb26-32"></a>    <span class="st">"elevacao_solar"</span>: meta[<span class="st">"elevacao_solar"</span>],</span>
-<span id="cb26-33"><a href="#cb26-33"></a>    <span class="st">"coeficientes_6s"</span>: coefs_6s <span class="kw">or</span> <span class="va">None</span>, <span class="st">"atmosfera"</span>: atm,</span>
-<span id="cb26-34"><a href="#cb26-34"></a>    <span class="st">"aod_ajustado_por_alvo_escuro"</span>: <span class="bu">bool</span>(NIVEL <span class="op">==</span> <span class="st">"boa"</span> <span class="kw">and</span> AJUSTAR_AOD),</span>
-<span id="cb26-35"><a href="#cb26-35"></a>    <span class="st">"faixa_reflectancia"</span>: [PISO_REFLECTANCIA, TETO_REFLECTANCIA],</span>
-<span id="cb26-36"><a href="#cb26-36"></a>    <span class="st">"negativos_por_banda"</span>: {k: {<span class="st">"frac"</span>: v[<span class="dv">0</span>], <span class="st">"p1"</span>: v[<span class="dv">1</span>], <span class="st">"mediana"</span>: v[<span class="dv">2</span>], <span class="st">"min"</span>: v[<span class="dv">3</span>]}</span>
-<span id="cb26-37"><a href="#cb26-37"></a>                            <span class="cf">for</span> k, v <span class="kw">in</span> neg.items()},</span>
-<span id="cb26-38"><a href="#cb26-38"></a>    <span class="st">"ordem_bandas"</span>: <span class="st">"RGBN"</span>, <span class="st">"fator_escala"</span>: ESCALA, <span class="st">"nodata"</span>: NODATA,</span>
-<span id="cb26-39"><a href="#cb26-39"></a>    <span class="st">"regra_nodata"</span>: <span class="st">"zero em QUALQUER banda MS"</span>,</span>
-<span id="cb26-40"><a href="#cb26-40"></a>    <span class="st">"px_nodata"</span>: <span class="bu">int</span>(zeros.<span class="bu">sum</span>()), <span class="st">"frac_nodata"</span>: <span class="bu">float</span>(zeros.mean()),</span>
-<span id="cb26-41"><a href="#cb26-41"></a>}</span>
-<span id="cb26-42"><a href="#cb26-42"></a>rgbcomp.with_suffix(<span class="st">".params.json"</span>).write_text(</span>
-<span id="cb26-43"><a href="#cb26-43"></a>    json.dumps(params, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>), encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
-<span id="cb26-44"><a href="#cb26-44"></a></span>
-<span id="cb26-45"><a href="#cb26-45"></a><span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>rgbcomp<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-46"><a href="#cb26-46"></a><span class="bu">print</span>(<span class="ss">f"Params : </span><span class="sc">{</span>rgbcomp<span class="sc">.</span>with_suffix(<span class="st">'.params.json'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-47"><a href="#cb26-47"></a><span class="bu">print</span>(<span class="ss">f"Pixels cortados na faixa [</span><span class="sc">{</span>PISO_REFLECTANCIA<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>TETO_REFLECTANCIA<span class="sc">}</span><span class="ss">]: </span><span class="sc">{</span>cortados<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb26-11"><a href="#cb26-11"></a>ac.remover_aux(rgbcomp)  <span class="co"># um .aux.xml antigo (QGIS/ArcGIS) não pode se sobrepor aos nomes novos</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(rgbcomp, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
+<span id="cb26-13"><a href="#cb26-13"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(ORDEM_SAIDA, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb26-14"><a href="#cb26-14"></a>        arr <span class="op">=</span> refl[ac.BANDAS_NATIVAS[n]]</span>
+<span id="cb26-15"><a href="#cb26-15"></a>        fora <span class="op">=</span> (arr <span class="op">&lt;</span> PISO_REFLECTANCIA) <span class="op">|</span> (arr <span class="op">&gt;</span> TETO_REFLECTANCIA)</span>
+<span id="cb26-16"><a href="#cb26-16"></a>        cortados[NOMES[i <span class="op">-</span> <span class="dv">1</span>]] <span class="op">=</span> <span class="bu">int</span>(fora[valido].<span class="bu">sum</span>())</span>
+<span id="cb26-17"><a href="#cb26-17"></a>        esc <span class="op">=</span> np.clip(np.rint(arr <span class="op">*</span> ESCALA), PISO_ESC, TETO_ESC)</span>
+<span id="cb26-18"><a href="#cb26-18"></a>        dst.write(np.where(valido, esc, NODATA).astype(<span class="st">"int16"</span>), i)</span>
+<span id="cb26-19"><a href="#cb26-19"></a>        dst.set_band_description(i, NOMES[i <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="cb26-20"><a href="#cb26-20"></a>    <span class="co"># qual banda é o vermelho, o verde e o azul (o azul está na banda 1)</span></span>
+<span id="cb26-21"><a href="#cb26-21"></a>    dst.colorinterp <span class="op">=</span> [ColorInterp.blue, ColorInterp.green, ColorInterp.red,</span>
+<span id="cb26-22"><a href="#cb26-22"></a>                       ColorInterp.undefined]</span>
+<span id="cb26-23"><a href="#cb26-23"></a>    dst.update_tags(ORDEM_BANDAS<span class="op">=</span>ac.ORDEM_BANDAS, NIVEL<span class="op">=</span>NIVEL.upper(), FATOR_ESCALA<span class="op">=</span><span class="bu">str</span>(ESCALA),</span>
+<span id="cb26-24"><a href="#cb26-24"></a>                    CENA<span class="op">=</span>CENA_ID, DATA<span class="op">=</span>meta[<span class="st">"data"</span>],</span>
+<span id="cb26-25"><a href="#cb26-25"></a>                    DROPOUTS_REPARADOS<span class="op">=</span><span class="bu">str</span>(<span class="bu">int</span>(dropout.<span class="bu">sum</span>())))</span>
+<span id="cb26-26"><a href="#cb26-26"></a></span>
+<span id="cb26-27"><a href="#cb26-27"></a><span class="co"># procedência: o que foi usado para gerar este arquivo, em texto, ao lado dele</span></span>
+<span id="cb26-28"><a href="#cb26-28"></a>params <span class="op">=</span> {</span>
+<span id="cb26-29"><a href="#cb26-29"></a>    <span class="st">"gerado_em"</span>: datetime.now().isoformat(timespec<span class="op">=</span><span class="st">"seconds"</span>),</span>
+<span id="cb26-30"><a href="#cb26-30"></a>    <span class="st">"aula"</span>: <span class="st">"01"</span>, <span class="st">"cena"</span>: CENA_ID, <span class="st">"data_cena"</span>: meta[<span class="st">"data"</span>], <span class="st">"nivel"</span>: NIVEL,</span>
+<span id="cb26-31"><a href="#cb26-31"></a>    <span class="st">"bbox_4326"</span>: AOI_BBOX,</span>
+<span id="cb26-32"><a href="#cb26-32"></a>    <span class="st">"convencao_coeficiente"</span>: <span class="st">"L = DN * absoluteCalibrationCoefficient (offset zero)"</span>,</span>
+<span id="cb26-33"><a href="#cb26-33"></a>    <span class="st">"coeficientes_calibracao"</span>: meta[<span class="st">"coeficientes"</span>],</span>
+<span id="cb26-34"><a href="#cb26-34"></a>    <span class="st">"esun"</span>: esun, <span class="st">"distancia_terra_sol_ua"</span>: d, <span class="st">"cos_zenite_solar"</span>: cos_z,</span>
+<span id="cb26-35"><a href="#cb26-35"></a>    <span class="st">"elevacao_solar"</span>: meta[<span class="st">"elevacao_solar"</span>],</span>
+<span id="cb26-36"><a href="#cb26-36"></a>    <span class="st">"coeficientes_6s"</span>: coefs_6s <span class="kw">or</span> <span class="va">None</span>, <span class="st">"atmosfera"</span>: atm,</span>
+<span id="cb26-37"><a href="#cb26-37"></a>    <span class="st">"aod_ajustado_por_alvo_escuro"</span>: <span class="bu">bool</span>(NIVEL <span class="op">==</span> <span class="st">"boa"</span> <span class="kw">and</span> AJUSTAR_AOD),</span>
+<span id="cb26-38"><a href="#cb26-38"></a>    <span class="st">"faixa_reflectancia"</span>: [PISO_REFLECTANCIA, TETO_REFLECTANCIA],</span>
+<span id="cb26-39"><a href="#cb26-39"></a>    <span class="st">"negativos_por_banda"</span>: {k: {<span class="st">"frac"</span>: v[<span class="dv">0</span>], <span class="st">"p1"</span>: v[<span class="dv">1</span>], <span class="st">"mediana"</span>: v[<span class="dv">2</span>], <span class="st">"min"</span>: v[<span class="dv">3</span>]}</span>
+<span id="cb26-40"><a href="#cb26-40"></a>                            <span class="cf">for</span> k, v <span class="kw">in</span> neg.items()},</span>
+<span id="cb26-41"><a href="#cb26-41"></a>    <span class="st">"ordem_bandas"</span>: ac.ORDEM_BANDAS, <span class="st">"fator_escala"</span>: ESCALA, <span class="st">"nodata"</span>: NODATA,</span>
+<span id="cb26-42"><a href="#cb26-42"></a>    <span class="st">"regra_nodata"</span>: <span class="st">"zero em TODAS as bandas MS (borda); dropout isolado reparado pelos vizinhos"</span>,</span>
+<span id="cb26-43"><a href="#cb26-43"></a>    <span class="st">"px_nodata"</span>: <span class="bu">int</span>((<span class="op">~</span>valido).<span class="bu">sum</span>()), <span class="st">"frac_nodata"</span>: <span class="bu">float</span>((<span class="op">~</span>valido).mean()),</span>
+<span id="cb26-44"><a href="#cb26-44"></a>    <span class="st">"px_dropout_reparados"</span>: <span class="bu">int</span>(dropout.<span class="bu">sum</span>()),</span>
+<span id="cb26-45"><a href="#cb26-45"></a>}</span>
+<span id="cb26-46"><a href="#cb26-46"></a>rgbcomp.with_suffix(<span class="st">".params.json"</span>).write_text(</span>
+<span id="cb26-47"><a href="#cb26-47"></a>    json.dumps(params, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>), encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb26-48"><a href="#cb26-48"></a></span>
+<span id="cb26-49"><a href="#cb26-49"></a><span class="bu">print</span>(<span class="ss">f"Escrito: </span><span class="sc">{</span>rgbcomp<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-50"><a href="#cb26-50"></a><span class="bu">print</span>(<span class="ss">f"Params : </span><span class="sc">{</span>rgbcomp<span class="sc">.</span>with_suffix(<span class="st">'.params.json'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-51"><a href="#cb26-51"></a><span class="bu">print</span>(<span class="ss">f"Pixels cortados na faixa [</span><span class="sc">{</span>PISO_REFLECTANCIA<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>TETO_REFLECTANCIA<span class="sc">}</span><span class="ss">]: </span><span class="sc">{</span>cortados<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Escrito: data\interim\rgbcomp_20260301_boa.tif
 Params : data\interim\rgbcomp_20260301_boa.params.json
-Pixels cortados na faixa [0.0, 1.6]: {'red': 2, 'green': 2, 'blue': 4, 'nir': 0}</code></pre>
+Pixels cortados na faixa [0.0, 1.6]: {'blue': 4, 'green': 2, 'red': 2, 'nir': 0}</code></pre>
 </div>
 </div></div>
 <div id="888eb01d" class="cell markdown">
@@ -1061,7 +1085,7 @@ Pixels cortados na faixa [0.0, 1.6]: {'red': 2, 'green': 2, 'blue': 4, 'nir': 0}
 <p>A função abaixo resolve os dois problemas: recorta as duas imagens na extensão comum, alinhada à grade de 8 m, e ajusta a PAN para uma grade exatamente 4 vezes mais fina.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="58ec8bd3" class="cell" data-execution_count="15">
+<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="58ec8bd3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:13.597678Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:13.597678Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:14.334701Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:14.334701Z&quot;}}" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>ms, pan, t_ms, t_pan, crs, nod_ms, FATOR <span class="op">=</span> ac.alinhar_ms_pan(</span>
 <span id="cb28-2"><a href="#cb28-2"></a>    rgbcomp, arquivos[<span class="st">"BAND0"</span>])</span>
 <span id="cb28-3"><a href="#cb28-3"></a></span>
@@ -1109,7 +1133,7 @@ CRS              : EPSG:32723</code></pre>
 <p>Para a fusão, as bandas multiespectrais precisam estar na mesma grade da PAN. Elas são reamostradas de 8 m para 2 m por convolução cúbica, e a máscara de pixels válidos acompanha.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="593c1d91" class="cell" data-execution_count="16">
+<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="593c1d91" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:14.336707Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:14.336707Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:17.181141Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:17.181141Z&quot;}}" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># ---- MS reamostrada para a grade da PAN ----</span></span>
 <span id="cb30-2"><a href="#cb30-2"></a>ms_f <span class="op">=</span> ms.astype(<span class="st">"float32"</span>)</span>
 <span id="cb30-3"><a href="#cb30-3"></a>valido_ms <span class="op">=</span> <span class="op">~</span>np.<span class="bu">all</span>(ms <span class="op">==</span> (nod_ms <span class="cf">if</span> nod_ms <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> NODATA), axis<span class="op">=</span><span class="dv">0</span>)</span>
@@ -1132,7 +1156,7 @@ CRS              : EPSG:32723</code></pre>
 <span id="cb30-20"><a href="#cb30-20"></a><span class="bu">print</span>(<span class="ss">f"pixels válidos: </span><span class="sc">{</span>valido_fus<span class="sc">.</span>mean() <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>grade da fusão: 6456 x 6968 px @ 2 m
-pixels válidos: 99.99%</code></pre>
+pixels válidos: 100.00%</code></pre>
 </div>
 </div></div>
 <div id="3ef2311d" class="cell markdown">
@@ -1141,7 +1165,7 @@ pixels válidos: 99.99%</code></pre>
 <p>A célula abaixo define as duas funções da fusão: <code>intensidade_por_regressao</code> (os coeficientes do GSA) e <code>gram_schmidt</code> (a fusão em si). Depois, ela mostra os coeficientes e o R² da regressão, compara o desvio de <span class="math inline">\(\Delta\)</span> com pesos fixos e com o GSA e aplica a fusão, imprimindo o ganho de cada banda.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="fce4f0d4" class="cell" data-execution_count="17">
+<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="fce4f0d4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:17.182657Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:17.182657Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:19.135724Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:19.135724Z&quot;}}" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">def</span> intensidade_por_regressao(ms_lr, pan, valido_lr, fator):</span>
 <span id="cb32-2"><a href="#cb32-2"></a>    <span class="co">"""Coeficientes da pancromática simulada, estimados por regressão (GSA).</span></span>
 <span id="cb32-3"><a href="#cb32-3"></a></span>
@@ -1167,7 +1191,7 @@ pixels válidos: 99.99%</code></pre>
 <span id="cb32-23"><a href="#cb32-23"></a><span class="kw">def</span> gram_schmidt(ms_up, pan, valido, alpha<span class="op">=</span><span class="va">None</span>, pesos<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb32-24"><a href="#cb32-24"></a>    <span class="co">"""Fusão por substituição de componente (Gram-Schmidt / GSA).</span></span>
 <span id="cb32-25"><a href="#cb32-25"></a></span>
-<span id="cb32-26"><a href="#cb32-26"></a><span class="co">    ms_up : (4, h, w) já na grade da PAN, ordem RGBN</span></span>
+<span id="cb32-26"><a href="#cb32-26"></a><span class="co">    ms_up : (4, h, w) já na grade da PAN, ordem BGRN (azul, verde, vermelho, NIR)</span></span>
 <span id="cb32-27"><a href="#cb32-27"></a><span class="co">    pan   : (h, w)</span></span>
 <span id="cb32-28"><a href="#cb32-28"></a><span class="co">    alpha : coeficientes de `intensidade_por_regressao` (modo GSA).</span></span>
 <span id="cb32-29"><a href="#cb32-29"></a><span class="co">            Sem eles, cai nos pesos fixos — o Gram-Schmidt clássico.</span></span>
@@ -1238,20 +1262,20 @@ pixels válidos: 99.99%</code></pre>
 <span id="cb32-94"><a href="#cb32-94"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>nome<span class="sc">:&lt;6}</span><span class="ss"> </span><span class="sc">{</span>g<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>I = a0 + soma(a_i * MS_i), por mínimos quadrados contra a PAN degradada:
-  a_red    +0.05217
-  a_green  +0.04796
   a_blue   +0.00676
+  a_green  +0.04796
+  a_red    +0.05217
   a_nir    +0.05607
   a0      +49.606
   R² da regressão: 0.9445   (perto de 1 = a MS explica bem a PAN; longe = descasamento espectral)
-  desvio de delta com pesos fixos     :    217.9
-  desvio de delta com regressão (GSA) :     26.6
+  desvio de delta com pesos fixos     :    217.1
+  desvio de delta com regressão (GSA) :     26.5
 
 ganho por banda (cov(MS, I) / var(I)):
-  red    6.4793
-  green  5.4967
-  blue   4.8455
-  nir    6.5196</code></pre>
+  blue   4.8406
+  green  5.4917
+  red    6.4754
+  nir    6.5281</code></pre>
 </div>
 </div></div>
 <div id="bcc835d3" class="cell markdown">
@@ -1260,7 +1284,7 @@ ganho por banda (cov(MS, I) / var(I)):
 <p>Mesmo com o GSA, uma pequena parte dos pixels escuros fica abaixo de zero depois da fusão (é ruído em torno de zero, e não reflectância). A célula mede esses negativos, grava o arquivo de 2 m com o mesmo piso em 0 e atualiza o <code>.params.json</code> com o método, os coeficientes e o número de pixels ajustados.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="da98dcdd" class="cell" data-execution_count="18">
+<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="da98dcdd" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:19.137098Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:19.137098Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:22.817690Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:22.817690Z&quot;}}" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>pansharp <span class="op">=</span> P[<span class="st">"interim"</span>] <span class="op">/</span> <span class="ss">f"pansharpening_</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>NIVEL<span class="sc">}</span><span class="ss">.tif"</span></span>
 <span id="cb34-2"><a href="#cb34-2"></a>perfil_fus <span class="op">=</span> <span class="bu">dict</span>(driver<span class="op">=</span><span class="st">"GTiff"</span>, dtype<span class="op">=</span><span class="st">"int16"</span>, count<span class="op">=</span><span class="dv">4</span>, height<span class="op">=</span>alt, width<span class="op">=</span>larg,</span>
 <span id="cb34-3"><a href="#cb34-3"></a>                  transform<span class="op">=</span>t_pan, crs<span class="op">=</span>crs, nodata<span class="op">=</span>NODATA, compress<span class="op">=</span><span class="st">"deflate"</span>,</span>
@@ -1283,50 +1307,54 @@ ganho por banda (cov(MS, I) / var(I)):
 <span id="cb34-20"><a href="#cb34-20"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">piso aplicado em </span><span class="sc">{</span>PISO_REFLECTANCIA<span class="sc">:g}</span><span class="ss"> — os pixels acima continuam intactos,"</span>)</span>
 <span id="cb34-21"><a href="#cb34-21"></a><span class="bu">print</span>(<span class="st">"e o pixel ceifado vale 0 e segue VÁLIDO (o nodata é -9999, outro valor)."</span>)</span>
 <span id="cb34-22"><a href="#cb34-22"></a></span>
-<span id="cb34-23"><a href="#cb34-23"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(pansharp, <span class="st">"w"</span>, <span class="op">**</span>perfil_fus) <span class="im">as</span> dst:</span>
-<span id="cb34-24"><a href="#cb34-24"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
-<span id="cb34-25"><a href="#cb34-25"></a>        b <span class="op">=</span> np.clip(np.rint(fus[i]), PISO_ESC, TETO_ESC)</span>
-<span id="cb34-26"><a href="#cb34-26"></a>        dst.write(np.where(valido_fus, b, NODATA).astype(<span class="st">"int16"</span>), i <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb34-27"><a href="#cb34-27"></a>        dst.set_band_description(i <span class="op">+</span> <span class="dv">1</span>, NOMES[i])          <span class="co"># carimbo da ordem</span></span>
-<span id="cb34-28"><a href="#cb34-28"></a>    dst.update_tags(ORDEM_BANDAS<span class="op">=</span><span class="st">"RGBN"</span>, NIVEL<span class="op">=</span>NIVEL.upper(), FATOR_ESCALA<span class="op">=</span><span class="bu">str</span>(ESCALA),</span>
-<span id="cb34-29"><a href="#cb34-29"></a>                    METODO<span class="op">=</span><span class="st">"Gram-Schmidt (GSA, intensidade por regressao)"</span>,</span>
-<span id="cb34-30"><a href="#cb34-30"></a>                    CENA<span class="op">=</span>CENA_ID,</span>
-<span id="cb34-31"><a href="#cb34-31"></a>                    FAIXA_REFLECTANCIA<span class="op">=</span><span class="ss">f"[</span><span class="sc">{</span>PISO_REFLECTANCIA<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>TETO_REFLECTANCIA<span class="sc">}</span><span class="ss">]"</span>)</span>
-<span id="cb34-32"><a href="#cb34-32"></a></span>
-<span id="cb34-33"><a href="#cb34-33"></a>params.update({<span class="st">"etapa"</span>: <span class="st">"pansharpening"</span>,</span>
-<span id="cb34-34"><a href="#cb34-34"></a>               <span class="st">"metodo"</span>: <span class="st">"Gram-Schmidt (GSA)"</span>,</span>
-<span id="cb34-35"><a href="#cb34-35"></a>               <span class="st">"intensidade"</span>: <span class="st">"regressao multivariada da PAN degradada sobre as bandas MS"</span>,</span>
-<span id="cb34-36"><a href="#cb34-36"></a>               <span class="st">"intensidade_coeficientes"</span>: <span class="bu">dict</span>(<span class="bu">zip</span>(NOMES <span class="op">+</span> [<span class="st">"const"</span>],</span>
-<span id="cb34-37"><a href="#cb34-37"></a>                                                    [<span class="bu">float</span>(a) <span class="cf">for</span> a <span class="kw">in</span> alpha])),</span>
-<span id="cb34-38"><a href="#cb34-38"></a>               <span class="st">"intensidade_r2"</span>: <span class="bu">float</span>(r2_pan),</span>
-<span id="cb34-39"><a href="#cb34-39"></a>               <span class="st">"pesos_gs_classico_nao_usados"</span>: ac.PESOS_GS,</span>
-<span id="cb34-40"><a href="#cb34-40"></a>               <span class="st">"ganhos"</span>: ganhos,</span>
-<span id="cb34-41"><a href="#cb34-41"></a>               <span class="st">"negativos_apos_fusao"</span>: neg_fus,</span>
-<span id="cb34-42"><a href="#cb34-42"></a>               <span class="st">"px_ceifados_no_piso"</span>: ceifados,</span>
-<span id="cb34-43"><a href="#cb34-43"></a>               <span class="st">"entrada_ms"</span>: <span class="bu">str</span>(rgbcomp), <span class="st">"entrada_pan"</span>: <span class="bu">str</span>(arquivos[<span class="st">"BAND0"</span>]),</span>
-<span id="cb34-44"><a href="#cb34-44"></a>               <span class="st">"saida"</span>: <span class="bu">str</span>(pansharp)})</span>
-<span id="cb34-45"><a href="#cb34-45"></a>pansharp.with_suffix(<span class="st">".params.json"</span>).write_text(</span>
-<span id="cb34-46"><a href="#cb34-46"></a>    json.dumps(params, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>), encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
-<span id="cb34-47"><a href="#cb34-47"></a></span>
-<span id="cb34-48"><a href="#cb34-48"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(pansharp) <span class="im">as</span> src:</span>
-<span id="cb34-49"><a href="#cb34-49"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Escrito: </span><span class="sc">{</span>pansharp<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb34-50"><a href="#cb34-50"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>src<span class="sc">.</span>width<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>src<span class="sc">.</span>height<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>src<span class="sc">.</span>res[<span class="dv">0</span>]<span class="sc">:g}</span><span class="ss"> m | </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb34-51"><a href="#cb34-51"></a>    <span class="bu">print</span>(<span class="ss">f"  bandas  : </span><span class="sc">{</span>src<span class="sc">.</span>descriptions<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb34-52"><a href="#cb34-52"></a>    <span class="bu">print</span>(<span class="ss">f"  tamanho : </span><span class="sc">{</span>pansharp<span class="sc">.</span>stat()<span class="sc">.</span>st_size <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb34-23"><a href="#cb34-23"></a>ac.remover_aux(pansharp)  <span class="co"># um .aux.xml antigo (QGIS/ArcGIS) não pode se sobrepor aos nomes novos</span></span>
+<span id="cb34-24"><a href="#cb34-24"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(pansharp, <span class="st">"w"</span>, <span class="op">**</span>perfil_fus) <span class="im">as</span> dst:</span>
+<span id="cb34-25"><a href="#cb34-25"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb34-26"><a href="#cb34-26"></a>        b <span class="op">=</span> np.clip(np.rint(fus[i]), PISO_ESC, TETO_ESC)</span>
+<span id="cb34-27"><a href="#cb34-27"></a>        dst.write(np.where(valido_fus, b, NODATA).astype(<span class="st">"int16"</span>), i <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb34-28"><a href="#cb34-28"></a>        dst.set_band_description(i <span class="op">+</span> <span class="dv">1</span>, NOMES[i])          <span class="co"># carimbo da ordem</span></span>
+<span id="cb34-29"><a href="#cb34-29"></a>    dst.colorinterp <span class="op">=</span> [ColorInterp.blue, ColorInterp.green, ColorInterp.red,</span>
+<span id="cb34-30"><a href="#cb34-30"></a>                       ColorInterp.undefined]</span>
+<span id="cb34-31"><a href="#cb34-31"></a>    dst.update_tags(ORDEM_BANDAS<span class="op">=</span>ac.ORDEM_BANDAS, NIVEL<span class="op">=</span>NIVEL.upper(), FATOR_ESCALA<span class="op">=</span><span class="bu">str</span>(ESCALA),</span>
+<span id="cb34-32"><a href="#cb34-32"></a>                    METODO<span class="op">=</span><span class="st">"Gram-Schmidt (GSA, intensidade por regressao)"</span>,</span>
+<span id="cb34-33"><a href="#cb34-33"></a>                    CENA<span class="op">=</span>CENA_ID,</span>
+<span id="cb34-34"><a href="#cb34-34"></a>                    FAIXA_REFLECTANCIA<span class="op">=</span><span class="ss">f"[</span><span class="sc">{</span>PISO_REFLECTANCIA<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>TETO_REFLECTANCIA<span class="sc">}</span><span class="ss">]"</span>)</span>
+<span id="cb34-35"><a href="#cb34-35"></a></span>
+<span id="cb34-36"><a href="#cb34-36"></a>params.update({<span class="st">"etapa"</span>: <span class="st">"pansharpening"</span>,</span>
+<span id="cb34-37"><a href="#cb34-37"></a>               <span class="st">"metodo"</span>: <span class="st">"Gram-Schmidt (GSA)"</span>,</span>
+<span id="cb34-38"><a href="#cb34-38"></a>               <span class="st">"intensidade"</span>: <span class="st">"regressao multivariada da PAN degradada sobre as bandas MS"</span>,</span>
+<span id="cb34-39"><a href="#cb34-39"></a>               <span class="st">"intensidade_coeficientes"</span>: <span class="bu">dict</span>(<span class="bu">zip</span>(NOMES <span class="op">+</span> [<span class="st">"const"</span>],</span>
+<span id="cb34-40"><a href="#cb34-40"></a>                                                    [<span class="bu">float</span>(a) <span class="cf">for</span> a <span class="kw">in</span> alpha])),</span>
+<span id="cb34-41"><a href="#cb34-41"></a>               <span class="st">"intensidade_r2"</span>: <span class="bu">float</span>(r2_pan),</span>
+<span id="cb34-42"><a href="#cb34-42"></a>               <span class="st">"pesos_gs_classico_nao_usados"</span>: ac.PESOS_GS,</span>
+<span id="cb34-43"><a href="#cb34-43"></a>               <span class="st">"ganhos"</span>: ganhos,</span>
+<span id="cb34-44"><a href="#cb34-44"></a>               <span class="st">"negativos_apos_fusao"</span>: neg_fus,</span>
+<span id="cb34-45"><a href="#cb34-45"></a>               <span class="st">"px_ceifados_no_piso"</span>: ceifados,</span>
+<span id="cb34-46"><a href="#cb34-46"></a>               <span class="st">"entrada_ms"</span>: <span class="bu">str</span>(rgbcomp), <span class="st">"entrada_pan"</span>: <span class="bu">str</span>(arquivos[<span class="st">"BAND0"</span>]),</span>
+<span id="cb34-47"><a href="#cb34-47"></a>               <span class="st">"saida"</span>: <span class="bu">str</span>(pansharp)})</span>
+<span id="cb34-48"><a href="#cb34-48"></a>pansharp.with_suffix(<span class="st">".params.json"</span>).write_text(</span>
+<span id="cb34-49"><a href="#cb34-49"></a>    json.dumps(params, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>), encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb34-50"><a href="#cb34-50"></a></span>
+<span id="cb34-51"><a href="#cb34-51"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(pansharp) <span class="im">as</span> src:</span>
+<span id="cb34-52"><a href="#cb34-52"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Escrito: </span><span class="sc">{</span>pansharp<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb34-53"><a href="#cb34-53"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>src<span class="sc">.</span>width<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>src<span class="sc">.</span>height<span class="sc">}</span><span class="ss"> px @ </span><span class="sc">{</span>src<span class="sc">.</span>res[<span class="dv">0</span>]<span class="sc">:g}</span><span class="ss"> m | </span><span class="sc">{</span>src<span class="sc">.</span>dtypes[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb34-54"><a href="#cb34-54"></a>    <span class="bu">print</span>(<span class="ss">f"  bandas  : </span><span class="sc">{</span>src<span class="sc">.</span>descriptions<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb34-55"><a href="#cb34-55"></a>    <span class="bu">print</span>(<span class="ss">f"  tamanho : </span><span class="sc">{</span>pansharp<span class="sc">.</span>stat()<span class="sc">.</span>st_size <span class="op">/</span> <span class="dv">1024</span><span class="op">**</span><span class="dv">2</span><span class="sc">:.1f}</span><span class="ss"> MB"</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>banda       % &lt; 0    mínimo   mediana dos negativos
-red        0.38%   -0.0549                 -0.0052
-green      0.02%   -0.0278                 -0.0029
-blue       0.28%   -0.1053                 -0.0037
-nir        0.00%   -0.0066                 -0.0038
+blue       0.28%   -0.1051                 -0.0037
+green      0.02%   -0.0277                 -0.0029
+red        0.38%   -0.0548                 -0.0052
+nir        0.00%   -0.0069                 -0.0040
 
 piso aplicado em 0 — os pixels acima continuam intactos,
 e o pixel ceifado vale 0 e segue VÁLIDO (o nodata é -9999, outro valor).
+removido pansharpening_20260301_boa.tif.aux.xml (sobra de uma versão anterior do arquivo)
 
 Escrito: data\interim\pansharpening_20260301_boa.tif
   6456 x 6968 px @ 2 m | int16
-  bandas  : ('red', 'green', 'blue', 'nir')
-  tamanho : 237.9 MB</code></pre>
+  bandas  : ('blue', 'green', 'red', 'nir')
+  tamanho : 237.8 MB</code></pre>
 </div>
 </div></div>
 <div id="a9883242" class="cell markdown">
@@ -1335,25 +1363,26 @@ Escrito: data\interim\pansharpening_20260301_boa.tif
 <p>Duas coisas para olhar: se a fusão <strong>ganhou detalhe</strong> sem alterar as cores, e se a cena tem <strong>nuvem</strong>, porque é ela que a Aula 02 vai detectar. A primeira figura mostra a cena inteira em cor natural e falsa cor; a segunda compara o mesmo trecho antes (8 m) e depois (2 m) da fusão.</p>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="cell-fig-fusao" class="cell" data-execution_count="19">
+<div class="cell-container"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="cell-fig-fusao" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:22.818692Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:22.818692Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:24.227280Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:24.226778Z&quot;}}" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># visão geral, em resolução reduzida</span></span>
 <span id="cb36-2"><a href="#cb36-2"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(pansharp) <span class="im">as</span> src:</span>
 <span id="cb36-3"><a href="#cb36-3"></a>    fator <span class="op">=</span> <span class="bu">max</span>(<span class="dv">1</span>, src.width <span class="op">//</span> <span class="dv">900</span>)</span>
 <span id="cb36-4"><a href="#cb36-4"></a>    forma <span class="op">=</span> (<span class="dv">3</span>, src.height <span class="op">//</span> fator, src.width <span class="op">//</span> fator)</span>
-<span id="cb36-5"><a href="#cb36-5"></a>    vis <span class="op">=</span> src.read((<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), out_shape<span class="op">=</span>forma,</span>
-<span id="cb36-6"><a href="#cb36-6"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
-<span id="cb36-7"><a href="#cb36-7"></a>    vis_nir <span class="op">=</span> src.read(<span class="dv">4</span>, out_shape<span class="op">=</span>forma[<span class="dv">1</span>:],</span>
-<span id="cb36-8"><a href="#cb36-8"></a>                       resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
-<span id="cb36-9"><a href="#cb36-9"></a>vis[vis <span class="op">==</span> NODATA] <span class="op">=</span> np.nan</span>
-<span id="cb36-10"><a href="#cb36-10"></a></span>
-<span id="cb36-11"><a href="#cb36-11"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">7.5</span>))</span>
-<span id="cb36-12"><a href="#cb36-12"></a>ax[<span class="dv">0</span>].imshow(np.dstack([ac.stretch(vis[<span class="dv">0</span>]), ac.stretch(vis[<span class="dv">1</span>]), ac.stretch(vis[<span class="dv">2</span>])]))</span>
-<span id="cb36-13"><a href="#cb36-13"></a>ax[<span class="dv">0</span>].set_title(<span class="ss">f"Cor natural — </span><span class="sc">{</span>NIVEL<span class="sc">.</span>upper()<span class="sc">}</span><span class="ss"> 2 m"</span>)</span>
-<span id="cb36-14"><a href="#cb36-14"></a>ax[<span class="dv">1</span>].imshow(np.dstack([ac.stretch(vis_nir), ac.stretch(vis[<span class="dv">0</span>]), ac.stretch(vis[<span class="dv">1</span>])]))</span>
-<span id="cb36-15"><a href="#cb36-15"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Falsa cor NIR/R/G — vegetação em vermelho, nuvem em branco"</span>)</span>
-<span id="cb36-16"><a href="#cb36-16"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
-<span id="cb36-17"><a href="#cb36-17"></a>    a.axis(<span class="st">"off"</span>)</span>
-<span id="cb36-18"><a href="#cb36-18"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb36-5"><a href="#cb36-5"></a>    <span class="co"># cor natural = vermelho, verde, azul -&gt; bandas (3, 2, 1) na ordem BGRN</span></span>
+<span id="cb36-6"><a href="#cb36-6"></a>    vis <span class="op">=</span> src.read(ac.RGB, out_shape<span class="op">=</span>forma,</span>
+<span id="cb36-7"><a href="#cb36-7"></a>                   resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb36-8"><a href="#cb36-8"></a>    vis_nir <span class="op">=</span> src.read(NOMES.index(<span class="st">"nir"</span>) <span class="op">+</span> <span class="dv">1</span>, out_shape<span class="op">=</span>forma[<span class="dv">1</span>:],</span>
+<span id="cb36-9"><a href="#cb36-9"></a>                       resampling<span class="op">=</span>Resampling.average).astype(<span class="st">"float32"</span>)</span>
+<span id="cb36-10"><a href="#cb36-10"></a>vis[vis <span class="op">==</span> NODATA] <span class="op">=</span> np.nan</span>
+<span id="cb36-11"><a href="#cb36-11"></a></span>
+<span id="cb36-12"><a href="#cb36-12"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">7.5</span>))</span>
+<span id="cb36-13"><a href="#cb36-13"></a>ax[<span class="dv">0</span>].imshow(np.dstack([ac.stretch(vis[<span class="dv">0</span>]), ac.stretch(vis[<span class="dv">1</span>]), ac.stretch(vis[<span class="dv">2</span>])]))</span>
+<span id="cb36-14"><a href="#cb36-14"></a>ax[<span class="dv">0</span>].set_title(<span class="ss">f"Cor natural — </span><span class="sc">{</span>NIVEL<span class="sc">.</span>upper()<span class="sc">}</span><span class="ss"> 2 m"</span>)</span>
+<span id="cb36-15"><a href="#cb36-15"></a>ax[<span class="dv">1</span>].imshow(np.dstack([ac.stretch(vis_nir), ac.stretch(vis[<span class="dv">0</span>]), ac.stretch(vis[<span class="dv">1</span>])]))</span>
+<span id="cb36-16"><a href="#cb36-16"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Falsa cor NIR/R/G — vegetação em vermelho, nuvem em branco"</span>)</span>
+<span id="cb36-17"><a href="#cb36-17"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
+<span id="cb36-18"><a href="#cb36-18"></a>    a.axis(<span class="st">"off"</span>)</span>
+<span id="cb36-19"><a href="#cb36-19"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-fusao" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1367,24 +1396,25 @@ Figura&nbsp;2: Cena fusionada em 2 m: cor natural e falsa cor NIR/R/G.
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="cell-fig-fusao-zoom" class="cell" data-execution_count="20">
+<div class="cell-container"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="cell-fig-fusao-zoom" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:24.242288Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:24.242288Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:24.455899Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:24.455899Z&quot;}}" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a><span class="co"># zoom: 8 m antes da fusão x 2 m depois, no mesmo pedaço de terreno</span></span>
 <span id="cb37-2"><a href="#cb37-2"></a>lado <span class="op">=</span> <span class="dv">200</span>                                   <span class="co"># em pixels de 8 m -&gt; 1,6 km</span></span>
 <span id="cb37-3"><a href="#cb37-3"></a>r0 <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, ms.shape[<span class="dv">1</span>] <span class="op">//</span> <span class="dv">2</span> <span class="op">-</span> lado <span class="op">//</span> <span class="dv">2</span>)</span>
 <span id="cb37-4"><a href="#cb37-4"></a>c0 <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, ms.shape[<span class="dv">2</span>] <span class="op">//</span> <span class="dv">2</span> <span class="op">-</span> lado <span class="op">//</span> <span class="dv">2</span>)</span>
 <span id="cb37-5"><a href="#cb37-5"></a></span>
-<span id="cb37-6"><a href="#cb37-6"></a>antes <span class="op">=</span> ms[:<span class="dv">3</span>, r0:r0 <span class="op">+</span> lado, c0:c0 <span class="op">+</span> lado].astype(<span class="st">"float32"</span>)</span>
-<span id="cb37-7"><a href="#cb37-7"></a>antes[antes <span class="op">==</span> NODATA] <span class="op">=</span> np.nan</span>
-<span id="cb37-8"><a href="#cb37-8"></a>depois <span class="op">=</span> fus[:<span class="dv">3</span>, r0 <span class="op">*</span> FATOR:(r0 <span class="op">+</span> lado) <span class="op">*</span> FATOR, c0 <span class="op">*</span> FATOR:(c0 <span class="op">+</span> lado) <span class="op">*</span> FATOR]</span>
-<span id="cb37-9"><a href="#cb37-9"></a></span>
-<span id="cb37-10"><a href="#cb37-10"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="fl">6.6</span>))</span>
-<span id="cb37-11"><a href="#cb37-11"></a>ax[<span class="dv">0</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> antes]))</span>
-<span id="cb37-12"><a href="#cb37-12"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"multiespectral original — 8 m"</span>)</span>
-<span id="cb37-13"><a href="#cb37-13"></a>ax[<span class="dv">1</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> depois]))</span>
-<span id="cb37-14"><a href="#cb37-14"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"fusionada com a pancromática — 2 m"</span>)</span>
-<span id="cb37-15"><a href="#cb37-15"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
-<span id="cb37-16"><a href="#cb37-16"></a>    a.axis(<span class="st">"off"</span>)</span>
-<span id="cb37-17"><a href="#cb37-17"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb37-6"><a href="#cb37-6"></a>rgb <span class="op">=</span> [b <span class="op">-</span> <span class="dv">1</span> <span class="cf">for</span> b <span class="kw">in</span> ac.RGB]                <span class="co"># vermelho, verde, azul (índices 2, 1, 0)</span></span>
+<span id="cb37-7"><a href="#cb37-7"></a>antes <span class="op">=</span> ms[rgb, r0:r0 <span class="op">+</span> lado, c0:c0 <span class="op">+</span> lado].astype(<span class="st">"float32"</span>)</span>
+<span id="cb37-8"><a href="#cb37-8"></a>antes[antes <span class="op">==</span> NODATA] <span class="op">=</span> np.nan</span>
+<span id="cb37-9"><a href="#cb37-9"></a>depois <span class="op">=</span> fus[rgb, r0 <span class="op">*</span> FATOR:(r0 <span class="op">+</span> lado) <span class="op">*</span> FATOR, c0 <span class="op">*</span> FATOR:(c0 <span class="op">+</span> lado) <span class="op">*</span> FATOR]</span>
+<span id="cb37-10"><a href="#cb37-10"></a></span>
+<span id="cb37-11"><a href="#cb37-11"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="fl">6.6</span>))</span>
+<span id="cb37-12"><a href="#cb37-12"></a>ax[<span class="dv">0</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> antes]))</span>
+<span id="cb37-13"><a href="#cb37-13"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"multiespectral original — 8 m"</span>)</span>
+<span id="cb37-14"><a href="#cb37-14"></a>ax[<span class="dv">1</span>].imshow(np.dstack([ac.stretch(b) <span class="cf">for</span> b <span class="kw">in</span> depois]))</span>
+<span id="cb37-15"><a href="#cb37-15"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"fusionada com a pancromática — 2 m"</span>)</span>
+<span id="cb37-16"><a href="#cb37-16"></a><span class="cf">for</span> a <span class="kw">in</span> ax:</span>
+<span id="cb37-17"><a href="#cb37-17"></a>    a.axis(<span class="st">"off"</span>)</span>
+<span id="cb37-18"><a href="#cb37-18"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-fusao-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1401,8 +1431,8 @@ Figura&nbsp;3: O mesmo trecho antes (8 m) e depois (2 m) da fusão Gram-Schmidt.
 <div id="39e34fb4" class="cell markdown">
 <section id="o-que-ficou-pronto" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-ficou-pronto">O que ficou pronto</h2>
-<pre><code>data/interim/rgbcomp_&lt;DATA&gt;_&lt;nivel&gt;.tif          8 m, RGBN, reflectância x10000
-data/interim/pansharpening_&lt;DATA&gt;_&lt;nivel&gt;.tif    2 m, RGBN, reflectância x10000   &lt;- produto da aula
+<pre><code>data/interim/rgbcomp_&lt;DATA&gt;_&lt;nivel&gt;.tif          8 m, BGRN, reflectância x10000
+data/interim/pansharpening_&lt;DATA&gt;_&lt;nivel&gt;.tif    2 m, BGRN, reflectância x10000   &lt;- produto da aula
 data/interim/*.params.json                       o que foi usado para gerar cada um</code></pre>
 <p>Na <strong>Aula 02</strong>, esse arquivo de 2 m entra no OmniCloudMask, que separa nuvem espessa, nuvem fina e sombra de nuvem. Na <strong>Aula 03</strong>, os pixels marcados viram lacunas a serem preenchidas com Sentinel-2 super-resolvido.</p>
 </section>

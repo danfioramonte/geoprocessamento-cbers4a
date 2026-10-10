@@ -310,7 +310,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Data de Publicação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">26 de setembro de 2026</p>
+      <p class="date">9 de outubro de 2026</p>
     </div>
   </div>
   
@@ -460,7 +460,7 @@ Aviso
 <section id="preparando-o-ambiente-colab" class="level3">
 <h3 class="anchored" data-anchor-id="preparando-o-ambiente-colab">3.2 Preparando o ambiente (Colab)</h3>
 <p>A primeira célula só faz diferença no Colab, onde ela instala as bibliotecas na sessão. Localmente, com o pixi, ela não faz nada.</p>
-<div id="11d0d08d" class="cell">
+<div id="8ce804ec" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="im">import</span> sys</span>
 <span id="cb7-2"><a href="#cb7-2"></a></span>
 <span id="cb7-3"><a href="#cb7-3"></a>NO_COLAB <span class="op">=</span> <span class="st">"google.colab"</span> <span class="kw">in</span> sys.modules</span>
@@ -471,7 +471,7 @@ Aviso
 <section id="configuração-e-imports" class="level3">
 <h3 class="anchored" data-anchor-id="configuração-e-imports">3.3 Configuração e imports</h3>
 <p>Essa célula ajusta algumas opções do GDAL para leitura remota (novas tentativas quando a conexão com o INPE cai, por exemplo), importa as bibliotecas, define o endereço do STAC, a coleção e as bandas que vamos baixar, e cria a pasta de saída <code>data/raw</code>. Os ajustes do GDAL precisam vir <strong>antes</strong> de importar o <code>rasterio</code>.</p>
-<div id="88621306" class="cell">
+<div id="9bd7fd19" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> os</span>
 <span id="cb8-2"><a href="#cb8-2"></a>os.environ.setdefault(<span class="st">"GDAL_HTTP_MAX_RETRY"</span>, <span class="st">"5"</span>)    <span class="co"># a API do INPE às vezes derruba a conexão</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="co"># ... (demais ajustes e imports no notebook)</span></span>
@@ -496,7 +496,7 @@ Aviso
 <section id="definindo-a-área-de-interesse-aoi" class="level3">
 <h3 class="anchored" data-anchor-id="definindo-a-área-de-interesse-aoi">3.4 Definindo a área de interesse (AOI)</h3>
 <p>A AOI é um retângulo <code>[oeste, sul, leste, norte]</code> em graus (<strong>EPSG:4326</strong>). O exemplo cobre a área urbana e o horto florestal de <strong>Rio Claro/SP</strong>, com cerca de 13 × 14 km. Para a sua região, pegue as coordenadas no <a href="https://rodostoteknoloji.com/online-tools/bbox-tool-en.html">bbox finder</a> e troque os valores. Tenha em mente que, quanto maior a AOI, mais demorado fica o download (principalmente da PAN).</p>
-<div id="ef6e5d77" class="cell">
+<div id="6f822584" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>AOI_BBOX <span class="op">=</span> [<span class="op">-</span><span class="fl">47.625969</span>, <span class="op">-</span><span class="fl">22.467835</span>, <span class="op">-</span><span class="fl">47.498227</span>, <span class="op">-</span><span class="fl">22.344048</span>]</span>
 <span id="cb9-2"><a href="#cb9-2"></a>AOI_NOME <span class="op">=</span> <span class="st">"rio_claro"</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a></span>
@@ -531,7 +531,7 @@ Aviso
 <section id="buscando-e-escolhendo-a-cena" class="level3">
 <h3 class="anchored" data-anchor-id="buscando-e-escolhendo-a-cena">3.5 Buscando e escolhendo a cena</h3>
 <p>A busca é feita por área (<code>bbox</code>) e por intervalo de datas. Ela retorna toda cena cujo contorno cruza a AOI, e o resultado vira uma tabela com o índice (<code>idx</code>), o <code>id</code>, a data e a órbita/ponto de cada cena.</p>
-<div id="be57c13b" class="cell">
+<div id="fc77c6f2" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">def</span> buscar_cenas(bbox, datetime_range, collection<span class="op">=</span>COLLECTION, limite<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb11-2"><a href="#cb11-2"></a>    busca <span class="op">=</span> client.search(collections<span class="op">=</span>[collection], bbox<span class="op">=</span>bbox,</span>
 <span id="cb11-3"><a href="#cb11-3"></a>                          datetime<span class="op">=</span>datetime_range, max_items<span class="op">=</span>limite)</span>
@@ -679,7 +679,7 @@ Figura&nbsp;1
 <a class="quarto-notebook-link" id="nblink-1" href="..\colab\00_aquisicao_cbers-preview.html#cell-fig-previas-cbers">Fonte: Aula 00 — Aquisição da imagem CBERS-4A/WPM via STAC</a></div>
 <p>Agora escolha o <code>idx</code> da cena e coloque em <code>ESCOLHA</code>, seguindo dois critérios: <code>cobertura_aoi_%</code> acima de 95 e <strong>nuvem sobre uma parte da AOI</strong>. Normalmente buscamos a cena mais limpa possível, mas nas Aulas 02 e 03 vamos detectar as nuvens e preencher esses pixels com Sentinel-2 super-resolvido, e para isso <strong>precisamos de nuvem</strong>.</p>
 <p>A cena de referência do curso é a <code>CBERS_4A_WPM_20260301_203_141_L4</code> (01/03/2026), que é o <code>idx</code> 1 da tabela. Se você escolher outra, <strong>anote o <code>id</code></strong>: as Aulas 01, 02 e 03 pedem esse identificador.</p>
-<div id="909f6249" class="cell">
+<div id="2e11e598" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>ESCOLHA <span class="op">=</span> <span class="dv">1</span>  <span class="co"># &lt;-- troque pelo "idx" da cena desejada</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a></span>
 <span id="cb12-3"><a href="#cb12-3"></a>item <span class="op">=</span> items[ESCOLHA]</span>
@@ -690,17 +690,20 @@ Figura&nbsp;1
 <section id="pré-visualização-em-rgb" class="level3">
 <h3 class="anchored" data-anchor-id="pré-visualização-em-rgb">3.6 Pré-visualização em RGB</h3>
 <p>Antes de baixar tudo em resolução total, vale conferir a cena escolhida com uma composição colorida da AOI (lida de forma reduzida). O contraste é ajustado por <strong>percentil</strong> (2%–98%), ignorando o <code>nodata</code>. O notebook mostra a cor natural e, em seguida, a falsa cor NIR/R/G, em que a vegetação aparece em vermelho.</p>
-<div id="ebe401ca" class="cell">
+<div id="64475e5b" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>rgb <span class="op">=</span> preview_rgb(item, AOI_BBOX)                                    <span class="co"># cor natural</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a>_ <span class="op">=</span> preview_rgb(item, AOI_BBOX, bandas<span class="op">=</span>(<span class="st">"BAND4"</span>, <span class="st">"BAND3"</span>, <span class="st">"BAND2"</span>))  <span class="co"># falsa cor</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="quarto-embed-nb-cell">
 <div id="cell-fig-preview-rgb" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>Baixando e processando as bandas ('BAND3', 'BAND2', 'BAND1')</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div id="fig-preview-rgb" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-preview-rgb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="00-ambiente_files/figure-html/..-colab-00_aquisicao_cbers-fig-preview-rgb-output-1.png" class="img-fluid figure-img">
+<img src="00-ambiente_files/figure-html/..-colab-00_aquisicao_cbers-fig-preview-rgb-output-2.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-preview-rgb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;2: Pré-visualização em cor natural (R/G/B) do recorte da AOI, antes de exportar.
@@ -714,14 +717,14 @@ Figura&nbsp;2: Pré-visualização em cor natural (R/G/B) do recorte da AOI, ant
 </section>
 <section id="exportando-as-bandas-para-dataraw" class="level3">
 <h3 class="anchored" data-anchor-id="exportando-as-bandas-para-dataraw">3.7 Exportando as bandas para <code>data/raw</code></h3>
-<p>Agora lemos a AOI em <strong>resolução total</strong> e gravamos em GeoTIFF, preservando o tipo de dado original (<code>int16</code>, número digital), o <code>nodata = 0</code>, o CRS e a georreferência do recorte, com compressão <code>deflate</code>. Saem 5 GeoTIFFs, um por banda, nomeados com o asset do INPE (<code>BAND0</code> a <code>BAND4</code>), e ao lado de cada um o <strong>XML de metadados</strong> da banda. É desse XML que a Aula 01 tira os coeficientes de calibração e a geometria solar. Por fim, as quatro multiespectrais são empilhadas num único arquivo RGBN; a PAN fica separada porque tem outra grade.</p>
-<div id="59bab2e0" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>arquivos <span class="op">=</span> exportar_cena(item, AOI_BBOX, AOI_NOME)     <span class="co"># 5 bandas + XML em data/raw</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a></span>
-<span id="cb14-3"><a href="#cb14-3"></a>ordem <span class="op">=</span> [<span class="st">"BAND3"</span>, <span class="st">"BAND2"</span>, <span class="st">"BAND1"</span>, <span class="st">"BAND4"</span>]           <span class="co"># R, G, B, NIR</span></span>
-<span id="cb14-4"><a href="#cb14-4"></a>stack_rgbn <span class="op">=</span> empilhar([arquivos[a] <span class="cf">for</span> a <span class="kw">in</span> ordem],</span>
-<span id="cb14-5"><a href="#cb14-5"></a>                      os.path.join(OUTPUT_DIR, <span class="ss">f"</span><span class="sc">{</span>AOI_NOME<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">_RGBN.tif"</span>),</span>
-<span id="cb14-6"><a href="#cb14-6"></a>                      descricoes<span class="op">=</span>[BANDAS[a] <span class="cf">for</span> a <span class="kw">in</span> ordem])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Agora lemos a AOI em <strong>resolução total</strong> e gravamos em GeoTIFF, preservando o tipo de dado original (<code>int16</code>, número digital), o <code>nodata = 0</code>, o CRS e a georreferência do recorte, com compressão <code>deflate</code>. Saem 5 GeoTIFFs, um por banda, nomeados com o asset do INPE (<code>BAND0</code> a <code>BAND4</code>), e ao lado de cada um o <strong>XML de metadados</strong> da banda. É desse XML que a Aula 01 tira os coeficientes de calibração e a geometria solar. Por fim, as quatro multiespectrais são empilhadas num único arquivo, na mesma ordem em que o WPM captura a cena (azul, verde, vermelho, NIR); a PAN fica separada porque tem outra grade.</p>
+<div id="2e71a42f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>arquivos <span class="op">=</span> exportar_cena(item, AOI_BBOX, AOI_NOME)     <span class="co"># 5 bandas + XML em data/raw</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a></span>
+<span id="cb15-3"><a href="#cb15-3"></a>ordem <span class="op">=</span> [<span class="st">"BAND1"</span>, <span class="st">"BAND2"</span>, <span class="st">"BAND3"</span>, <span class="st">"BAND4"</span>]           <span class="co"># B, G, R, NIR (ordem nativa)</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>stack_bgrn <span class="op">=</span> empilhar([arquivos[a] <span class="cf">for</span> a <span class="kw">in</span> ordem],</span>
+<span id="cb15-5"><a href="#cb15-5"></a>                      os.path.join(OUTPUT_DIR, <span class="ss">f"</span><span class="sc">{</span>AOI_NOME<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>item<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">_BGRN.tif"</span>),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>                      descricoes<span class="op">=</span>[BANDAS[a] <span class="cf">for</span> a <span class="kw">in</span> ordem])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -747,7 +750,7 @@ Aviso
 shape:      1742 x 1615 (4 bandas, int16)
 resolução:  (8.0, 8.0) m
 bounds:     BoundingBox(left=229772.0, bottom=7513022.0, right=242692.0, top=7526958.0)
-descrições: ('red', 'green', 'blue', 'nir')
+descrições: ('blue', 'green', 'red', 'nir')
 
 PAN -&gt; 6968 x 6462 | resolução: (2.0, 2.0) m</code></pre>
 </div>
@@ -773,7 +776,7 @@ Figura&nbsp;3: Visualização rápida do recorte exportado: RGB, falsa cor NIR/R
 <pre><code>data/raw/rio_claro_&lt;CENA_ID&gt;_BAND0.tif       pancromática, 2 m
 data/raw/rio_claro_&lt;CENA_ID&gt;_BAND1..4.tif    multiespectrais, 8 m
 data/raw/rio_claro_&lt;CENA_ID&gt;_BAND*.xml       calibração e geometria solar
-data/raw/rio_claro_&lt;CENA_ID&gt;_RGBN.tif        multiespectrais empilhadas</code></pre>
+data/raw/rio_claro_&lt;CENA_ID&gt;_BGRN.tif        multiespectrais empilhadas (azul, verde, vermelho, NIR)</code></pre>
 <p>Na <a href="../aulas/01-toa-boa.html">Aula 01</a> vamos converter esses números digitais para reflectância <strong>TOA</strong> e <strong>BOA</strong> e fundir as multiespectrais com a pancromática. Um lembrete: o arquivo exportado herda a zona UTM da cena. Se você baixar cenas de <strong>órbitas diferentes</strong> para a mesma AOI, elas podem cair em zonas UTM distintas, e aí é preciso reprojetar antes de comparar.</p>
 <p>Travou em algum ponto? A página de <a href="../aulas/99-erros-comuns.html" target="_blank">erros comuns</a> apresenta as mensagens mais frequentes e o que fazer com cada uma.</p>
 </section>

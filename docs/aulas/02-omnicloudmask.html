@@ -300,7 +300,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Data de Publicação</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">26 de setembro de 2026</p>
+      <p class="date">9 de outubro de 2026</p>
     </div>
   </div>
   
@@ -408,12 +408,13 @@ div.csl-indent {
 </div>
 </div>
 <p>Depois da instalação, o notebook traz o <code>aulas_cbers.py</code> do repositório e define os parâmetros da aula. O mais importante é o <code>DETECT_RES</code>, a resolução em que a detecção acontece:</p>
-<div id="74698a02" class="cell">
+<div id="9bd1eeb6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>CENA_ID <span class="op">=</span> ac.CENA_PADRAO</span>
 <span id="cb3-2"><a href="#cb3-2"></a>NIVEL <span class="op">=</span> <span class="st">"boa"</span>                 <span class="co"># tem que ser o mesmo que você gerou na Aula 01</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>DETECT_RES <span class="op">=</span> <span class="fl">10.0</span>             <span class="co"># resolução (m) em que a detecção acontece</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>BANDA_RED, BANDA_GREEN, BANDA_NIR <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>     <span class="co"># ordem RGBN do produto da Aula 01</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># tamanho dos blocos e sobreposição usados pelo OCM</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># BANDA_RED / BANDA_GREEN / BANDA_NIR são lidas do arquivo de entrada, pelo nome:</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># na ordem nativa do produto da Aula 01 (BGRN), saem 3, 2 e 4</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>PATCH, OVERLAP <span class="op">=</span> <span class="dv">1000</span>, <span class="dv">300</span>    <span class="co"># tamanho dos blocos e sobreposição usados pelo OCM</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="por-que-detectar-em-10-m-e-não-nos-2-m" class="level2">
@@ -425,7 +426,7 @@ div.csl-indent {
 <li><strong>Custo.</strong> São 16 vezes menos pixels para a rede processar.</li>
 </ol>
 <p>A cena é lida já reduzida para 10 m, pela média dos pixels, e os pixels sem dado são marcados para o OCM ignorar. Depois, a máscara volta para a grade de 2 m por <strong>vizinho mais próximo</strong>, que é o único método de reamostragem adequado para dados categóricos.</p>
-<div id="2be3b29a" class="cell">
+<div id="95b46b98" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(entrada) <span class="im">as</span> src:</span>
 <span id="cb4-2"><a href="#cb4-2"></a>    escala <span class="op">=</span> src.res[<span class="dv">0</span>] <span class="op">/</span> DETECT_RES</span>
 <span id="cb4-3"><a href="#cb4-3"></a>    h, w <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(src.height <span class="op">*</span> escala)), <span class="bu">int</span>(<span class="bu">round</span>(src.width <span class="op">*</span> escala))</span>
@@ -443,7 +444,7 @@ div.csl-indent {
 <section id="rodando-o-omnicloudmask" class="level2">
 <h2 class="anchored" data-anchor-id="rodando-o-omnicloudmask">2. Rodando o OmniCloudMask</h2>
 <p>Na primeira execução, o OCM baixa os pesos do modelo pelo Hugging Face. Ele processa a imagem em blocos de <code>PATCH</code> pixels, com <code>OVERLAP</code> de sobreposição, e faz a média nas emendas. Roda em CPU ou GPU.</p>
-<div id="ec3e4d30" class="cell">
+<div id="aba7fbfd" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> omnicloudmask <span class="im">import</span> predict_from_array</span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a>mask <span class="op">=</span> predict_from_array(</span>
@@ -458,7 +459,7 @@ div.csl-indent {
 </div>
 <p>Ao final, o notebook mostra quantos pixels caíram em cada classe. Na cena do curso, cerca de 11% da AOI ficou marcada como contaminada: quase 7% de nuvem espessa e 4% de sombra.</p>
 <div class="quarto-embed-nb-cell">
-<div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<div id="tbl-ocm-classes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:28.340252Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:28.340252Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:34.273476Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:34.273476Z&quot;}}" data-execution_count="5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-ocm-classes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1
@@ -468,12 +469,12 @@ Tabela&nbsp;1
 <pre><code>dispositivo: CPU
 
 --- composição da cena (pixels válidos, grade de detecção) ---
-  0 clear        :  1,597,022  ( 88.7 %)
-  1 thick_cloud  :    123,299  (  6.9 %)
+  0 clear        :  1,597,038  ( 88.7 %)
+  1 thick_cloud  :    123,317  (  6.9 %)
   2 thin_cloud   :          0  (  0.0 %)
-  3 cloud_shadow :     79,316  (  4.4 %)
-  -&gt; nuvem + sombra:    202,615  ( 11.3 %)
-  -&gt; utilizável    :  1,597,022  ( 88.7 %)</code></pre>
+  3 cloud_shadow :     79,299  (  4.4 %)
+  -&gt; nuvem + sombra:    202,616  ( 11.3 %)
+  -&gt; utilizável    :  1,597,038  ( 88.7 %)</code></pre>
 </div>
 </div>
 </figure>
@@ -490,7 +491,7 @@ Tabela&nbsp;1
 <li><strong>água</strong>: corpos d’água escuros às vezes são classificados como sombra. Se a sua AOI tem represa, olhe com atenção.</li>
 </ul>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-ocm-mascara" class="cell" data-execution_count="7">
+<div id="cell-fig-ocm-mascara" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:34.276481Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:34.275480Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:34.801320Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:34.801320Z&quot;}}" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-mascara" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -506,7 +507,7 @@ Figura&nbsp;1: Falsa cor e a máscara do OmniCloudMask, lado a lado.
 </div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-ocm-zoom" class="cell" data-execution_count="8">
+<div id="cell-fig-ocm-zoom" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:34.812829Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:34.811829Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:35.050590Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:35.050590Z&quot;}}" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-zoom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -556,7 +557,7 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 </tr>
 </tbody>
 </table>
-<div id="e7c2ef7a" class="cell">
+<div id="c3c5563b" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>nativa <span class="op">=</span> np.full((nativo[<span class="st">"height"</span>], nativo[<span class="st">"width"</span>]), <span class="dv">255</span>, dtype<span class="op">=</span><span class="st">"uint8"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2"></a>reproject(source<span class="op">=</span>mask, destination<span class="op">=</span>nativa,</span>
 <span id="cb7-3"><a href="#cb7-3"></a>          src_transform<span class="op">=</span>t_det, src_crs<span class="op">=</span>nativo[<span class="st">"crs"</span>],</span>
@@ -568,7 +569,7 @@ Figura&nbsp;2: Zoom na maior mancha de nuvem, com a máscara sobreposta.
 <h2 class="anchored" data-anchor-id="aplicando-a-máscara-na-imagem">5. Aplicando a máscara na imagem</h2>
 <p>Agora gravamos uma cópia da cena em que os pixels de nuvem e de sombra viram <strong>nodata</strong> (e não zero). Um pixel zerado entraria nas estatísticas puxando a média para baixo; como nodata, ele é ignorado pelo rasterio, pelo QGIS e pelo AROSICS, que não vai tentar achar pontos de amarração dentro da área removida. A gravação é feita em faixas de linhas, para não ocupar muita memória.</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-ocm-antes-depois" class="cell" data-execution_count="11">
+<div id="cell-fig-ocm-antes-depois" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-01T20:27:39.006760Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-01T20:27:39.006760Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-01T20:27:40.838475Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-01T20:27:40.838475Z&quot;}}" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div id="fig-ocm-antes-depois" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -621,7 +622,7 @@ data/interim/pansharpening_&lt;DATA&gt;_boa_masked.tif             cena com lacu
 </tr>
 <tr class="odd">
 <td>A máscara sai vazia (100% <code>clear</code>)</td>
-<td>Confira a ordem das bandas: o OCM espera <strong>Red, Green, NIR</strong> nessa ordem. Com o produto da Aula 01 (RGBN), são os índices 1, 2 e 4.</td>
+<td>Confira a ordem das bandas: o OCM espera <strong>Red, Green, NIR</strong> nessa ordem. Com o produto da Aula 01 (ordem nativa BGRN), são as bandas 3, 2 e 4, e o notebook as acha pelo nome gravado no arquivo.</td>
 </tr>
 <tr class="even">
 <td>A máscara marca a cena inteira como nuvem</td>

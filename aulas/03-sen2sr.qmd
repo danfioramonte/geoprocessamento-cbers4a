@@ -4,7 +4,7 @@ subtitle: "Super-resolução do Sentinel-2 para preencher lacunas do CBERS-4A"
 author:
   - "Danilo Roberto Fioramonte"
   - "Danilo Marques de Magalhães"
-date: "2026-09-26"
+date: "2026-10-09"
 ---
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/03_sen2sr.ipynb){target="_blank"}
@@ -28,7 +28,11 @@ processo tem quatro etapas:
 | 1. mosaico Sentinel-2 | achar dado limpo perto da data do CBERS | STAC do Planetary Computer |
 | 2. super-resolução | aproximar a resolução do Sentinel-2 à do CBERS | SEN2SR (10 m → 2,5 m) |
 | 3. corregistro | as duas imagens não estão exatamente alinhadas | AROSICS |
-| 4. harmonização e emenda | sensores diferentes têm brilho e resposta diferentes | normalização radiométrica relativa (média-desvio padrão) |
+| 4. harmonização e emenda | sensores diferentes têm brilho e resposta diferentes | normalização radiométrica relativa (casamento de histograma, referência Sentinel-2) |
+
+Além do mosaico, a aula gera um **produto só de Sentinel-2 com 10 bandas**, na mesma grade de 2 m,
+com as bandas de red-edge e SWIR que o WPM não tem. Ele serve para calcular índices como o MNDWI,
+o NDBI e o NDMI (seções 2.1 e 3.1).
 
 O SEN2SR [@aybar_radiometrically_2026] leva o Sentinel-2 de 10 m para 2,5 m antes da
 substituição. O modelo não inventa informação: ele aprendeu como imagens de alta resolução
@@ -38,8 +42,7 @@ que deve ser mencionado quando você for escrever sobre o método.
 
 O SEN2SR tem duas versões. A completa depende do pacote `mamba-ssm`, que só funciona com GPU
 NVIDIA (CUDA 12 ou superior) e, na prática, exige Linux. Neste curso usamos a versão **Lite**, que
-roda em qualquer computador, inclusive sem placa de vídeo. A diferença de qualidade existe, mas é
-pequena diante do ganho em acessibilidade.
+roda em qualquer computador, inclusive sem placa de vídeo. 
 
 ## Antes de começar
 
@@ -116,7 +119,8 @@ P = ac.pastas()
 :::
 
 Na configuração, o notebook reúne todos os parâmetros da aula (janela de busca do Sentinel-2,
-máscara de nuvem, modelo, corregistro e método de harmonização), confere se os arquivos da Aula 02
+máscara de nuvem, modelo, produto de 10 bandas, corregistro, método e referência da harmonização),
+confere se os arquivos da Aula 02
 existem e mostra um mapa interativo com a cena CBERS mascarada, em que as lacunas aparecem em
 preto.
 
@@ -230,7 +234,7 @@ O mosaico é gravado como um GeoTIFF de **6 bandas** em `int16`:
 
 | banda | conteúdo |
 |---|---|
-| 1–4 | vermelho, verde, azul, NIR (reflectância × 10.000) |
+| 1–4 | azul, verde, vermelho, NIR (reflectância × 10.000, ordem nativa) |
 | 5 | `delta_days`, a diferença em dias até a data do CBERS |
 | 6 | `valid`, 1 onde o mosaico tem dado |
 
@@ -243,7 +247,34 @@ emendas. Antes disso, as eventuais lacunas do mosaico são preenchidas temporari
 válido mais próximo, porque o modelo não aceita valores vazios. O resultado é gravado em
 reflectância 0–1, com 2,5 m de resolução.
 
+O modelo espera as bandas numa ordem própria, registrada no `mlm.json` que vem com os pesos:
+B04, B03, B02, B08 (vermelho, verde, azul, NIR). O notebook lê essa ordem, reordena o mosaico
+(que está na ordem nativa: azul, verde, vermelho, NIR) na entrada do modelo e devolve a saída para
+a ordem nativa. Sem isso o modelo trataria o azul como vermelho, sem dar erro nenhum.
+
 {{< embed ../colab/03_sen2sr.ipynb#fig-sen2sr-zoom >}}
+
+### 2.1 Produto só Sentinel-2 com 10 bandas
+
+O mosaico final fica só com as quatro bandas que existem nos dois satélites (azul, verde, vermelho
+e NIR). O Sentinel-2, porém, tem bandas que o WPM não tem, como o **red-edge** e o **SWIR**, e são
+elas que faltam para índices como o MNDWI, o NDBI e o NDMI. Por isso, com `BANDAS_EXTRAS = True`, o
+notebook gera também um **produto só de Sentinel-2**, com 10 bandas (da B02 à B12, sem a B01, a B09
+e a B10), usando a versão de 10 bandas do SEN2SR. As bandas de 20 m são lidas já na montagem do
+mosaico (seção 1), seguindo a mesma escolha de cena por pixel das bandas de 10 m.
+
+O modelo leva as bandas de 20 m (B05, B06, B07, B8A, B11 e B12) para 10 m e depois para 2,5 m,
+usando as bandas de 10 m (azul, verde, vermelho e NIR) como guia do detalhe. Dois cuidados:
+
+- **a informação real dessas bandas continua sendo de 20 m.** O modelo preserva a média de cada
+  bloco, mas o detalhe de 2,5 m vem das bandas de 10 m e é reconstruído: a borda de alvos pequenos
+  é estimada, não observada;
+- **a ordem das bandas é a nativa do Sentinel-2** (B02, B03, B04, B05, B06, B07, B08, B8A, B11,
+  B12), na entrada e na saída. O `mlm.json` desse modelo lista outra ordem, por isso o notebook
+  confere a ordem no código do próprio pacote `sen2sr` e para com erro se ela tiver mudado.
+
+O modelo de 10 bandas também refaz o azul, o verde, o vermelho e o NIR. No fim da seção 3, essas
+quatro bandas são comparadas com as da super-resolução anterior, que são as que entram no mosaico.
 
 ## 3. Reamostragem para 2 m e corregistro com o AROSICS
 
@@ -282,7 +313,7 @@ CR.correct_shifts()
 
 {{< embed ../colab/03_sen2sr.ipynb#tbl-coregistro >}}
 
-Na cena do curso, sobraram 327 pontos confiáveis e o deslocamento mediano foi de cerca de 12 m
+Na cena do curso, sobraram 350 pontos confiáveis e o deslocamento mediano foi de cerca de 12 m
 (6 pixels de 2 m), o que mostra por que essa etapa é necessária. Os pontos de amarração são gravados
 num GeoPackage (`tiepoints.gpkg`), que você pode abrir no QGIS para ver onde o ajuste foi bom e
 onde não foi. **Menos de 20 pontos confiáveis é sinal de alerta**: cena com pouca textura, ou lacuna
@@ -291,13 +322,31 @@ que estima um deslocamento único para a imagem inteira (correlação de fase do
 
 Por fim, o notebook grava o Sentinel-2 corregistrado em 2 m e a banda `delta_days` na mesma grade.
 
+### 3.1 Corregistrando o produto só Sentinel-2
+
+As 10 bandas passam pelo **mesmo** corregistro: os deslocamentos que o AROSICS mediu no NIR são
+aplicados a cada banda com o `DESHIFTER`, sem correlacionar de novo, uma banda por vez, para não
+carregar 10 bandas de 2 m na memória. Se o corregistro usou o plano B, o mesmo deslocamento global
+é aplicado. O resultado vai para `data/processed/S2_<DATA>_2m_10bandas.tif`, na grade de 2 m do
+CBERS, em reflectância × 10.000 e na ordem nativa do Sentinel-2. Ele é **só de Sentinel-2** e não
+passa pela harmonização da seção 4. A data de cada pixel está no `S2_<DATA>_2m_delta_days.tif`.
+
 ## 4. Harmonização e substituição
 
-### 4.1 Em que escala fica o produto final
+### 4.1 Qual imagem é a referência
 
-O Sentinel-2 é convertido para a escala do CBERS, e **não** o contrário. Assim, o mosaico continua
-comparável com as outras cenas CBERS da sua série temporal, sem precisar reprocessar nenhuma
-delas.
+O **Sentinel-2 L2A é a referência**, e o CBERS é ajustado a ele (`REFERENCIA_HARM = "sentinel2"`).
+O motivo apareceu ao comparar as duas imagens nos corpos d'água: o NIR do CBERS sai alto sobre
+alvos escuros já no DN e no TOA, antes da correção atmosférica e da fusão. Na cena do curso, sobre
+a água, o NIR fica em ≈ 0,068 no CBERS contra ≈ 0,029 no Sentinel-2 (com azul e verde praticamente
+iguais), e o NDWI da água fica perto de zero. Quando o Sentinel-2 era ajustado ao CBERS, esse viés
+ia junto para as lacunas. Com o Sentinel-2 L2A como referência, o mosaico inteiro passa a seguir a
+radiometria de um produto validado.
+
+Com `REFERENCIA_HARM = "cbers"`, o ajuste se inverte e o Sentinel-2 é levado para a escala do CBERS
+(o padrão até a versão 1.0.1 deste material). Essa opção serve para quando o mosaico precisa
+continuar comparável com outras cenas CBERS da sua série temporal, sem reprocessar nenhuma delas.
+As saídas ganham o sufixo `_refCBERS`, para não sobrescrever o mosaico padrão.
 
 ### 4.2 Normalização radiométrica relativa
 
@@ -312,20 +361,28 @@ aplicado sobre a reflectância de superfície.
 
 Para esse ajuste, usamos a **normalização radiométrica relativa** (RRN, *relative radiometric
 normalization*) [@yuan_comparison_1996]: uma transformação empírica, banda a banda, que leva a
-imagem a ser ajustada (o Sentinel-2, $x$) para a escala da imagem de referência (o CBERS, $y$). Nos
-métodos lineares, ela é uma reta $x' = a\,x + b$. Antes do ajuste, o S2 super-resolvido, que sai
-do SEN2SR em reflectância 0–1, é **multiplicado por 10.000** para ficar na mesma unidade do CBERS
-(reflectância × 10.000). Assim, $a$ e $b$ medem só a diferença de radiometria entre os dois
-sensores. Os coeficientes são estimados em janelas amostradas pela cena, só nos pixels em que as
-duas imagens têm dado, e descartando 1% de cada extremo. Quatro métodos estão disponíveis em
-`METODO_HARM`:
+imagem a ser ajustada ($x$, aqui o CBERS) para a escala da imagem de referência ($y$, o
+Sentinel-2). Antes do ajuste, o S2 super-resolvido, que sai do SEN2SR em reflectância 0–1, é
+**multiplicado por 10.000** para ficar na mesma unidade do CBERS (reflectância × 10.000). Assim, o
+ajuste mede só a diferença de radiometria entre os dois sensores. Os parâmetros são estimados em
+janelas amostradas pela cena, só nos pixels em que as duas imagens têm dado. Cinco métodos estão
+disponíveis em `METODO_HARM`:
 
 | método | o que faz | quando usar |
 |---|---|---|
-| `media_desvio` (padrão) | normalização média-desvio padrão: $a = s_y/s_x$, $b = \bar{y} - a\,\bar{x}$ | o S2 passa a ter a mesma média e o mesmo desvio-padrão do CBERS, então a **textura** da área preenchida combina com a do entorno |
-| `regressao` | regressão linear simples por mínimos quadrados: $a = r\,s_y/s_x$ | **reduz a variância** para $\lvert r\rvert\,s_y$: o preenchimento sai mais liso que a vizinhança |
-| `histograma` | casamento de histograma, pela distribuição inteira por quantis | acomoda relação não linear entre os sensores, mas não produz coeficientes para reportar |
+| `histograma` (padrão) | casamento de histograma: ajusta a distribuição inteira por quantis, de 0,1 % a 99,9 % | acomoda a relação **não linear** entre os sensores na ponta escura: uma reta única não consegue baixar o NIR da água sem mexer no resto da cena. Não produz coeficientes para reportar (os quantis vão para o `.params.json`) |
+| `pif` | reta ajustada só em pixels pseudo-invariantes [@schott_radiometric_1988], escolhidos pelo IR-MAD [@canty_automatic_2008], por regressão ortogonal | quando você precisa de coeficientes $a$ e $b$ para reportar. A água entra como alvo escuro invariante, com o peso `PIF_PESO_AGUA` |
+| `media_desvio` | normalização média-desvio padrão: $a = s_y/s_x$, $b = \bar{y} - a\,\bar{x}$ | a imagem ajustada passa a ter a mesma média e o mesmo desvio-padrão da referência |
+| `regressao` | regressão linear simples por mínimos quadrados: $a = r\,s_y/s_x$ | **reduz a variância** para $\lvert r\rvert\,s_y$: o resultado sai mais liso |
 | `minmax` | normalização mínimo-máximo: ajusta os extremos | variante robusta, com os percentis 0,5 e 99,5 no lugar do mínimo e do máximo |
+
+No casamento de histograma, a malha de quantis é mais fina nas pontas, porque a água está
+justamente no 0,1–0,2 % mais escuro do NIR. Fora da faixa ajustada, o valor segue com inclinação 1
+a partir do último quantil, então os poucos pixels extremos (telhados muito claros realçados pelo
+SEN2SR, resto de nuvem) não entram no ajuste. Nos métodos lineares, que são uma reta
+$x' = a\,x + b$, 1% de cada extremo é descartado antes do ajuste, para a reta não ser puxada por
+valores atípicos. O IR-MAD do `pif` tende a descartar a água, que é justamente onde os sensores
+discordam, por isso os corpos d'água vistos pelo Sentinel-2 entram na reta com um peso próprio.
 
 A RRN foi proposta para séries multitemporais de um mesmo sensor [@yuan_comparison_1996], mas
 transformações lineares banda a banda também têm sido usadas entre sensores com bandas
@@ -334,30 +391,33 @@ WPM, cujas bandas ocupam intervalos próximos, mas não idênticos. Por isso ela
 ganho e de offset, mas **não** a diferença entre as funções de resposta espectral das bandas, o que
 exigiria um fator de ajuste de banda espectral (SBAF) [@pinto_first_2016].
 
-Se a área que estava sob nuvem for muito diferente do
-resto da cena (mais úmida ou mais vegetada, por exemplo), use `ANEL_LACUNA > 0` para calcular o
-ajuste só numa faixa em torno das lacunas.
+Se a área que estava sob nuvem for muito diferente do resto da cena (mais úmida ou mais vegetada,
+por exemplo), use `ANEL_LACUNA > 0` para calcular o ajuste só numa faixa em torno das lacunas.
 
 A tabela abaixo está toda em reflectância × 10.000 e tem duas partes. **Antes da normalização**
 traz as médias do S2 e do CBERS nos mesmos pixels, a diferença entre elas (em valor e em % da média
 do CBERS) e a razão de contraste (desvio-padrão do S2 ÷ desvio-padrão do CBERS). **Coeficientes**
-traz o ganho $a$ e o deslocamento $b$ da reta.
+traz o ganho $a$ e o deslocamento $b$ da reta, nos métodos lineares. No `histograma` não há reta:
+logo abaixo da tabela aparece para onde o ajuste leva alguns quantis do CBERS (0,1 %, 1 %, 50 % e
+99 %).
 
 {{< embed ../colab/03_sen2sr.ipynb#tbl-harmonizacao >}}
 
-Na cena do curso, antes do ajuste, o S2 estava de 9% a 11% mais escuro que o CBERS no visível (no
-NIR, as médias já eram quase iguais) e tinha cerca de 20% mais contraste em todas as bandas. O
-ganho $a$ entre 0,82 e 0,84 reduz esse contraste, e o $b$ devolve o brilho. Nos pixels usados para
-calcular a reta, a média-desvio padrão deixa as médias e os desvios **iguais por construção**, então
-o resultado da normalização é avaliado na emenda (seção 5).
+Na cena do curso, antes do ajuste, o S2 estava de 9% a 12% mais escuro que o CBERS no visível (no
+NIR, as médias já eram quase iguais) e tinha de 18% a 25% mais contraste em todas as bandas. O
+casamento de histograma leva o CBERS para essa distribuição: escurece o visível (a mediana do
+vermelho passa de 612 para 458) e estica a ponta clara (o percentil 99 sobe em todas as bandas). No
+NIR, a mediana quase não muda (de 2.696 para 2.668), mas o 0,1% mais escuro, onde está a água, desce
+de 698 para 405. Uma reta única não conseguiria fazer sem mexer no resto da cena.
 
 ### 4.3 A transição
 
 Como a lacuna é um buraco no CBERS, não há o que misturar *dentro* dela. A transição acontece do
 lado de fora: uma faixa de 50 m (`LARGURA_TRANSICAO` = 25 pixels) de CBERS válido em volta de cada
 lacuna é parcialmente substituída, com o peso do Sentinel-2 diminuindo gradualmente, para que o
-resultado fique natural e sem cortes abruptos. Cada pixel do mosaico recebe um código de
-procedência:
+resultado fique natural e sem cortes abruptos. Como a referência é o Sentinel-2, a parte CBERS do
+mosaico inteiro já está ajustada, e a mistura acontece entre o CBERS ajustado e o Sentinel-2. Cada
+pixel do mosaico recebe um código de procedência:
 
 | código | procedência |
 |---|---|
@@ -378,14 +438,17 @@ saida = np.nan_to_num(cb, nan=0.0) * (1 - w) + np.nan_to_num(sh, nan=0.0) * w
 ```
 
 O mosaico final é gravado com o mesmo piso de reflectância da Aula 01 (valores abaixo de zero
-viram 0). Como a normalização é uma reta $a\,x + b$, um $b$ negativo poderia gerar valores abaixo
-de zero; o notebook reporta quantos pixels foram ajustados (na cena do curso, nenhum).
+viram 0). A normalização pode gerar valores abaixo de zero (o casamento de histograma estendido
+abaixo do menor quantil, ou uma reta com $b$ negativo), mesmo partindo de imagens sem nenhum
+negativo, e o notebook reporta quantos pixels de cada banda foram ajustados. Na cena do curso,
+foram 5 pixels no azul, 2 no vermelho, 17 no NIR e nenhum no verde, menos de 0,001% da cena.
 
 ## 5. A emenda ficou boa?
 
 Para avaliar a emenda, o notebook calcula duas medidas num anel de 3 pixels em volta de cada
-lacuna, onde as duas imagens existem e podem ser comparadas. Cada uma aparece **antes** (o S2 só
-multiplicado por 10.000, sem a reta) e **depois** da normalização:
+lacuna, onde as duas imagens existem e podem ser comparadas. Cada uma aparece **antes** (as duas
+imagens sem ajuste, com o S2 só multiplicado por 10.000) e **depois** da normalização (com o CBERS
+ajustado ao Sentinel-2):
 
 - **viés**: a diferença média entre o S2 e o CBERS. Perto de zero significa que não há diferença
   de brilho na emenda. A coluna "em refl." traz o viés depois da normalização em reflectância 0–1;
@@ -405,13 +468,16 @@ Como ler:
 | viés grande com sinais diferentes por banda | provável troca de bandas entre as duas fontes; confira os rótulos dos arquivos |
 
 Na cena do curso, antes da normalização, o S2 era mais escuro que o CBERS na emenda nas bandas do
-visível (viés entre −37 e −66) e, em todas as bandas, tinha de 18% a 30% mais variabilidade (razão
-de desvios entre 1,18 e 1,30). Depois, o viés do visível ficou entre −12 e +30 (no máximo 0,003 de
-reflectância), e a razão de desvios ficou próxima de 1 em todas as bandas. O NIR é a exceção: o viés já era de cerca
-de +313 antes do ajuste e ficou em +272 depois (cerca de 0,03 de reflectância). Como ele já
+visível (viés entre −37 e −66) e, em todas as bandas, tinha de 17% a 30% mais variabilidade (razão
+de desvios entre 1,17 e 1,30). Depois, o viés do visível ficou entre −21 e +25 (no máximo 0,0025 de
+reflectância), e a razão de desvios ficou entre 0,97 e 1,08. O NIR é a exceção: o viés já era de
+cerca de +320 antes do ajuste e ficou em +295 depois (cerca de 0,03 de reflectância). Como ele já
 existia antes, trata-se de uma diferença local entre as duas imagens em volta das nuvens, e não de
-um efeito da normalização. É o caso em que vale testar `ANEL_LACUNA`. Todos os parâmetros e
-resultados ficam registrados no `.params.json` do mosaico.
+um efeito da normalização. É o caso em que vale testar `ANEL_LACUNA`.
+
+Todos os parâmetros e resultados ficam registrados no `.params.json` do mosaico.
+
+### 5.1 O mosaico final
 
 {{< embed ../colab/03_sen2sr.ipynb#fig-mosaico-final >}}
 
@@ -425,15 +491,50 @@ transição), com a porcentagem e a área de cada um. As contagens são feitas n
 ## O que ficou pronto
 
 ```
-data/interim/S2_<DATA>_10m.tif                 mosaico S2 (RGBN + delta_days + validade)
+data/interim/S2_<DATA>_10m.tif                 mosaico S2 (BGRN + delta_days + validade)
 data/interim/S2_<DATA>_SR2p5m.tif              super-resolvido pelo SEN2SR
-data/interim/S2_<DATA>_2m_coreg.tif             reamostrado e corregistrado na grade do CBERS
+data/interim/S2_<DATA>_2m_coreg.tif            reamostrado e corregistrado na grade do CBERS
+data/interim/S2_<DATA>_10m_10bandas.tif        mosaico S2 com as 10 bandas, em 10 m
+data/interim/S2_<DATA>_SR2p5m_10bandas.tif     as 10 bandas super-resolvidas
 data/processed/mosaico_<DATA>_gapfilled.tif    mosaico final     <- o produto do curso
 data/processed/mosaico_<DATA>_proveniencia.tif de onde veio cada pixel
+data/processed/S2_<DATA>_2m_10bandas.tif       só Sentinel-2, 10 bandas (BANDAS_EXTRAS)
 ```
 
-Abra os dois últimos juntos no QGIS. A banda de procedência permite saber, para qualquer análise
-feita sobre este mosaico, **quais pixels são observação e quais são reconstrução**.
+Abra o mosaico e a procedência juntos no QGIS. A banda de procedência permite saber, para qualquer
+análise feita sobre este mosaico, **quais pixels são observação e quais são reconstrução**.
+
+### Índices com SWIR no produto só Sentinel-2
+
+O `S2_<DATA>_2m_10bandas.tif` está na mesma grade do mosaico: dá para calcular os índices nele (no
+ArcGIS, por exemplo) e usar o resultado para rotular o mosaico CBERS/S2. As bandas, na ordem do
+arquivo:
+
+| banda no arquivo | S2 | nome | resolução nativa |
+|---|---|---|---|
+| 1 | B02 | azul | 10 m |
+| 2 | B03 | verde | 10 m |
+| 3 | B04 | vermelho | 10 m |
+| 4 | B05 | red-edge 1 | 20 m |
+| 5 | B06 | red-edge 2 | 20 m |
+| 6 | B07 | red-edge 3 | 20 m |
+| 7 | B08 | NIR | 10 m |
+| 8 | B8A | NIR estreito | 20 m |
+| 9 | B11 | SWIR 1 | 20 m |
+| 10 | B12 | SWIR 2 | 20 m |
+
+Expressões para a *Band Arithmetic* do ArcGIS no modo *User Defined* (`B1` = banda 1 do arquivo):
+
+| índice | fórmula | expressão |
+|---|---|---|
+| NDWI [@mcfeeters_use_1996] | (verde − NIR) / (verde + NIR) | `(B2 - B7) / (B2 + B7)` |
+| MNDWI [@xu_modification_2006] | (verde − SWIR 1) / (verde + SWIR 1) | `(B2 - B9) / (B2 + B9)` |
+| NDBI | (SWIR 1 − NIR) / (SWIR 1 + NIR) | `(B9 - B7) / (B9 + B7)` |
+| NDMI | (NIR − SWIR 1) / (NIR + SWIR 1) | `(B7 - B9) / (B7 + B9)` |
+
+Com as mesmas bandas, o NDMI é o NDBI com o sinal trocado. Para o NDBI e o NDMI também dá para
+usar o NIR estreito (`B8`, a B8A), que tem a mesma resolução nativa do SWIR. Lembre que o SWIR tem
+informação real de 20 m: em margens e corpos d'água pequenos, o detalhe de 2,5 m vem do modelo.
 
 ::: {.callout-important}
 ## Limitações que devem ser destacadas
@@ -442,8 +543,13 @@ feita sobre este mosaico, **quais pixels são observação e quais são reconstr
 - a textura da área preenchida é **reconstruída** pelo modelo;
 - os pixels de Sentinel-2 vêm de outra data (`delta_days` indica de quantos dias);
 - a zona de transição substitui parcialmente pixels de CBERS válidos;
+- no produto só Sentinel-2, as bandas de 20 m (red-edge, B8A e SWIR) têm informação real de 20 m; o
+  detalhe de 2,5 m vem das bandas de 10 m, por meio do modelo;
 - a normalização radiométrica relativa é empírica (global ou por anel), e não uma correção física
-  entre sensores: não compensa a diferença entre as funções de resposta espectral das bandas.
+  entre sensores: não compensa a diferença entre as funções de resposta espectral das bandas;
+- a referência radiométrica é o Sentinel-2 L2A: o mosaico inteiro, inclusive a parte CBERS, passa a
+  seguir a radiometria do S2. O casamento de histograma é global, então não corrige diferenças
+  locais (como o efeito de adjacência em volta de corpos d'água pequenos).
 :::
 
 ## Considerações finais
@@ -485,6 +591,8 @@ regiões do Brasil.
 | Metade do mosaico ficou vazia com escolha manual | A cena que você escolheu cobre só parte da AOI (emenda de tiles). Veja a coluna `cobre` na prévia e acrescente o outro tile da mesma data. |
 | `IndexError` na célula de escolha | Algum `idx` de `ESCOLHA_S2` não existe na tabela. Os índices vêm da tabela ordenada por proximidade de data e mudam se você alterar `JANELA_DIAS`. |
 | Emenda visível mesmo com viés ≈ 0 | Provavelmente é corregistro, não radiometria. Olhe o deslocamento mediano da seção 3. |
+| `a versão instalada do sen2sr mudou a ordem das bandas do modelo de 10 bandas` | O pacote `sen2sr` foi atualizado e a ordem de entrada mudou. Confira `sen2sr/referencex4.py` antes de seguir, ou use `BANDAS_EXTRAS = False` para rodar só o mosaico. |
+| A seção 2.1 ou a 3.1 ficou lenta demais, ou faltou memória | O produto de 10 bandas pesa bem mais que o mosaico. Use `BANDAS_EXTRAS = False` se você não precisa dos índices com SWIR. |
 
 ## Referências
 

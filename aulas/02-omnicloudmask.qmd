@@ -4,7 +4,7 @@ subtitle: "Modelo de aprendizado profundo para detecção de nuvens"
 author:
   - "Danilo Roberto Fioramonte"
   - "Danilo Marques de Magalhães"
-date: "2026-09-26"
+date: "2026-10-09"
 ---
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/02_nuvens_omnicloudmask.ipynb){target="_blank"}
@@ -106,7 +106,8 @@ aula. O mais importante é o `DETECT_RES`, a resolução em que a detecção aco
 CENA_ID = ac.CENA_PADRAO
 NIVEL = "boa"                 # tem que ser o mesmo que você gerou na Aula 01
 DETECT_RES = 10.0             # resolução (m) em que a detecção acontece
-BANDA_RED, BANDA_GREEN, BANDA_NIR = 1, 2, 4     # ordem RGBN do produto da Aula 01
+# BANDA_RED / BANDA_GREEN / BANDA_NIR são lidas do arquivo de entrada, pelo nome:
+# na ordem nativa do produto da Aula 01 (BGRN), saem 3, 2 e 4
 PATCH, OVERLAP = 1000, 300    # tamanho dos blocos e sobreposição usados pelo OCM
 ```
 
@@ -244,7 +245,7 @@ substituição.
 |---|---|
 | `ResamplingAlgorithmError: <Resampling.min: 9> can be used for warp operations but not for reads and writes` | `min`, `max`, `med`, `q1`, `q3` e `sum` só valem em reprojeção, não em leitura. Para leitura reduzida use `average`, `bilinear`, `cubic` ou `nearest` e, para saber onde há nodata, `read_masks()` com `average`. |
 | O download dos pesos trava ou dá erro de rede | Troque `model_download_source="hugging_face"` por `"google_drive"`. |
-| A máscara sai vazia (100% `clear`) | Confira a ordem das bandas: o OCM espera **Red, Green, NIR** nessa ordem. Com o produto da Aula 01 (RGBN), são os índices 1, 2 e 4. |
+| A máscara sai vazia (100% `clear`) | Confira a ordem das bandas: o OCM espera **Red, Green, NIR** nessa ordem. Com o produto da Aula 01 (ordem nativa BGRN), são as bandas 3, 2 e 4, e o notebook as acha pelo nome gravado no arquivo. |
 | A máscara marca a cena inteira como nuvem | Provavelmente a entrada está em escala errada (DN misturado com reflectância) ou o nodata não foi declarado no arquivo. |
 | Sombra aparece do lado errado da nuvem | Bandas trocadas na leitura. Verifique `src.descriptions` do arquivo de entrada. |
 | `MemoryError` em CPU | Reduza `PATCH` para 500 e `OVERLAP` para 150, ou aumente `DETECT_RES` para 20 m. |
