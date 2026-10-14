@@ -433,13 +433,13 @@ window.Quarto = {
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Clique no botão do Colab no topo da página. Diferente das outras aulas, aqui a instalação tem <strong>duas células e um reinício da sessão</strong> no meio: o 6S não é uma biblioteca Python, é um programa em Fortran, e no Colab ele só chega pelo conda.</p>
-<div id="3b6c6e07" class="cell">
+<div id="bcad07ce" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># célula 1 — instala o conda na sessão; o ambiente REINICIA aqui</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="op">!</span>pip install <span class="op">-</span>q condacolab</span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="im">import</span> condacolab</span>
 <span id="cb3-4"><a href="#cb3-4"></a>condacolab.install()</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="9d4a3a84" class="cell">
+<div id="59fa8b20" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># célula 2 — rode DEPOIS do reinício</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="op">!</span>mamba install <span class="op">-</span>q <span class="op">-</span>y <span class="op">-</span>c conda<span class="op">-</span>forge rasterio pyproj py6s sixs pystac<span class="op">-</span>client requests</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -448,7 +448,7 @@ window.Quarto = {
 </div>
 </div>
 <p>A célula seguinte do notebook baixa o <code>aulas_cbers.py</code> e a pasta <code>config/</code> do repositório (quando eles ainda não estão na pasta). O <code>aulas_cbers.py</code> guarda, de forma condensada, as etapas das aulas anteriores, e é isso que permite começar o curso por qualquer aula: se os arquivos da Aula 00 não estiverem em <code>data/raw</code>, ele baixa a mesma cena, com o mesmo recorte.</p>
-<div id="21dee9f1" class="cell">
+<div id="905c63e7" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> aulas_cbers <span class="im">as</span> ac</span>
 <span id="cb5-2"><a href="#cb5-2"></a>ac.configurar_gdal()</span>
 <span id="cb5-3"><a href="#cb5-3"></a></span>
@@ -487,7 +487,7 @@ Aviso
 <p>A convenção é <strong>multiplicativa e sem offset</strong>:</p>
 <p><span class="math display">\[L_\lambda = DN \times G_\lambda\]</span></p>
 <p>O offset é zero porque, ao calibrar os sensores do CBERS, <span class="citation" data-cites="pinto_first_2016">Pinto et al. (<a href="#ref-pinto_first_2016" role="doc-biblioref">2016</a>)</span> obtiveram interceptos estatisticamente iguais a zero; os ganhos publicados já consideram essa condição.</p>
-<div id="be054edf" class="cell">
+<div id="d78bc6e6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>meta <span class="op">=</span> ac.ler_xml(CENA_ID)      <span class="co"># coeficientes + geometria solar, do XML</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a>esun <span class="op">=</span> ac.ler_esun()            <span class="co"># config/esun_wpm.json</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a></span>
@@ -600,7 +600,7 @@ Aviso
 <h3 class="anchored" data-anchor-id="escolhendo-o-aod-quando-você-não-tem-a-medida-do-dia-não-recomendado">3.2 Escolhendo o AOD quando você não tem a medida do dia (não recomendado)</h3>
 <p>Dos parâmetros, o <strong>AOD</strong> é o que mais mexe no resultado e o mais difícil de obter. Quando não temos a medida do dia, dá para estimá-lo a partir da própria imagem, pelo <strong>critério do alvo escuro</strong>: numa cena com água ou sombra densa, o pixel mais escuro tem reflectância de superfície no azul perto de zero (em torno de 0,005). Se o AOD for alto demais, o 6S subtrai brilho demais e o percentil 1 do azul fica negativo; se for baixo demais, ele fica alto.</p>
 <p>Com <code>AJUSTAR_AOD = True</code>, o notebook roda o 6S só na banda azul com vários valores de AOD e escolhe o que deixa o alvo escuro mais perto de 0,005 (leva uns 30 s):</p>
-<div id="5eba08dd" class="cell">
+<div id="6ea06c51" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>testes <span class="op">=</span> {}</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="cf">for</span> aod <span class="kw">in</span> [<span class="fl">0.03</span>, <span class="fl">0.05</span>, <span class="fl">0.08</span>, <span class="fl">0.12</span>, <span class="fl">0.16</span>, <span class="fl">0.22</span>]:</span>
 <span id="cb7-3"><a href="#cb7-3"></a>    xa, xb, xc <span class="op">=</span> ac.coeficientes_6s(meta, <span class="bu">dict</span>(atm, aot550<span class="op">=</span>aod), <span class="dv">1</span>)   <span class="co"># 1 = azul</span></span>
@@ -614,7 +614,7 @@ Aviso
 <section id="a-correção-banda-a-banda" class="level3">
 <h3 class="anchored" data-anchor-id="a-correção-banda-a-banda">3.3 A correção, banda a banda</h3>
 <p>Com os parâmetros definidos, o 6S roda uma vez para cada banda e os coeficientes são aplicados sobre a radiância:</p>
-<div id="a84a6778" class="cell">
+<div id="23242487" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">for</span> n, nome <span class="kw">in</span> ac.BANDAS_NATIVAS.items():</span>
 <span id="cb8-2"><a href="#cb8-2"></a>    xa, xb, xc <span class="op">=</span> ac.coeficientes_6s(meta, atm, n)</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    y <span class="op">=</span> xa <span class="op">*</span> radiancia[n] <span class="op">-</span> xb</span>
@@ -653,7 +653,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <h2 class="anchored" data-anchor-id="gravando-o-composto-de-8-m">4. Gravando o composto de 8 m</h2>
 <p>A saída é gravada em <code>int16</code>, com a reflectância multiplicada por <strong>10.000</strong> (a mesma escala do Sentinel-2 L2A, o que evita conversão na Aula 03). O nodata passa a ser <code>-9999</code>, porque agora zero é um valor de reflectância válido. Valores abaixo de zero são gravados como 0 (<code>PISO_REFLECTANCIA</code>), e o número de pixels afetados fica registrado.</p>
 <p>As bandas ficam <strong>na mesma ordem em que o WPM captura a cena</strong>: B1 azul, B2 verde, B3 vermelho e B4 NIR (BGRN), que é também a ordem do Sentinel-2 (B02, B03, B04, B08). Os nomes das bandas ficam <strong>gravados dentro do arquivo</strong>, junto com a interpretação de cor. As aulas seguintes acham cada banda pelo nome, em vez de assumir a posição, o que evita trocas silenciosas entre bandas.</p>
-<div id="ae86a36f" class="cell">
+<div id="e7d221c1" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(rgbcomp, <span class="st">"w"</span>, <span class="op">**</span>perfil) <span class="im">as</span> dst:</span>
 <span id="cb10-2"><a href="#cb10-2"></a>    <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(ac.ORDEM_SAIDA, start<span class="op">=</span><span class="dv">1</span>):        <span class="co"># [1, 2, 3, 4] = B, G, R, NIR</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a>        arr <span class="op">=</span> refl[ac.BANDAS_NATIVAS[n]]</span>
@@ -666,7 +666,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <section id="alinhando-a-multiespectral-com-a-pancromática" class="level2">
 <h2 class="anchored" data-anchor-id="alinhando-a-multiespectral-com-a-pancromática">5. Alinhando a multiespectral com a pancromática</h2>
 <p>Na Aula 00, cada banda foi recortada na sua própria grade (8 m nas multiespectrais e 2 m na PAN), então as duas imagens podem ter ficado deslocadas em alguns metros. O Gram-Schmidt precisa que a razão entre elas seja exatamente 4 e que as origens coincidam; sem isso, a fusão gera um deslocamento que se propaga até o corregistro da Aula 03. A função <code>alinhar_ms_pan</code> recorta as duas imagens na extensão comum e ajusta a PAN para uma grade exatamente 4 vezes mais fina que a da multiespectral.</p>
-<div id="f6768990" class="cell">
+<div id="b9c8080d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>ms, pan, t_ms, t_pan, crs, nod_ms, FATOR <span class="op">=</span> ac.alinhar_ms_pan(rgbcomp, arquivos[<span class="st">"BAND0"</span>])</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
@@ -685,7 +685,7 @@ Figura&nbsp;1: Distribuição da reflectância e do NDVI, antes e depois da corr
 <p><span class="math display">\[I = a_0 + \sum_i a_i \, MS_i .\]</span></p>
 <p>Na cena do curso, o desvio de <span class="math inline">\(\Delta\)</span> cai de cerca de 218 (pesos fixos) para 27 (GSA), na escala de 10.000.</p>
 <p>No notebook, as bandas multiespectrais são primeiro reamostradas para a grade de 2 m (convolução cúbica); depois, os coeficientes são estimados e a fusão é aplicada:</p>
-<div id="ce6e5270" class="cell">
+<div id="718f041f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>alpha, r2_pan, _ <span class="op">=</span> intensidade_por_regressao(ms.astype(<span class="st">"float32"</span>), pan, valido_ms, FATOR)</span>
 <span id="cb12-2"><a href="#cb12-2"></a>fus, ganhos, delta_fus <span class="op">=</span> gram_schmidt(ms_up, pan, valido_fus, alpha<span class="op">=</span>alpha)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
