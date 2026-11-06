@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
     "section": "",
-    "text": "O presente material é um Recurso Educacional Aberto elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Geografia, na área de Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (Digital Number) para reflectância de topo de atmosfera (top-of-atmosphere) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca OmniCloudMask) (Wright et al., 2025); e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2,5 metros de resolução espacial utilizando o modelo SEN2SR + interpolação bicúbica para 2 metros) (Aybar et al., 2026).\nCada aula contém vídeo (em breve), código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - Recomendado) e Google Colab para quem prefere rodar em ambiente nuvem.\nNão é preciso ter experiência com Python, pixi ou GitHub. A Aula 00 começa do zero absoluto.",
+    "text": "O presente material é um Recurso Educacional Aberto elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Geografia, na área de Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (Digital Number) para reflectância de topo de atmosfera (top-of-atmosphere) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca OmniCloudMask) (Wright et al., 2025); e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2,5 metros de resolução espacial utilizando o modelo SEN2SR + interpolação bicúbica para 2 metros) (Aybar et al., 2026).\nCada aula contém vídeo, código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - Recomendado) e Google Colab para quem prefere rodar em ambiente nuvem.\nNão é preciso ter experiência com Python, pixi ou GitHub. A Aula 00 começa do zero absoluto.",
     "crumbs": [
       "Início",
       "Visão geral"
@@ -27,6 +27,17 @@
     "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
     "section": "Como citar",
     "text": "Como citar\nEste material tem DOI próprio e pode ser citado como obra. Se ele foi útil na sua pesquisa, aula ou relatório técnico, use a referência abaixo (ABNT NBR 6023):\n\nFIORAMONTE, Danilo Roberto; MAGALHÃES, Danilo Marques de. Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2: correção atmosférica, remoção de nuvens e substituição de pixels. Versão 1.1.0. Rio Claro: Grupo de pesquisa MAPEAR, UNESP, 2026. Material didático. DOI: 10.5281/zenodo.22970993. Disponível em: https://danfioramonte.github.io/geoprocessamento-cbers4a/. Acesso em: dia mês ano.\n\n\n\n\n\n\n\nDicaEm BibTeX\n\n\n\n\n\n@misc{fioramonte_magalhaes_geoprocessamento_2026,\n  author    = {Fioramonte, Danilo Roberto and Magalhães, Danilo Marques de},\n  title     = {Geoprocessamento com imagens {CBERS-4A/WPM} e {Sentinel-2}:\n               correção atmosférica, remoção de nuvens e substituição de pixels},\n  year      = {2026},\n  version   = {1.1.0},\n  publisher = {Zenodo},\n  doi       = {10.5281/zenodo.22970993},\n  url       = {https://danfioramonte.github.io/geoprocessamento-cbers4a/},\n  note      = {Material didático}\n}\n\n\n\n\n\n\n\n\n\nImportanteCite também os métodos que você usar\n\n\n\nEste material organiza e explica ferramentas de terceiros. Ao empregar os métodos das aulas, cite os trabalhos originais junto com esta obra: STAC (Radiant Earth Foundation, 2021) para aquisição de imagens via API; Brazil Data Cube (Ferreira et al., 2020) para as imagens CBERS-4A; SEN2SR (Aybar et al., 2026) para a super-resolução; OmniCloudMask (Wright et al., 2025) para a detecção de nuvens; o 6S (Vermote et al., 1997) para a correção atmosférica; o AROSICS (Scheffler et al., 2017) para o corregistro; e o Gram-Schmidt (Aiazzi; Baronti; Selva, 2007; Laben; Brower, 2000) para a fusão com a pancromática.",
+    "crumbs": [
+      "Início",
+      "Visão geral"
+    ]
+  },
+  {
+    "objectID": "index.html#agradecimentos",
+    "href": "index.html#agradecimentos",
+    "title": "Geoprocessamento com imagens CBERS-4A/WPM e Sentinel-2",
+    "section": "Agradecimentos",
+    "text": "Agradecimentos\nO presente trabalho foi realizado com apoio da Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), Brasil. Processo nº 2025/24168-5. Agradecemos também ao INPE e ao Microsoft Planetary Computer por disponibilizarem gratuitamente, via API STAC, as imagens de satélite utilizadas.\nAs opiniões, hipóteses e conclusões ou recomendações expressas neste material são de responsabilidade do(s) autor(es) e não necessariamente refletem a visão da FAPESP.",
     "crumbs": [
       "Início",
       "Visão geral"

@@ -14,7 +14,14 @@
       "orcid": "0000-0001-9306-4326"
     }
   ],
-  "keywords": ["CBERS-4A", "sensoriamento remoto", "geoprocessamento", "OmniCloudMask", "SEN2SR", "Python"],
+  "keywords": [
+    "CBERS-4A",
+    "sensoriamento remoto",
+    "geoprocessamento",
+    "OmniCloudMask",
+    "SEN2SR",
+    "Python"
+  ],
   "license": "cc-by-4.0",
   "language": "por",
   "related_identifiers": [
@@ -23,5 +30,6 @@
       "relation": "isSupplementTo",
       "scheme": "url"
     }
-  ]
+  ],
+  "notes": "O presente trabalho foi realizado com apoio da Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), Brasil. Processo nº 2025/24168-5. As opiniões, hipóteses e conclusões ou recomendações expressas neste material são de responsabilidade do(s) autor(es) e não necessariamente refletem a visão da FAPESP."
 }

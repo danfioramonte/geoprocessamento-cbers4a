@@ -261,6 +261,7 @@ div.csl-indent {
   <ul>
   <li><a href="#cronograma-de-aulas" id="toc-cronograma-de-aulas" class="nav-link active" data-scroll-target="#cronograma-de-aulas">Cronograma de aulas</a></li>
   <li><a href="#como-citar" id="toc-como-citar" class="nav-link" data-scroll-target="#como-citar">Como citar</a></li>
+  <li><a href="#agradecimentos" id="toc-agradecimentos" class="nav-link" data-scroll-target="#agradecimentos">Agradecimentos</a></li>
   <li><a href="#referências" id="toc-referências" class="nav-link" data-scroll-target="#referências">Referências</a></li>
   </ul>
 </nav>
@@ -302,7 +303,7 @@ div.csl-indent {
 
 
 <p>O presente material é um Recurso Educacional Aberto elaborado a partir dos resultados de uma etapa de pesquisa de mestrado em Geografia, na área de Sensoriamento Remoto. Você irá aprender a fazer a correção atmosférica de imagens CBERS-4A/WPM (conversão de número digital (<em>Digital Number</em>) para reflectância de topo de atmosfera (<em>top-of-atmosphere</em>) - TOA e posteriormente para reflectância de superfície - BOA); a remoção de nuvens utilizando aprendizado profundo (biblioteca <em>OmniCloudMask</em>) <span class="citation" data-cites="wright_training_2025">(<a href="#ref-wright_training_2025" role="doc-biblioref">Wright et al., 2025</a>)</span>; e a substituição de pixels contaminados usando Sentinel-2 super-resolvido (de 10 metros para 2,5 metros de resolução espacial utilizando o modelo SEN2SR + interpolação bicúbica para 2 metros) <span class="citation" data-cites="aybar_radiometrically_2026">(<a href="#ref-aybar_radiometrically_2026" role="doc-biblioref">Aybar et al., 2026</a>)</span>.</p>
-<p>Cada aula contém vídeo (em breve), código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - <strong>Recomendado</strong>) e Google Colab para quem prefere rodar em ambiente nuvem.</p>
+<p>Cada aula contém vídeo, código comentado e duas trilhas de execução: JupyterLab (utilizando gerenciador de ambientes pixi - <strong>Recomendado</strong>) e Google Colab para quem prefere rodar em ambiente nuvem.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -392,6 +393,11 @@ div.csl-indent {
 <p>Este material organiza e explica ferramentas de terceiros. Ao empregar os métodos das aulas, cite os trabalhos originais junto com esta obra: STAC <span class="citation" data-cites="stac2021specification">(<a href="#ref-stac2021specification" role="doc-biblioref">Radiant Earth Foundation, 2021</a>)</span> para aquisição de imagens via API; Brazil Data Cube <span class="citation" data-cites="ferreira_earth_2020">(<a href="#ref-ferreira_earth_2020" role="doc-biblioref">Ferreira et al., 2020</a>)</span> para as imagens CBERS-4A; SEN2SR <span class="citation" data-cites="aybar_radiometrically_2026">(<a href="#ref-aybar_radiometrically_2026" role="doc-biblioref">Aybar et al., 2026</a>)</span> para a super-resolução; OmniCloudMask <span class="citation" data-cites="wright_training_2025">(<a href="#ref-wright_training_2025" role="doc-biblioref">Wright et al., 2025</a>)</span> para a detecção de nuvens; o 6S <span class="citation" data-cites="vermote_second_1997">(<a href="#ref-vermote_second_1997" role="doc-biblioref">Vermote et al., 1997</a>)</span> para a correção atmosférica; o AROSICS <span class="citation" data-cites="scheffler_arosics_2017">(<a href="#ref-scheffler_arosics_2017" role="doc-biblioref">Scheffler et al., 2017</a>)</span> para o corregistro; e o Gram-Schmidt <span class="citation" data-cites="laben_process_2000 aiazzi_improving_2007">(<a href="#ref-aiazzi_improving_2007" role="doc-biblioref">Aiazzi; Baronti; Selva, 2007</a>; <a href="#ref-laben_process_2000" role="doc-biblioref">Laben; Brower, 2000</a>)</span> para a fusão com a pancromática.</p>
 </div>
 </div>
+</section>
+<section id="agradecimentos" class="level2">
+<h2 class="anchored" data-anchor-id="agradecimentos">Agradecimentos</h2>
+<p>O presente trabalho foi realizado com apoio da Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), Brasil. Processo nº 2025/24168-5. Agradecemos também ao INPE e ao Microsoft Planetary Computer por disponibilizarem gratuitamente, via API STAC, as imagens de satélite utilizadas.</p>
+<p><em>As opiniões, hipóteses e conclusões ou recomendações expressas neste material são de responsabilidade do(s) autor(es) e não necessariamente refletem a visão da FAPESP.</em></p>
 </section>
 <section id="referências" class="level2">
 <h2 class="anchored" data-anchor-id="referências">Referências</h2>
@@ -833,7 +839,7 @@ WRIGHT, Nicholas <em>et al.</em> <a href="https://doi.org/10.1016/j.rse.2025.114
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Código sob licença MIT; textos, figuras e vídeos sob CC BY 4.0. Grupo de pesquisa MAPEAR.</p>
+<p>Código sob licença MIT; textos, figuras e vídeos sob CC BY 4.0. Grupo de pesquisa MAPEAR. Apoio: FAPESP, processo nº 2025/24168-5.</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

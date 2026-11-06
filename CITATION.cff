@@ -9,7 +9,9 @@ abstract: >-
   Gram-Schmidt com a banda pancromática, detecção de nuvem e sombra com
   OmniCloudMask e substituição dos pixels contaminados por Sentinel-2
   super-resolvido com o SEN2SR. Inclui site, vídeos e notebooks executáveis
-  localmente (pixi) ou no Google Colab.
+  localmente (pixi) ou no Google Colab. Trabalho realizado com apoio da
+  Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), processo
+  nº 2025/24168-5.
 type: software
 authors:
   - family-names: Fioramonte

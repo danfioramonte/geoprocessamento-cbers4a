@@ -9,7 +9,7 @@ date: "2026-10-09"
 
 [![](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danfioramonte/geoprocessamento-cbers4a/blob/main/colab/01_toa_boa.ipynb){target="_blank"}
 
-<!--{{< video https://www.youtube.com/embed/ID-DO-VIDEO >}}-->
+{{< video https://www.youtube.com/embed/Za4JFQ5KKt4?si=98GKe2L9I5WFVD2t >}}
 
 ## O que vamos aprender
 

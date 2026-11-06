@@ -95,7 +95,7 @@ website:
           - aulas/99-erros-comuns.qmd
 
   page-footer:
-    center: "Código sob licença MIT; textos, figuras e vídeos sob CC BY 4.0. Grupo de pesquisa MAPEAR."
+    center: "Código sob licença MIT; textos, figuras e vídeos sob CC BY 4.0. Grupo de pesquisa MAPEAR. Apoio: FAPESP, processo nº 2025/24168-5."
 
 format:
   html:

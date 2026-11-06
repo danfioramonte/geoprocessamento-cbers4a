@@ -14,7 +14,7 @@ mestrado do autor em Geografia, na área de Sensoriamento Remoto, e está sendo 
 > **Site do curso:** <https://danfioramonte.github.io/geoprocessamento-cbers4a/>
 > **Canal no YouTube:** <https://www.youtube.com/@MapearUnesp>
 
-São 4 aulas que se complementam. Cada aula contém vídeo (em breve), código comentado e duas trilhas de execução: **JupyterLab
+São 4 aulas que se complementam. Cada aula contém vídeo, código comentado e duas trilhas de execução: **JupyterLab
 local** (com o gerenciador de ambientes `pixi`, recomendado) e **Google Colab**,
 para quem prefere rodar em ambiente nuvem. Não é preciso experiência prévia
 com Python, `pixi` ou GitHub.
@@ -170,5 +170,9 @@ utilizadas seguem as licenças de seus provedores (INPE/CBERS e ESA/Copernicus).
 Material desenvolvido no âmbito do Programa de Pós-Graduação em Geografia da
 UNESP — Instituto de Geociências e Ciências Exatas (Rio Claro/SP). 
 
-Agradecemos ao INPE e ao Microsoft Planetary Computer por disponibilizarem gratuitamente, via API
+O presente trabalho foi realizado com apoio da Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), Brasil. Processo nº 2025/24168-5.
+
+Agradecemos também ao INPE e ao Microsoft Planetary Computer por disponibilizarem gratuitamente, via API
 STAC, as imagens de satélite utilizadas.
+
+*As opiniões, hipóteses e conclusões ou recomendações expressas neste material são de responsabilidade do(s) autor(es) e não necessariamente refletem a visão da FAPESP.*
