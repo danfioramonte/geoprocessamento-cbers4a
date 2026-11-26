@@ -175,4 +175,10 @@ O presente trabalho foi realizado com apoio da Fundação de Amparo à Pesquisa 
 Agradecemos também ao INPE e ao Microsoft Planetary Computer por disponibilizarem gratuitamente, via API
 STAC, as imagens de satélite utilizadas.
 
+Agradecemos ao Future Tech Leaders Brazil pela oportunidade de integrar o I Bootcamp de Geotecnologias no Brasil, realizado em parceria com a UNDP e a AEB.
+
+<p align="center">
+  <img src="img/logos_bootcamp_ftl.png" alt="Logos do Future Tech Leaders, AEB, SDG AI Lab, ICPSD e UNDP" width="700">
+</p>
+
 *As opiniões, hipóteses e conclusões ou recomendações expressas neste material são de responsabilidade do(s) autor(es) e não necessariamente refletem a visão da FAPESP.*
